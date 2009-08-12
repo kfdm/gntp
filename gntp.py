@@ -38,7 +38,7 @@ class GNTPRegister(GNTPBase):
 					self.defaultNotifications.append(notice['Notification-Name'])
 				
 	def __unicode__(self):
-		return self.raw.split('\r\n')
+		return self.parsed
 	def send(self):
 		print 'Sending Registration'
 		growl = Growl.GrowlNotifier(
