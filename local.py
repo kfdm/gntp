@@ -23,7 +23,7 @@ class GNTPNotice(gntp.GNTPNotice):
 		if self.headers.get('Notification-Icon',False):
 			resource = self.headers['Notification-Icon'].split('://')
 			#print resource
-			resource = self.headers['identifier'].get(resource[1],False)
+			resource = self.resources.get(resource[1],False)
 			#print resource
 			if resource:
 				noticeIcon = resource['Data']

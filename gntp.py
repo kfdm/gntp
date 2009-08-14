@@ -38,13 +38,21 @@ class GNTPRegister(GNTPBase):
 	def __unicode__(self):
 		return self.headers
 	def send(self):
-		print 'Sending Registration'
+		print
+		print '=Registration Object='
+		print '==Headers=='
 		print self.headers
+		print '==Notifications=='
+		print self.notifications
+		print '==Defaults=='
+		print self.defaultNotifications
+		print
 
 class GNTPNotice(GNTPBase):
 	def __init__(self,data=None):
 		self.raw	= data
 		self.headers	= {}
+		self.resources	= {}
 		if data:
 			self.parse(data)
 	def parse(self,data):
@@ -54,16 +62,20 @@ class GNTPNotice(GNTPBase):
 		if len(parts) > 1:
 			print parts[1:]
 			if parts[1] == '': return
-			self.headers['identifier'] = {}
 			item					= self.parse_dict(parts[1])
 			#print len(parts[2])
 			#print parts[2]
 			item['Data']			= parts[2]
-			self.headers['identifier'][item['Identifier']] = item
+			self.resources[item['Identifier']] = item
 			
 	def send(self):
-		print 'Sending Notification'
+		print
+		print '=Notification Object='
+		print '==Headers=='
 		print self.headers
+		print '==Resources=='
+		print self.resources
+		print
 			
 	def __unicode__(self):
 		return self.headers

@@ -1,6 +1,4 @@
 import SocketServer
-import local
-import gntp
 
 class GNTPServer(SocketServer.TCPServer):
 	pass
@@ -10,15 +8,13 @@ class GNTPHandler(SocketServer.StreamRequestHandler):
 		self.data = self.request.recv(1024)
 		
 		if self.data.startswith('GNTP/1.0 REGISTER'):
-			reload(local)
 			print "%s sent REGISTER:" % self.client_address[0]
-			local.GNTPRegister(self.data).send()
-			self.request.send(gntp.GNTPResponse().format())
+			GNTPRegister(self.data).send()
+			self.request.send(GNTPResponse().format())
 		elif self.data.startswith('GNTP/1.0 NOTIFY'):
-			reload(local)
 			print "%s sent NOTIFY:" % self.client_address[0]
-			local.GNTPNotice(self.data).send()
-			self.request.send(gntp.GNTPResponse().format())
+			GNTPNotice(self.data).send()
+			self.request.send(GNTPResponse().format())
 		else:
 			print "%s sent UNKNOWN:" % self.client_address[0]
 			print '----'
@@ -27,9 +23,20 @@ class GNTPHandler(SocketServer.StreamRequestHandler):
 			return None
 		
 if __name__ == "__main__":
-	HOST,PORT = '',23053
+	from optparse import OptionParser
+	parser = OptionParser()
+	parser.add_option("-a","--address",dest="host",help="address to listen on",default="")
+	parser.add_option("-p","--port",dest="port",help="port to listen on",type="int",default=23053)
+	parser.add_option("-r","--regrowl",dest='regrowl',help="ReGrowl on local machine",action="store_true",default=False)
+	(options, args) = parser.parse_args()
 	
-	server = GNTPServer((HOST, PORT), GNTPHandler)
+	if options.regrowl:
+		from local import GNTPRegister,GNTPNotice
+		from gntp import GNTPResponse
+	else:
+		from gntp import *
+	
+	server = GNTPServer((options.host, options.port), GNTPHandler)
 	
 	sa = server.socket.getsockname()
 	print "Listening for GNTP on", sa[0], "port", sa[1], "..."
