@@ -33,7 +33,6 @@ class GNTPRegister(GNTPBase):
 			self.headers['Notifications-Count'] = 0
 	def validate(self):
 		for header in self.requiredHeaders:
-			print self.headers
 			if not self.headers.get(header,False):
 				raise Exception('Missing Registration Header: '+header)
 		for notice in self.notifications:
@@ -82,7 +81,7 @@ class GNTPRegister(GNTPBase):
 		print self.format()
 
 class GNTPNotice(GNTPBase):
-	def __init__(self,data=None,app=None,name=None):
+	def __init__(self,data=None,app=None,name=None,title=None):
 		self.raw	= data
 		self.headers	= {}
 		self.resources	= {}
@@ -98,6 +97,8 @@ class GNTPNotice(GNTPBase):
 				self.headers['Application-Name'] = app
 			if name:
 				self.headers['Notification-Name'] = name
+			if title:
+				self.headers['Notification-Title'] = title
 	def validate(self):
 		for header in self.requiredHeaders:
 			print self.headers
