@@ -3,7 +3,7 @@ import Growl
 
 class GNTPRegister(gntp.GNTPRegister):
 	def send(self):
-		print 'Sending Registration'
+		print 'Sending Local Registration'
 		growl = Growl.GrowlNotifier(
 			applicationName			= self.headers['Application-Name'],
 			notifications			= self.notifications,
@@ -13,7 +13,7 @@ class GNTPRegister(gntp.GNTPRegister):
 		
 class GNTPNotice(gntp.GNTPNotice):
 	def send(self):
-		print 'Sending Notification'
+		print 'Sending Local Notification'
 		growl = Growl.GrowlNotifier(
 			applicationName			= self.headers['Application-Name'],
 			notifications			= [self.headers['Notification-Name']]
@@ -32,5 +32,4 @@ class GNTPNotice(gntp.GNTPNotice):
 			noteType = self.headers['Notification-Name'],
 			title = self.headers['Notification-Title'],
 			description=self.headers['Notification-Text'],
-			icon=noticeIcon
 		)
