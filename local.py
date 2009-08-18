@@ -4,10 +4,19 @@ import Growl
 class GNTPRegister(gntp.GNTPRegister):
 	def send(self):
 		print 'Sending Local Registration'
+		
+		#Local growls only need a list of strings
+		notifications=[]
+		defaultNotifications = []
+		for notice in self.notifications:
+			notifications.append(notice['Notification-Name'])
+			if notice.get('Notification-Enabled',True):
+				defaultNotifications.append(notice['Notification-Name'])
+				
 		growl = Growl.GrowlNotifier(
 			applicationName			= self.headers['Application-Name'],
-			notifications			= self.notifications,
-			defaultNotifications	= self.defaultNotifications,
+			notifications			= notifications,
+			defaultNotifications	= defaultNotifications,
 		)
 		growl.register()
 		

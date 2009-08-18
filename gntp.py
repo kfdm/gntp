@@ -19,7 +19,6 @@ class GNTPRegister(GNTPBase):
 	def __init__(self,data=None):
 		self.headers	= {}
 		self.notifications = []
-		self.defaultNotifications = []
 		self.requiredHeaders = [
 			'Application-Name',
 			'Notifications-Count'
@@ -51,9 +50,7 @@ class GNTPRegister(GNTPBase):
 			for notification in parts[1:]:
 				if notification.strip()=='': continue
 				notice = self.parse_dict(notification)
-				self.notifications.append(notice['Notification-Name'])
-				if notice['Notification-Enabled'] == 'True':
-					self.defaultNotifications.append(notice['Notification-Name'])
+				self.notifications.append(notice)
 	def add_notification(self,name,enabled=True):
 		notice = {}
 		notice['Notification-Name'] = name
@@ -82,15 +79,7 @@ class GNTPRegister(GNTPBase):
 		return message
 	
 	def send(self):
-		print
-		print '=Registration Object='
-		print '==Headers=='
-		print self.headers
-		print '==Notifications=='
-		print self.notifications
-		print '==Defaults=='
-		print self.defaultNotifications
-		print
+		print self.format()
 
 class GNTPNotice(GNTPBase):
 	def __init__(self,data=None,app=None,name=None):
@@ -129,13 +118,7 @@ class GNTPNotice(GNTPBase):
 			self.resources[item['Identifier']] = item
 			
 	def send(self):
-		print
-		print '=Notification Object='
-		print '==Headers=='
-		print self.headers
-		print '==Resources=='
-		print self.resources
-		print
+		print self.format()
 	def format(self):
 		SEP = u': '
 		EOL = u'\r\n'
