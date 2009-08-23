@@ -22,15 +22,15 @@ class GNTPHandler(SocketServer.StreamRequestHandler):
 		self.data = self.read()
 		
 		try:
-			message = parse_gntp(self.data)
+			message = gntp.parse_gntp(self.data,self.server.growl_password)
 			message.send()
 			
-			response = GNTPOK()
+			response = gntp.GNTPOK()
 			self.write(response.encode())
-		except GNTPError:
+		except gntp.GNTPError:
 			if self.server.growl_debug:
 				traceback.print_exc()
-			response = GNTPError()
+			response = gntp.GNTPError()
 			self.write(response.encode())
 		
 if __name__ == "__main__":
@@ -40,16 +40,17 @@ if __name__ == "__main__":
 	parser.add_option("-p","--port",dest="port",help="port to listen on",type="int",default=23053)
 	parser.add_option("-r","--regrowl",dest='regrowl',help="ReGrowl on local OSX machine",action="store_true",default=False)
 	parser.add_option("-d","--debug",dest='debug',help="Print raw growl packets",action="store_true",default=False)
+	parser.add_option("-P","--password",dest='password',help="Network password",default=None)
 	(options, args) = parser.parse_args()
 	
 	if options.regrowl:
-		from local import GNTPRegister,GNTPNotice
-		from gntp import GNTPParseError,GNTPOK,GNTPError,parse_gntp
+		import local as gntp
 	else:
-		from gntp import *
+		import gntp
 	
 	server = GNTPServer((options.host, options.port), GNTPHandler)
 	server.growl_debug = options.debug
+	server.growl_password = options.password
 	
 	sa = server.socket.getsockname()
 	print "Listening for GNTP on", sa[0], "port", sa[1], "..."

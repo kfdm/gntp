@@ -1,6 +1,11 @@
 import gntp
 import Growl
 
+GNTPParseError = gntp.GNTPParseError
+GNTPOK = gntp.GNTPOK
+GNTPError = gntp.GNTPError
+parse_gntp = gntp.parse_gntp
+
 class GNTPRegister(gntp.GNTPRegister):
 	def send(self):
 		print 'Sending Local Registration'
