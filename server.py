@@ -8,30 +8,31 @@ class GNTPHandler(SocketServer.StreamRequestHandler):
 	def read(self):
 		data = self.request.recv(1024)
 		if self.server.growl_debug:
-			print '---'
-			print data
-			print '---'
+			print '<Reading>\n',data,'\n</Reading>'
 		return data
 	def write(self,msg):
 		if self.server.growl_debug:
-			print '---'
-			print msg
-			print '---'
+			print '<Writing>\n',msg,'\n</Writing>'
 		self.request.send(msg)
 	def handle(self):
+		reload(gntp)
 		self.data = self.read()
 		
 		try:
 			message = gntp.parse_gntp(self.data,self.server.growl_password)
 			message.send()
 			
-			response = gntp.GNTPOK()
+			response = gntp.GNTPOK(action=message.info['messagetype'])
 			self.write(response.encode())
-		except gntp.GNTPError:
+		except gntp.BaseError, e:
 			if self.server.growl_debug:
 				traceback.print_exc()
-			response = gntp.GNTPError()
-			self.write(response.encode())
+			if e.gntp_error:
+				self.write(e.gntp_error())
+		except:
+			error = gntp.GNTPError(errorcode=500,errordesc='Unknown server error')
+			self.write(error.encode())
+			raise
 		
 if __name__ == "__main__":
 	from optparse import OptionParser
@@ -55,4 +56,3 @@ if __name__ == "__main__":
 	sa = server.socket.getsockname()
 	print "Listening for GNTP on", sa[0], "port", sa[1], "..."
 	server.serve_forever()
-	

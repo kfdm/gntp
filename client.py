@@ -36,7 +36,7 @@ def send_growl(options,message=None):
 	_send(options.host,options.port,notice.encode(),options.debug)
 
 def _send(host,port,data,debug=False):
-	if debug: print '-----\n',data,'\n----'
+	if debug: print '<Sending>\n',data,'\n</Sending>'
 	
 	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	s.connect((host,port))
@@ -44,7 +44,7 @@ def _send(host,port,data,debug=False):
 	response = gntp.parse_gntp(s.recv(1024))
 	s.close()
 	
-	if debug: print '-----\n',response,'\n----'
+	if debug: print '<Recieved>\n',response,'\n</Recieved>'
 
 if __name__ == "__main__":
 	from optparse import OptionParser

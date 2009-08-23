@@ -2,8 +2,18 @@ import re
 import hashlib
 import time
 
-class GNTPParseError(Exception):
+class BaseError(Exception):
 	pass
+
+class ParseError(BaseError):
+	def gntp_error(self):
+		error = GNTPError(errorcode=500,errordesc='Error parsing the message')
+		return error.encode()
+
+class AuthError(BaseError):
+	def gntp_error(self):
+		error = GNTPError(errorcode=400,errordesc='Error with authorization')
+		return error.encode()
 
 class _GNTPBase(object):
 	def __init__(self,messagetype):
@@ -12,6 +22,11 @@ class _GNTPBase(object):
 			'messagetype':messagetype,
 			'encryptionAlgorithmID':None
 		}
+		self.requiredHeaders = []
+	def send(self):
+		print self.encode()
+	def __str__(self):
+		return self.encode()
 	def parse_info(self,data):
 		#GNTP/<version> <messagetype> <encryptionAlgorithmID>[:<ivValue>][ <keyHashAlgorithmID>:<keyHash>.<salt>]
 		match = re.match('GNTP/(?P<version>\d+\.\d+) (?P<messagetype>REGISTER|NOTIFY|\-OK|\-ERROR)'+
@@ -19,7 +34,7 @@ class _GNTPBase(object):
 						'((?P<keyHashAlgorithmID>[A-Z0-9]+):(?P<keyHash>[A-F0-9]+).(?P<salt>[A-F0-9]+))?\r\n', data,re.IGNORECASE)
 		
 		if not match:
-			raise GNTPParseError('ERROR_PARSING_INFO_LINE')
+			raise ParseError('ERROR_PARSING_INFO_LINE')
 		
 		info = match.groupdict()
 		if info['encryptionAlgorithmID'] == 'NONE':
@@ -48,7 +63,7 @@ class _GNTPBase(object):
 		if not self.info.get('keyHash',None):
 			return True
 		if not self.password:
-			raise GNTPParseError('Missing Password')
+			raise AuthError('Missing Server Password')
 		
 		password = self.password.encode('utf8')
 		saltHash = self._decode_hex(self.info['salt'])
@@ -58,9 +73,12 @@ class _GNTPBase(object):
 		keyHash = hashlib.md5(key).hexdigest()
 		
 		if not keyHash.upper() == self.info['keyHash'].upper():
-			raise GNTPParseError('Invalid Hash')
+			raise AuthError('Invalid Hash')
 		return True
-		
+	def validate(self):
+		for header in self.requiredHeaders:
+			if not self.headers.get(header,False):
+				raise ParseError('Missing Notification Header: '+header)
 		
 	def format_info(self):
 		info = u'GNTP/%s %s'%(
@@ -118,11 +136,11 @@ class GNTPRegister(_GNTPBase):
 	def validate(self):
 		for header in self.requiredHeaders:
 			if not self.headers.get(header,False):
-				raise GNTPParseError('Missing Registration Header: '+header)
+				raise ParseError('Missing Registration Header: '+header)
 		for notice in self.notifications:
 			for header in self.requiredNotification:
 				if not notice.get(header,False):
-					raise GNTPParseError('Missing Notification Header: '+header)		
+					raise ParseError('Missing Notification Header: '+header)		
 	def decode(self,data):
 		self.raw = data
 		parts = self.raw.split('\r\n\r\n')
@@ -161,11 +179,6 @@ class GNTPRegister(_GNTPBase):
 		
 		message += EOL
 		return message
-	
-	def send(self):
-		print self.encode()
-	def __str__(self):
-		return self.encode()
 
 class GNTPNotice(_GNTPBase):
 	def __init__(self,data=None,app=None,name=None,title=None,password=None):
@@ -190,7 +203,7 @@ class GNTPNotice(_GNTPBase):
 	def validate(self):
 		for header in self.requiredHeaders:
 			if not self.headers.get(header,False):
-				raise GNTPParseError('Missing Notification Header: '+header)
+				raise ParseError('Missing Notification Header: '+header)
 	def decode(self,data):
 		self.raw = data
 		parts = self.raw.split('\r\n\r\n')
@@ -206,11 +219,6 @@ class GNTPNotice(_GNTPBase):
 			#print parts[2]
 			item['Data']			= parts[2]
 			self.resources[item['Identifier']] = item
-			
-	def send(self):
-		print self.encode()
-	def __str__(self):
-		return self.encode()
 	def encode(self):
 		self.validate()
 		SEP = u': '
@@ -224,7 +232,7 @@ class GNTPNotice(_GNTPBase):
 		message += EOL
 		return message
 
-class GNTPResponse(_GNTPBase):
+class _GNTPResponse(_GNTPBase):
 	def __init__(self,type='-OK'):
 		_GNTPBase.__init__(self,type)
 		self.headers = {}
@@ -234,7 +242,7 @@ class GNTPResponse(_GNTPBase):
 		self.info = self.parse_info(data)
 		self.headers = self.parse_dict(parts[0])
 	def encode(self):
-		#self.validate()
+		self.validate()
 		SEP = u': '
 		EOL = u'\r\n'
 		
@@ -245,39 +253,42 @@ class GNTPResponse(_GNTPBase):
 		
 		message += EOL
 		return message
-	def send(self):
-		print self.encode()
-	def __str__(self):
-		return self.encode()
 
-class GNTPOK(GNTPResponse):
-	def __init__(self,data=None):
-		GNTPResponse.__init__(self,'-OK')
+class GNTPOK(_GNTPResponse):
+	def __init__(self,data=None,action=None):
+		_GNTPResponse.__init__(self,'-OK')
+		self.requiredHeaders = ['Response-Action']
 		if data:
 			self.decode(data)
+		if action:
+			self.headers['Response-Action'] = action
 
-class GNTPError(GNTPResponse):
-	def __init__(self,data=None):
-		GNTPResponse.__init__(self,'-ERROR')
+class GNTPError(_GNTPResponse):
+	def __init__(self,data=None,errorcode=None,errordesc=None):
+		_GNTPResponse.__init__(self,'-ERROR')
+		self.requiredHeaders = ['Error-Code','Error-Description']
 		if data:
 			self.decode(data)
+		if errorcode:
+			self.headers['Error-Code'] = errorcode
+			self.headers['Error-Description'] = errordesc
 
 def parse_gntp(data,password=None,debug=False):
 	match = re.match('GNTP/(?P<version>\d+\.\d+) (?P<messagetype>REGISTER|NOTIFY|\-OK|\-ERROR)',data,re.IGNORECASE)
 	if not match:
-		raise GNTPParseError('INVALID_GNTP_INFO')
+		raise ParseError('INVALID_GNTP_INFO')
 	info = match.groupdict()
 	if info['messagetype'] == 'REGISTER':
 		return GNTPRegister(data,password=password)
 	elif info['messagetype'] == 'NOTIFY':
 		return GNTPNotice(data,password=password)
 	elif info['messagetype'] == '-OK':
-		return GNTPResponse(data)
+		return GNTPOK(data)
 	elif info['messagetype'] == '-ERROR':
-		return GNTPResponse(data)
+		return GNTPError(data)
 	if debug:
 		print '----'
 		print self.data
 		print '----'
 	print info
-	raise GNTPParseError('INVALID_GNTP_MESSAGE')
+	raise ParseError('INVALID_GNTP_MESSAGE')
