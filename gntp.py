@@ -27,7 +27,7 @@ class GNTPRegister(GNTPBase):
 			'Notification-Name',
 		]
 		if data:
-			self.parse(data)
+			self.decode(data)
 		else:
 			self.headers['Application-Name'] = 'pygntp'
 			self.headers['Notifications-Count'] = 0
@@ -39,7 +39,7 @@ class GNTPRegister(GNTPBase):
 			for header in self.requiredNotification:
 				if not notice.get(header,False):
 					raise Exception('Missing Notification Header: '+header)		
-	def parse(self,data):
+	def decode(self,data):
 		self.raw = data
 		parts = self.raw.split('\r\n\r\n')
 		
@@ -57,7 +57,7 @@ class GNTPRegister(GNTPBase):
 			
 		self.notifications.append(notice)
 		self.headers['Notifications-Count'] = len(self.notifications)
-	def format(self):
+	def encode(self):
 		self.validate()
 		SEP = u': '
 		EOL = u'\r\n'
@@ -78,7 +78,7 @@ class GNTPRegister(GNTPBase):
 		return message
 	
 	def send(self):
-		print self.format()
+		print self.encode()
 
 class GNTPNotice(GNTPBase):
 	def __init__(self,data=None,app=None,name=None,title=None):
@@ -91,7 +91,7 @@ class GNTPNotice(GNTPBase):
 			'Notification-Title'
 		]
 		if data:
-			self.parse(data)
+			self.decode(data)
 		else:
 			if app:
 				self.headers['Application-Name'] = app
@@ -104,7 +104,7 @@ class GNTPNotice(GNTPBase):
 			print self.headers
 			if not self.headers.get(header,False):
 				raise Exception('Missing Notification Header: '+header)
-	def parse(self,data):
+	def decode(self,data):
 		self.raw = data
 		parts = self.raw.split('\r\n\r\n')
 		self.headers = self.parse_dict(parts[0])
@@ -119,8 +119,8 @@ class GNTPNotice(GNTPBase):
 			self.resources[item['Identifier']] = item
 			
 	def send(self):
-		print self.format()
-	def format(self):
+		print self.encode()
+	def encode(self):
 		SEP = u': '
 		EOL = u'\r\n'
 		
@@ -133,5 +133,5 @@ class GNTPNotice(GNTPBase):
 		return message
 
 class GNTPResponse(object):
-	def format(self):
+	def encode(self):
 		return 'GNTP/1.0 -OK NONE\r\n\r\n'

@@ -7,7 +7,7 @@ def send_growl(options,message=None):
 	register = gntp.GNTPRegister()
 	register.add_header('Application-Name',options.app)
 	register.add_notification(options.name,True)
-	_send(options.host,options.port,register.format(),options.debug)
+	_send(options.host,options.port,register.encode(),options.debug)
 	
 	#Send Notification
 	notice = gntp.GNTPNotice()
@@ -26,7 +26,7 @@ def send_growl(options,message=None):
 	if message:
 		notice.add_header('Notification-Text',message)
 	
-	_send(options.host,options.port,notice.format(),options.debug)
+	_send(options.host,options.port,notice.encode(),options.debug)
 
 def _send(host,port,data,debug=False):
 	if debug: print '-----\n',data,'\n----'

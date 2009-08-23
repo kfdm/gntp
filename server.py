@@ -22,11 +22,11 @@ class GNTPHandler(SocketServer.StreamRequestHandler):
 		if self.data.startswith('GNTP/1.0 REGISTER'):
 			print "%s sent REGISTER:" % self.client_address[0]
 			GNTPRegister(self.data).send()
-			self.write(GNTPResponse().format())
+			self.write(GNTPResponse().encode())
 		elif self.data.startswith('GNTP/1.0 NOTIFY'):
 			print "%s sent NOTIFY:" % self.client_address[0]
 			GNTPNotice(self.data).send()
-			self.write(GNTPResponse().format())
+			self.write(GNTPResponse().encode())
 		else:
 			print "%s sent UNKNOWN:" % self.client_address[0]
 			print '----'
@@ -39,7 +39,7 @@ if __name__ == "__main__":
 	parser = OptionParser()
 	parser.add_option("-a","--address",dest="host",help="address to listen on",default="")
 	parser.add_option("-p","--port",dest="port",help="port to listen on",type="int",default=23053)
-	parser.add_option("-r","--regrowl",dest='regrowl',help="ReGrowl on local machine",action="store_true",default=False)
+	parser.add_option("-r","--regrowl",dest='regrowl',help="ReGrowl on local OSX machine",action="store_true",default=False)
 	parser.add_option("-d","--debug",dest='debug',help="Print raw growl packets",action="store_true",default=False)
 	(options, args) = parser.parse_args()
 	
