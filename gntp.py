@@ -1,6 +1,65 @@
 import re
+import hashlib
+import time
 
-class GNTPBase(object):
+class GNTPError(Exception):
+	pass
+
+class _GNTPBase(object):
+	def __init__(self,messagetype):
+		self.info = {
+			'version':'1.0',
+			'messagetype':messagetype,
+			'encryptionAlgorithmID':None
+		}
+	def parse_info(self,data):
+		#GNTP/<version> <messagetype> <encryptionAlgorithmID>[:<ivValue>][ <keyHashAlgorithmID>:<keyHash>.<salt>]
+		match = re.match('GNTP/(?P<version>\d+\.\d+) (?P<messagetype>REGISTER|NOTIFY)'+
+						' (?P<encryptionAlgorithmID>[A-Z0-9]+(:(?P<ivValue>[A-F0-9]+))?) ?'+
+						'((?P<keyHashAlgorithmID>[A-Z0-9]+):(?P<keyHash>[A-F0-9]+).(?P<salt>[A-F0-9]+))?\r\n', data,re.IGNORECASE)
+		
+		if not match:
+			raise GNTPError('ERROR_PARSING_INFO_LINE')
+		
+		info = match.groupdict()
+		if info['encryptionAlgorithmID'] == 'NONE':
+			info['encryptionAlgorithmID'] = None
+		
+		return info
+	def set_password(self,password,encryptAlgo='MD5'):
+		password = password.encode('utf8')
+		seed = time.ctime()
+		salt = hashlib.md5(seed).hexdigest()
+		saltHash = hashlib.md5(seed).digest()
+		keyBasis = password+saltHash
+		key = hashlib.md5(keyBasis).digest()
+		keyHash = hashlib.md5(key).hexdigest()
+				
+		self.info['keyHashAlgorithmID'] = encryptAlgo.upper()
+		self.info['keyHash'] = keyHash.upper()
+		self.info['salt'] = salt.upper()
+		
+	def format_info(self):
+		info = u'GNTP/%s %s'%(
+			self.info.get('version'),
+			self.info.get('messagetype'),
+		)
+		if self.info.get('encryptionAlgorithmID',None):
+			info += ' %s:%s'%(
+				self.info.get('encryptionAlgorithmID'),
+				self.info.get('ivValue'),
+			)
+		else:
+			info+=' NONE'
+		
+		if self.info.get('keyHashAlgorithmID',None):
+			info += ' %s:%s.%s'%(
+				self.info.get('keyHashAlgorithmID'),
+				self.info.get('keyHash'),
+				self.info.get('salt')
+			)			
+		
+		return info	
 	def parse_dict(self,data):
 		dict = {}
 		for line in data.split('\r\n'):
@@ -15,8 +74,9 @@ class GNTPBase(object):
 	def add_header(self,key,value):
 		self.headers[key] = value
 
-class GNTPRegister(GNTPBase):
+class GNTPRegister(_GNTPBase):
 	def __init__(self,data=None):
+		_GNTPBase.__init__(self,'REGISTER')
 		self.headers	= {}
 		self.notifications = []
 		self.requiredHeaders = [
@@ -34,13 +94,16 @@ class GNTPRegister(GNTPBase):
 	def validate(self):
 		for header in self.requiredHeaders:
 			if not self.headers.get(header,False):
-				raise Exception('Missing Registration Header: '+header)
+				raise GNTPError('Missing Registration Header: '+header)
 		for notice in self.notifications:
 			for header in self.requiredNotification:
 				if not notice.get(header,False):
-					raise Exception('Missing Notification Header: '+header)		
+					raise GNTPError('Missing Notification Header: '+header)		
 	def decode(self,data):
 		self.raw = data
+		
+		self.info = self.parse_info(data)
+		
 		parts = self.raw.split('\r\n\r\n')
 		
 		self.headers = self.parse_dict(parts[0])
@@ -62,7 +125,7 @@ class GNTPRegister(GNTPBase):
 		SEP = u': '
 		EOL = u'\r\n'
 		
-		message = u'GNTP/1.0 REGISTER NONE ' + EOL
+		message = self.format_info() + EOL
 		#Headers
 		for k,v in self.headers.iteritems():
 			message += k.encode('utf8') + SEP + str(v).encode('utf8') + EOL
@@ -80,8 +143,9 @@ class GNTPRegister(GNTPBase):
 	def send(self):
 		print self.encode()
 
-class GNTPNotice(GNTPBase):
+class GNTPNotice(_GNTPBase):
 	def __init__(self,data=None,app=None,name=None,title=None):
+		_GNTPBase.__init__(self,'NOTIFY')
 		self.raw	= data
 		self.headers	= {}
 		self.resources	= {}
@@ -103,7 +167,7 @@ class GNTPNotice(GNTPBase):
 		for header in self.requiredHeaders:
 			print self.headers
 			if not self.headers.get(header,False):
-				raise Exception('Missing Notification Header: '+header)
+				raise GNTPError('Missing Notification Header: '+header)
 	def decode(self,data):
 		self.raw = data
 		parts = self.raw.split('\r\n\r\n')
@@ -124,7 +188,7 @@ class GNTPNotice(GNTPBase):
 		SEP = u': '
 		EOL = u'\r\n'
 		
-		message = u'GNTP/1.0 NOTIFY NONE ' + EOL
+		message = self.format_info() + EOL
 		#Headers
 		for k,v in self.headers.iteritems():
 			message += k.encode('utf8') + SEP + str(v).encode('utf8') + EOL

@@ -7,6 +7,10 @@ def send_growl(options,message=None):
 	register = gntp.GNTPRegister()
 	register.add_header('Application-Name',options.app)
 	register.add_notification(options.name,True)
+	
+	if options.password:
+		register.set_password(options.password)
+	
 	_send(options.host,options.port,register.encode(),options.debug)
 	
 	#Send Notification
@@ -16,6 +20,9 @@ def send_growl(options,message=None):
 	notice.add_header('Application-Name',options.app)
 	notice.add_header('Notification-Name',options.name)
 	notice.add_header('Notification-Title',options.title)
+	
+	if options.password:
+		notice.set_password(options.password)
 
 	#Optional
 	if options.sticky:
@@ -46,6 +53,7 @@ if __name__ == "__main__":
 	#Network
 	parser.add_option("-H","--hostname",dest="host",default="localhost")
 	parser.add_option("-p","--port",dest="port",help="port to listen on",type="int",default=23053)
+	parser.add_option("-P","--password",dest="password",help="network password")
 
 	#Required (Needs Defaults)
 	parser.add_option("-a","--appname",dest="app",default="pygntp")
