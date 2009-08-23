@@ -1,4 +1,5 @@
 import SocketServer
+import traceback
 
 class GNTPServer(SocketServer.TCPServer):
 	pass
@@ -19,20 +20,18 @@ class GNTPHandler(SocketServer.StreamRequestHandler):
 		self.request.send(msg)
 	def handle(self):
 		self.data = self.read()
-		if self.data.startswith('GNTP/1.0 REGISTER'):
-			print "%s sent REGISTER:" % self.client_address[0]
-			GNTPRegister(self.data).send()
-			self.write(GNTPResponse().encode())
-		elif self.data.startswith('GNTP/1.0 NOTIFY'):
-			print "%s sent NOTIFY:" % self.client_address[0]
-			GNTPNotice(self.data).send()
-			self.write(GNTPResponse().encode())
-		else:
-			print "%s sent UNKNOWN:" % self.client_address[0]
-			print '----'
-			print self.data
-			print '----'
-			return None
+		
+		try:
+			message = parse_gntp(self.data)
+			message.send()
+			
+			response = GNTPOK()
+			self.write(response.encode())
+		except GNTPError:
+			if self.server.growl_debug:
+				traceback.print_exc()
+			response = GNTPError()
+			self.write(response.encode())
 		
 if __name__ == "__main__":
 	from optparse import OptionParser
@@ -45,7 +44,7 @@ if __name__ == "__main__":
 	
 	if options.regrowl:
 		from local import GNTPRegister,GNTPNotice
-		from gntp import GNTPResponse
+		from gntp import GNTPParseError,GNTPOK,GNTPError,parse_gntp
 	else:
 		from gntp import *
 	

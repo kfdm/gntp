@@ -41,7 +41,7 @@ def _send(host,port,data,debug=False):
 	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	s.connect((host,port))
 	s.send(data)
-	response = s.recv(1024)
+	response = gntp.parse_gntp(s.recv(1024))
 	s.close()
 	
 	if debug: print '-----\n',response,'\n----'
