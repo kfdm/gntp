@@ -158,7 +158,8 @@ class GNTPRegister(_GNTPBase):
 		_GNTPBase.__init__(self,'REGISTER')
 		self.headers	= {}
 		self.notifications = []
-		self.password = password
+		if password:
+			self.set_password(password)
 		self.requiredHeaders = [
 			'Application-Name',
 			'Notifications-Count'
@@ -250,7 +251,8 @@ class GNTPNotice(_GNTPBase):
 		_GNTPBase.__init__(self,'NOTIFY')
 		self.headers	= {}
 		self.resources	= {}
-		self.password = password
+		if password:
+			self.set_password(password)
 		self.requiredHeaders = [
 			'Application-Name',
 			'Notification-Name',
