@@ -204,7 +204,8 @@ class GNTPRegister(_GNTPBase):
 			for notification in parts[1:]:
 				if notification.strip()=='': continue
 				notice = self.parse_dict(notification)
-				self.notifications.append(notice)
+				if notice.get('Notification-Name',False):
+					self.notifications.append(notice)
 	def add_notification(self,name,enabled=True):
 		'''
 		Add new Notification to Registration message
