@@ -49,10 +49,15 @@ class _GNTPBase(object):
 	def set_password(self,password,encryptAlgo='MD5'):
 		'''
 		Set a password for a GNTP Message
-		@param password:
+		@param password:  Null to clear password
 		@param encryptAlgo: Currently only supports MD5
 		@todo: Support other hash functions
 		'''
+		self.password = password
+		if not password:
+			self.info['encryptionAlgorithmID'] = None
+			self.info['keyHashAlgorithm'] = None;
+			return
 		password = password.encode('utf8')
 		seed = time.ctime()
 		salt = hashlib.md5(seed).hexdigest()
@@ -158,8 +163,7 @@ class GNTPRegister(_GNTPBase):
 		_GNTPBase.__init__(self,'REGISTER')
 		self.headers	= {}
 		self.notifications = []
-		if password:
-			self.set_password(password)
+		
 		self.requiredHeaders = [
 			'Application-Name',
 			'Notifications-Count'
@@ -168,8 +172,9 @@ class GNTPRegister(_GNTPBase):
 			'Notification-Name',
 		]
 		if data:
-			self.decode(data)
+			self.decode(data,password)
 		else:
+			self.set_password(password)
 			self.headers['Application-Name'] = 'pygntp'
 			self.headers['Notifications-Count'] = 0
 	def validate(self):
@@ -183,11 +188,12 @@ class GNTPRegister(_GNTPBase):
 			for header in self.requiredNotification:
 				if not notice.get(header,False):
 					raise ParseError('Missing Notification Header: '+header)		
-	def decode(self,data):
+	def decode(self,data,password=None):
 		'''
 		Decode existing GNTP Registration message
 		@param data: Message to decode.
 		'''
+		self.password = password
 		self.raw = data
 		parts = self.raw.split('\r\n\r\n')
 		self.info = self.parse_info(data)
@@ -251,27 +257,28 @@ class GNTPNotice(_GNTPBase):
 		_GNTPBase.__init__(self,'NOTIFY')
 		self.headers	= {}
 		self.resources	= {}
-		if password:
-			self.set_password(password)
+		
 		self.requiredHeaders = [
 			'Application-Name',
 			'Notification-Name',
 			'Notification-Title'
 		]
 		if data:
-			self.decode(data)
+			self.decode(data,password)
 		else:
+			self.set_password(password)
 			if app:
 				self.headers['Application-Name'] = app
 			if name:
 				self.headers['Notification-Name'] = name
 			if title:
 				self.headers['Notification-Title'] = title
-	def decode(self,data):
+	def decode(self,data,password):
 		'''
 		Decode existing GNTP Notification message
 		@param data: Message to decode.
 		'''
+		self.password = password
 		self.raw = data
 		parts = self.raw.split('\r\n\r\n')
 		self.info = self.parse_info(data)
