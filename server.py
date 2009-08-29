@@ -45,7 +45,7 @@ if __name__ == "__main__":
 	(options, args) = parser.parse_args()
 	
 	if options.regrowl:
-		import local as gntp
+		import gntp_bridge as gntp
 	else:
 		import gntp
 	
