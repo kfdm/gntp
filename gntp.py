@@ -169,7 +169,31 @@ class _GNTPBase(object):
 		return dict
 	def add_header(self,key,value):
 		self.headers[key] = value
-
+	def decode(self,data):
+		'''
+		Decode GNTP Message
+		@param data:
+		'''
+		self.raw = data
+		parts = self.raw.split('\r\n\r\n')
+		self.info = self.parse_info(data)
+		self.headers = self.parse_dict(parts[0])
+	def encode(self):
+		'''
+		Encode a GNTP Message
+		@return: GNTP Message ready to be sent
+		'''
+		self.validate()
+		SEP = u': '
+		EOL = u'\r\n'
+		
+		message = self.format_info() + EOL
+		#Headers
+		for k,v in self.headers.iteritems():
+			message += k.encode('utf8') + SEP + str(v).encode('utf8') + EOL
+		
+		message += EOL
+		return message
 class GNTPRegister(_GNTPBase):
 	'''
 	GNTP Registration Message
@@ -336,43 +360,23 @@ class GNTPNotice(_GNTPBase):
 		message += EOL
 		return message
 
-class _GNTPResponse(_GNTPBase):
-	def __init__(self,type):
-		_GNTPBase.__init__(self,type)
-		self.headers = {}
-	def decode(self,data):
-		'''
-		Decode GNTP Response Message
-		@param data:
-		'''
-		self.raw = data
-		parts = self.raw.split('\r\n\r\n')
-		self.info = self.parse_info(data)
-		self.headers = self.parse_dict(parts[0])
-	def encode(self):
-		'''
-		Encode a GNTP Response Message
-		@return: GNTP Response Message ready to be sent
-		'''
-		self.validate()
-		SEP = u': '
-		EOL = u'\r\n'
-		
-		message = self.format_info() + EOL
-		#Headers
-		for k,v in self.headers.iteritems():
-			message += k.encode('utf8') + SEP + str(v).encode('utf8') + EOL
-		
-		message += EOL
-		return message
+class GNTPSubscribe(_GNTPBase):
+	def __init__(self,password=None):
+		_GNTPBase.__init__(self, 'SUBSCRIBE')
+		self.requiredHeaders = [
+			'Subscriber-ID',
+			'Subscriber-Name',
+		]
+		self.set_password(password)
+		self.add_origin_info()
 
-class GNTPOK(_GNTPResponse):
+class GNTPOK(_GNTPBase):
 	def __init__(self,data=None,action=None):
 		'''
 		@param data: (Optional) See _GNTPResponse.decode()
 		@param action: (Optional) Set type of action the OK Response is for
 		'''
-		_GNTPResponse.__init__(self,'-OK')
+		_GNTPBase.__init__(self,'-OK')
 		self.requiredHeaders = ['Response-Action']
 		if data:
 			self.decode(data)
@@ -380,14 +384,14 @@ class GNTPOK(_GNTPResponse):
 			self.headers['Response-Action'] = action
 			self.add_origin_info()
 
-class GNTPError(_GNTPResponse):
+class GNTPError(_GNTPBase):
 	def __init__(self,data=None,errorcode=None,errordesc=None):
 		'''
 		@param data: (Optional) See _GNTPResponse.decode()
 		@param errorcode: (Optional) Error code
 		@param errordesc: (Optional) Error Description
 		'''
-		_GNTPResponse.__init__(self,'-ERROR')
+		_GNTPBase.__init__(self,'-ERROR')
 		self.requiredHeaders = ['Error-Code','Error-Description']
 		if data:
 			self.decode(data)
