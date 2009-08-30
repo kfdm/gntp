@@ -1,6 +1,9 @@
 import re
 import hashlib
 import time
+import platform
+
+__version__ = '0.1'
 
 class BaseError(Exception):
 	pass
@@ -23,6 +26,13 @@ class _GNTPBase(object):
 			'encryptionAlgorithmID':None
 		}
 		self.requiredHeaders = []
+		self.headers = {}
+	def add_origin_info(self):
+		self.add_header('Origin-Machine-Name',platform.node())
+		self.add_header('Origin-Software-Name','gntp.py')
+		self.add_header('Origin-Software-Version',__version__)
+		self.add_header('Origin-Platform-Name',platform.system())
+		self.add_header('Origin-Platform-Version',platform.platform())
 	def send(self):
 		print self.encode()
 	def __str__(self):
@@ -170,7 +180,6 @@ class GNTPRegister(_GNTPBase):
 		@param password: (Optional) Password to use while encoding/decoding messages
 		'''
 		_GNTPBase.__init__(self,'REGISTER')
-		self.headers	= {}
 		self.notifications = []
 		self.resources = {}
 		
@@ -187,6 +196,7 @@ class GNTPRegister(_GNTPBase):
 			self.set_password(password)
 			self.headers['Application-Name'] = 'pygntp'
 			self.headers['Notifications-Count'] = 0
+			self.add_origin_info()
 	def validate(self):
 		'''
 		Validate required headers and validate notification headers
@@ -271,7 +281,6 @@ class GNTPNotice(_GNTPBase):
 		@param password: (Optional) Password to use while encoding/decoding messages
 		'''
 		_GNTPBase.__init__(self,'NOTIFY')
-		self.headers	= {}
 		self.resources	= {}
 		
 		self.requiredHeaders = [
@@ -289,6 +298,7 @@ class GNTPNotice(_GNTPBase):
 				self.headers['Notification-Name'] = name
 			if title:
 				self.headers['Notification-Title'] = title
+			self.add_origin_info()
 	def decode(self,data,password):
 		'''
 		Decode existing GNTP Notification message
@@ -368,6 +378,7 @@ class GNTPOK(_GNTPResponse):
 			self.decode(data)
 		if action:
 			self.headers['Response-Action'] = action
+			self.add_origin_info()
 
 class GNTPError(_GNTPResponse):
 	def __init__(self,data=None,errorcode=None,errordesc=None):
@@ -383,6 +394,7 @@ class GNTPError(_GNTPResponse):
 		if errorcode:
 			self.headers['Error-Code'] = errorcode
 			self.headers['Error-Description'] = errordesc
+			self.add_origin_info()
 
 def parse_gntp(data,password=None,debug=False):
 	'''
