@@ -80,6 +80,15 @@ class _GNTPBase(object):
 			tmp = int(value[i:i+2],16)
 			result += chr(tmp)
 		return result
+	def _decode_binary(self,rawIdentifier,identifier):
+		rawIdentifier += '\r\n\r\n'
+		dataLength = int(identifier['Length'])
+		pointerStart = self.raw.find(rawIdentifier)+len(rawIdentifier)
+		pointerEnd = pointerStart + dataLength
+		data = self.raw[pointerStart:pointerEnd]
+		if not len(data) == dataLength:
+			raise ParseError('INVALID_DATA_LENGTH Expected: %s Recieved %s'%(dataLength,len(data)))
+		return data
 	def validate_password(self):
 		'''
 		Validate GNTP Message against stored password
@@ -163,6 +172,7 @@ class GNTPRegister(_GNTPBase):
 		_GNTPBase.__init__(self,'REGISTER')
 		self.headers	= {}
 		self.notifications = []
+		self.resources = {}
 		
 		self.requiredHeaders = [
 			'Application-Name',
@@ -200,12 +210,17 @@ class GNTPRegister(_GNTPBase):
 		self.validate_password()
 		self.headers = self.parse_dict(parts[0])
 		
-		if len(parts) > 1:
-			for notification in parts[1:]:
-				if notification.strip()=='': continue
-				notice = self.parse_dict(notification)
-				if notice.get('Notification-Name',False):
-					self.notifications.append(notice)
+		for i,part in enumerate(parts):
+			if i==0: continue  #Skip Header
+			if part.strip()=='': continue
+			notice = self.parse_dict(part)
+			if notice.get('Notification-Name',False):
+				self.notifications.append(notice)
+			elif notice.get('Identifier',False):
+				notice['Data'] = self._decode_binary(part,notice)
+				#open('register.png','wblol').write(notice['Data'])
+				self.resources[ notice.get('Identifier') ] = notice
+		
 	def add_notification(self,name,enabled=True):
 		'''
 		Add new Notification to Registration message
@@ -285,15 +300,15 @@ class GNTPNotice(_GNTPBase):
 		self.info = self.parse_info(data)
 		self.validate_password()
 		self.headers = self.parse_dict(parts[0])
-		if len(parts) > 1:
-			print 'Extra parts'
-			print parts[1:]
-			if parts[1] == '': return
-			item					= self.parse_dict(parts[1])
-			#print len(parts[2])
-			#print parts[2]
-			item['Data']			= parts[2]
-			self.resources[item['Identifier']] = item
+		
+		for i,part in enumerate(parts):
+			if i==0: continue  #Skip Header
+			if part.strip()=='': continue
+			notice = self.parse_dict(part)
+			if notice.get('Identifier',False):
+				notice['Data'] = self._decode_binary(part,notice)
+				#open('notice.png','wblol').write(notice['Data'])
+				self.resources[ notice.get('Identifier') ] = notice
 	def encode(self):
 		'''
 		Encode a GNTP Notification Message
