@@ -7,24 +7,22 @@ class GNTPServer(SocketServer.TCPServer):
 
 class GNTPHandler(SocketServer.StreamRequestHandler):
 	def read(self):
-		bufferSleep = 0.01
 		bufferLength = 2048
-		time.sleep(bufferSleep) #Let the buffer fill up a bit (hack)
 		buffer = ''
 		while(1):
 			data = self.request.recv(bufferLength)
 			if self.server.growl_debug:
 				print 'Reading',len(data)
 			buffer = buffer + data
-			if len(data) < bufferLength: break
-			time.sleep(bufferSleep) #Let the buffer fill up a bit (hack)
+			if len(data) < bufferLength and buffer.endswith('\r\n\r\n'):
+				break
 		if self.server.growl_debug:
 			print '<Reading>\n',buffer,'\n</Reading>'
 		return buffer
 	def write(self,msg):
 		if self.server.growl_debug:
 			print '<Writing>\n',msg,'\n</Writing>'
-		self.request.send(msg)
+		self.request.sendall(msg)
 	def handle(self):
 		reload(gntp)
 		self.data = self.read()
