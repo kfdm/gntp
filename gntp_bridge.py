@@ -15,7 +15,7 @@ def register_send(self):
 		if notice.get('Notification-Enabled',True):
 			defaultNotifications.append(notice['Notification-Name'])
 	
-	appIcon = self.headers.get('Application-Icon',None)
+	appIcon = self.headers.get('Application-Icon','')
 	if appIcon.startswith('x-growl-resource://'):
 		resource = appIcon.split('://')
 		appIcon = self.resources.get(resource[1])['Data']
@@ -42,7 +42,7 @@ def notice_send(self):
 		notifications			= [self.headers['Notification-Name']]
 	)
 	
-	noticeIcon = self.headers.get('Notification-Icon',None)
+	noticeIcon = self.headers.get('Notification-Icon','')
 	if noticeIcon.startswith('x-growl-resource://'):
 		resource = noticeIcon.split('://')
 		noticeIcon = self.resources.get(resource[1])['Data']
