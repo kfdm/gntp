@@ -16,9 +16,12 @@ def register_send(self):
 			defaultNotifications.append(notice['Notification-Name'])
 	
 	appIcon = self.headers.get('Application-Icon',None)
-	if appIcon:
+	if appIcon.startswith('x-growl-resource://'):
 		resource = appIcon.split('://')
 		appIcon = self.resources.get(resource[1])['Data']
+	else:
+		#Ignore URLs for now
+		appIcon = None
 	
 	growl = Growl.GrowlNotifier(
 		applicationName			= self.headers['Application-Name'],
@@ -40,9 +43,12 @@ def notice_send(self):
 	)
 	
 	noticeIcon = self.headers.get('Notification-Icon',None)
-	if noticeIcon:
+	if noticeIcon.startswith('x-growl-resource://'):
 		resource = noticeIcon.split('://')
 		noticeIcon = self.resources.get(resource[1])['Data']
+	else:
+		#Ignore URLs for now
+		noticeIcon = None
 	
 	growl.notify(
 		noteType = self.headers['Notification-Name'],
