@@ -18,6 +18,11 @@ class AuthError(BaseError):
 		error = GNTPError(errorcode=400,errordesc='Error with authorization')
 		return error.encode()
 
+class UnsupportedError(BaseError):
+	def gntp_error(self):
+		error = GNTPError(errorcode=500,errordesc='Currently unsupported by gntp.py')
+		return error.encode()
+
 class _GNTPBase(object):
 	def __init__(self,messagetype):
 		self.info = {
@@ -44,7 +49,7 @@ class _GNTPBase(object):
 		@return: GNTP Message information in a dictionary
 		'''
 		#GNTP/<version> <messagetype> <encryptionAlgorithmID>[:<ivValue>][ <keyHashAlgorithmID>:<keyHash>.<salt>]
-		match = re.match('GNTP/(?P<version>\d+\.\d+) (?P<messagetype>REGISTER|NOTIFY|\-OK|\-ERROR)'+
+		match = re.match('GNTP/(?P<version>\d+\.\d+) (?P<messagetype>REGISTER|NOTIFY|SUBSCRIBE|\-OK|\-ERROR)'+
 						' (?P<encryptionAlgorithmID>[A-Z0-9]+(:(?P<ivValue>[A-F0-9]+))?) ?'+
 						'((?P<keyHashAlgorithmID>[A-Z0-9]+):(?P<keyHash>[A-F0-9]+).(?P<salt>[A-F0-9]+))?\r\n', data,re.IGNORECASE)
 		
@@ -169,11 +174,12 @@ class _GNTPBase(object):
 		return dict
 	def add_header(self,key,value):
 		self.headers[key] = value
-	def decode(self,data):
+	def decode(self,data,password=None):
 		'''
 		Decode GNTP Message
 		@param data:
 		'''
+		self.password = password
 		self.raw = data
 		parts = self.raw.split('\r\n\r\n')
 		self.info = self.parse_info(data)
@@ -361,14 +367,17 @@ class GNTPNotice(_GNTPBase):
 		return message
 
 class GNTPSubscribe(_GNTPBase):
-	def __init__(self,password=None):
+	def __init__(self,data=None,password=None):
 		_GNTPBase.__init__(self, 'SUBSCRIBE')
 		self.requiredHeaders = [
 			'Subscriber-ID',
 			'Subscriber-Name',
 		]
-		self.set_password(password)
-		self.add_origin_info()
+		if data:
+			self.decode(data,password)
+		else:
+			self.set_password(password)
+			self.add_origin_info()
 
 class GNTPOK(_GNTPBase):
 	def __init__(self,data=None,action=None):
@@ -407,7 +416,7 @@ def parse_gntp(data,password=None,debug=False):
 	@param password: Optional password to be used to verify the message
 	@param debug: Print out extra debugging information
 	'''
-	match = re.match('GNTP/(?P<version>\d+\.\d+) (?P<messagetype>REGISTER|NOTIFY|\-OK|\-ERROR)',data,re.IGNORECASE)
+	match = re.match('GNTP/(?P<version>\d+\.\d+) (?P<messagetype>REGISTER|NOTIFY|SUBSCRIBE|\-OK|\-ERROR)',data,re.IGNORECASE)
 	if not match:
 		if debug:
 			print '----'
@@ -419,6 +428,8 @@ def parse_gntp(data,password=None,debug=False):
 		return GNTPRegister(data,password=password)
 	elif info['messagetype'] == 'NOTIFY':
 		return GNTPNotice(data,password=password)
+	elif info['messagetype'] == 'SUBSCRIBE':
+		return GNTPSubscribe(data,password=password)
 	elif info['messagetype'] == '-OK':
 		return GNTPOK(data)
 	elif info['messagetype'] == '-ERROR':

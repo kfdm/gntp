@@ -32,6 +32,11 @@ class GNTPHandler(SocketServer.StreamRequestHandler):
 			message.send()
 			
 			response = gntp.GNTPOK(action=message.info['messagetype'])
+			if message.info['messagetype'] == 'NOTICE':
+				response.add_header('Notification-ID','')
+			elif message.info['messagetype'] == 'SUBSCRIBE':
+				raise gntp.UnsupportedError()
+				#response.add_header('Subscription-TTL','10')
 			self.write(response.encode())
 		except gntp.BaseError, e:
 			if self.server.growl_debug:
