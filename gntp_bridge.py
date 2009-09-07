@@ -16,17 +16,7 @@ def register_send(self):
 		if notice.get('Notification-Enabled',True):
 			defaultNotifications.append(notice['Notification-Name'])
 	
-	appIcon = self.headers.get('Application-Icon','')
-	if appIcon.startswith('x-growl-resource://'):
-		resource = appIcon.split('://')
-		appIcon = self.resources.get(resource[1])['Data']
-	elif appIcon.startswith('http'):
-		appIcon = appIcon.replace(' ', '%20')
-		icon = urllib.urlopen(appIcon)
-		appIcon = icon.read()
-	else:
-		#Ignore URLs for now
-		appIcon = None
+	appIcon = get_resource(self,'Application-Icon')
 	
 	growl = Growl.GrowlNotifier(
 		applicationName			= self.headers['Application-Name'],
@@ -47,17 +37,8 @@ def notice_send(self):
 		notifications			= [self.headers['Notification-Name']]
 	)
 	
-	noticeIcon = self.headers.get('Notification-Icon','')
-	if noticeIcon.startswith('x-growl-resource://'):
-		resource = noticeIcon.split('://')
-		noticeIcon = self.resources.get(resource[1])['Data']
-	elif noticeIcon.startswith('http'):
-		noticeIcon = noticeIcon.replace(' ', '%20')
-		icon = urllib.urlopen(noticeIcon)
-		noticeIcon = icon.read()
-	else:
-		#Ignore URLs for now
-		noticeIcon = None
+	noticeIcon = get_resource(self,'Notification-Icon')
+	
 	growl.notify(
 		noteType = self.headers['Notification-Name'],
 		title = self.headers['Notification-Title'],
@@ -65,6 +46,22 @@ def notice_send(self):
 		icon=noticeIcon
 	)
 	return self.encode()
+
+def get_resource(self,key):
+	try:
+		resource = self.headers.get(key,'')
+		if resource.startswith('x-growl-resource://'):
+			resource = resource.split('://')
+			return self.resources.get(resource[1])['Data']
+		elif resource.startswith('http'):
+			resource = resource.replace(' ', '%20')
+			icon = urllib.urlopen(resource)
+			return icon.read()
+		else:
+			return None
+	except Exception,e:
+		print e
+		return None
 
 GNTPRegister.send = register_send
 GNTPNotice.send = notice_send
