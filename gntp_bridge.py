@@ -1,4 +1,5 @@
 from gntp import *
+import urllib
 import Growl
 
 def register_send(self):
@@ -19,6 +20,10 @@ def register_send(self):
 	if appIcon.startswith('x-growl-resource://'):
 		resource = appIcon.split('://')
 		appIcon = self.resources.get(resource[1])['Data']
+	elif appIcon.startswith('http'):
+		appIcon = appIcon.replace(' ', '%20')
+		icon = urllib.urlopen(appIcon)
+		appIcon = icon.read()
 	else:
 		#Ignore URLs for now
 		appIcon = None
@@ -46,10 +51,13 @@ def notice_send(self):
 	if noticeIcon.startswith('x-growl-resource://'):
 		resource = noticeIcon.split('://')
 		noticeIcon = self.resources.get(resource[1])['Data']
+	elif noticeIcon.startswith('http'):
+		noticeIcon = noticeIcon.replace(' ', '%20')
+		icon = urllib.urlopen(noticeIcon)
+		noticeIcon = icon.read()
 	else:
 		#Ignore URLs for now
 		noticeIcon = None
-	
 	growl.notify(
 		noteType = self.headers['Notification-Name'],
 		title = self.headers['Notification-Title'],
