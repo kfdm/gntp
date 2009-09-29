@@ -104,14 +104,19 @@ class _GNTPBase(object):
 		if not len(data) == dataLength:
 			raise ParseError('INVALID_DATA_LENGTH Expected: %s Recieved %s'%(dataLength,len(data)))
 		return data
-	def validate_password(self):
+	def validate_password(self,password):
 		'''
 		Validate GNTP Message against stored password
 		'''
-		if not self.info.get('keyHash',None):
+		self.password = password
+		if password == None: raise Exception()
+		keyHash = self.info.get('keyHash',None)
+		if keyHash is None and self.password is None:
 			return True
-		if not self.password:
-			raise AuthError('Missing Server Password')
+		if keyHash is None:
+			raise AuthError('Invalid keyHash')
+		if self.password is None:
+			raise AuthError('Missing password')
 		
 		password = self.password.encode('utf8')
 		saltHash = self._decode_hex(self.info['salt'])
@@ -238,16 +243,15 @@ class GNTPRegister(_GNTPBase):
 			for header in self.requiredNotification:
 				if not notice.get(header,False):
 					raise ParseError('Missing Notification Header: '+header)		
-	def decode(self,data,password=None):
+	def decode(self,data,password):
 		'''
 		Decode existing GNTP Registration message
 		@param data: Message to decode.
 		'''
-		self.password = password
 		self.raw = data
 		parts = self.raw.split('\r\n\r\n')
 		self.info = self.parse_info(data)
-		self.validate_password()
+		self.validate_password(password)
 		self.headers = self.parse_dict(parts[0])
 		
 		for i,part in enumerate(parts):
@@ -334,11 +338,10 @@ class GNTPNotice(_GNTPBase):
 		Decode existing GNTP Notification message
 		@param data: Message to decode.
 		'''
-		self.password = password
 		self.raw = data
 		parts = self.raw.split('\r\n\r\n')
 		self.info = self.parse_info(data)
-		self.validate_password()
+		self.validate_password(password)
 		self.headers = self.parse_dict(parts[0])
 		
 		for i,part in enumerate(parts):
