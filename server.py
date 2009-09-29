@@ -56,6 +56,8 @@ if __name__ == "__main__":
 	parser.add_option("-r","--regrowl",dest='regrowl',help="ReGrowl on local OSX machine",action="store_true",default=False)
 	parser.add_option("-d","--debug",dest='debug',help="Print raw growl packets",action="store_true",default=False)
 	parser.add_option("-P","--password",dest='password',help="Network password",default=None)
+	parser.add_option("-s","--subscribe",dest='subscribe',help="Subscribe to a remote server",default=None)
+	parser.add_option("--remote-port",dest='remote_port',help="Port on the remote machine",type="int",default=23053)
 	(options, args) = parser.parse_args()
 	
 	if options.regrowl:
@@ -66,6 +68,21 @@ if __name__ == "__main__":
 	server = GNTPServer((options.host, options.port), GNTPHandler)
 	server.growl_debug = options.debug
 	server.growl_password = options.password
+	
+	if options.subscribe:
+		import threading
+		import platform
+		from client import _send
+		subscribe = gntp.GNTPSubscribe(password=options.password)
+		subscribe.add_header('Subscriber-ID',platform.node())
+		subscribe.add_header('Subscriber-Name',platform.node())
+		subscribe.add_header('Subscriber-Port',options.port)
+		threading.Timer(5.0,_send,[
+			options.subscribe,
+			options.remote_port,
+			subscribe.encode(),
+			options.debug
+		]).start()
 	
 	sa = server.socket.getsockname()
 	print "Listening for GNTP on", sa[0], "port", sa[1], "..."
