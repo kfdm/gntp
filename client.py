@@ -29,6 +29,8 @@ def send_growl(options,message=None):
 		notice.add_header('Notification-Sticky',options.sticky)
 	if options.priority:
 		notice.add_header('Notification-Priority',options.priority)
+	if options.icon:
+		notice.add_header('Notification-Icon',options.icon)
 	
 	if message:
 		notice.add_header('Notification-Text',message)
@@ -64,6 +66,7 @@ if __name__ == "__main__":
 	parser.add_option("-d","--debug",dest='debug',help="Print raw growl packets",action="store_true",default=False)
 	parser.add_option("-s","--sticky",dest='sticky',help="Sticky Notification",action="store_true",default=None)
 	parser.add_option("--priority",dest="priority",help="-2 to 2  Default 0",type="int",default=None)
+	parser.add_option("-i","--icon",dest="icon",help="Icon for notification (Only supports URL currently)",default=False)
 	
 	(options, args) = parser.parse_args()
 	if len(args) > 0:
