@@ -47,7 +47,32 @@ class GNTPHandler(SocketServer.StreamRequestHandler):
 			error = gntp.GNTPError(errorcode=500,errordesc='Unknown server error')
 			self.write(error.encode())
 			raise
-		
+
+def send_subscribe(options):
+	options.debug = True
+	subscribe = gntp.GNTPSubscribe(password=options.password)
+	subscribe.add_header('Subscriber-ID',platform.node())
+	subscribe.add_header('Subscriber-Name',platform.node())
+	subscribe.add_header('Subscriber-Port',options.port)
+	
+	data = subscribe.encode()
+	
+	if options.debug: print '<Sending>\n',data,'\n</Sending>'
+	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+	s.connect((options.subscribe,options.remote_port))
+	s.send(data)
+	response = gntp.parse_gntp(s.recv(1024))
+	s.close()
+	if options.debug: print '<Recieved>\n',response,'\n</Recieved>'
+	
+	try: ttl = int(response.headers['Subscription-TTL']) - 30
+	except: ttl = 0
+	
+	if ttl <= 0: raise gntp.BaseError('Error with subscribe message')
+	
+	if options.debug: print 'Resubscribing in',ttl,'seconds'
+	threading.Timer(ttl,send_subscribe,[options]).start()
+	
 if __name__ == "__main__":
 	from optparse import OptionParser
 	parser = OptionParser()
@@ -72,17 +97,9 @@ if __name__ == "__main__":
 	if options.subscribe:
 		import threading
 		import platform
-		from client import _send
-		subscribe = gntp.GNTPSubscribe(password=options.password)
-		subscribe.add_header('Subscriber-ID',platform.node())
-		subscribe.add_header('Subscriber-Name',platform.node())
-		subscribe.add_header('Subscriber-Port',options.port)
-		threading.Timer(5.0,_send,[
-			options.subscribe,
-			options.remote_port,
-			subscribe.encode(),
-			options.debug
-		]).start()
+		import socket
+		print 'Subscribing to: ',options.subscribe,':',options.remote_port
+		threading.Timer(1.0,send_subscribe,[options]).start()
 	
 	sa = server.socket.getsockname()
 	print "Listening for GNTP on", sa[0], "port", sa[1], "..."
