@@ -91,8 +91,8 @@ class GrowlNotifier(object):
 			notice.add_header('Notification-Priority',priority)
 		if icon:
 			notice.add_header('Notification-Icon',self._checkIcon(icon))
-		if message:
-			notice.add_header('Notification-Text',message)
+		if description:
+			notice.add_header('Notification-Text',description)
 		self.send(notice.encode())
 	def send(self,data):
 		'''
