@@ -69,7 +69,7 @@ class GrowlNotifier(object):
 		register.add_header('Application-Name',self.applicationName)
 		for notification in self.notifications:
 			enabled = notification in self.defaultNotifications
-			register.add_notification(options.name,enabled)
+			register.add_notification(notification,enabled)
 		if self.password:
 			register.set_password(self.password)
 		self.send(register.encode())
