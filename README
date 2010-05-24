@@ -1,0 +1,18 @@
+Python library for working with Growl Notification Transport Protocol (GNTP)
+
+client.py
+Test client for showing the basic options
+
+gntp.py
+Main GNTP classes
+
+gntp_notifier.py
+Class that is supposed to be a drop in replacement for the python
+bindings that come with the Growl SDK
+http://code.google.com/p/growl/source/browse/Bindings/python/Growl.py
+
+server.py
+Server that listens for GNTP messages.
+
+gntp_bridge.py
+Used with server.py to 'regrowl' messages to the local Mac Growl library
