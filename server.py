@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import SocketServer
 import traceback
 import time

@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 from gntp import __version__ as gntpversion
 from distutils.core import setup
 setup(
