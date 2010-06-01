@@ -178,7 +178,7 @@ class _GNTPBase(object):
 			#print key,'\t\t\t',val
 		return dict
 	def add_header(self,key,value):
-		self.headers[key] = value
+		self.headers[key] = u'%s'%value
 	def decode(self,data,password=None):
 		'''
 		Decode GNTP Message
@@ -195,16 +195,15 @@ class _GNTPBase(object):
 		@return: GNTP Message ready to be sent
 		'''
 		self.validate()
-		SEP = u': '
 		EOL = u'\r\n'
 		
 		message = self.format_info() + EOL
 		#Headers
 		for k,v in self.headers.iteritems():
-			message += k.encode('utf8') + SEP + str(v).encode('utf8') + EOL
+			message += u'%s: %s%s'%(k,v,EOL)
 		
 		message += EOL
-		return message
+		return message.encode('utf8')
 class GNTPRegister(_GNTPBase):
 	'''
 	GNTP Registration Message
@@ -229,8 +228,8 @@ class GNTPRegister(_GNTPBase):
 			self.decode(data,password)
 		else:
 			self.set_password(password)
-			self.headers['Application-Name'] = 'pygntp'
-			self.headers['Notifications-Count'] = 0
+			self.add_header('Application-Name', 'pygntp')
+			self.add_header('Notification-Count', 0)
 			self.add_origin_info()
 	def validate(self):
 		'''
@@ -272,31 +271,30 @@ class GNTPRegister(_GNTPBase):
 		@param enabled: Default Notification to Enabled
 		'''
 		notice = {}
-		notice['Notification-Name'] = name
-		notice['Notification-Enabled'] = str(enabled)
+		notice['Notification-Name'] = u'%s'%name
+		notice['Notification-Enabled'] = u'%s'%enabled
 			
 		self.notifications.append(notice)
-		self.headers['Notifications-Count'] = len(self.notifications)
+		self.add_header('Notifications-Count', len(self.notifications))
 	def encode(self):
 		'''
 		Encode a GNTP Registration Message
 		@return: GNTP Registration Message ready to be sent
 		'''
 		self.validate()
-		SEP = u': '
 		EOL = u'\r\n'
 		
 		message = self.format_info() + EOL
 		#Headers
 		for k,v in self.headers.iteritems():
-			message += k.encode('utf8') + SEP + str(v).encode('utf8') + EOL
+			message += u'%s: %s%s'%(k,v,EOL)
 		
 		#Notifications
 		if len(self.notifications)>0:
 			for notice in self.notifications:
 				message += EOL
 				for k,v in notice.iteritems():
-					message += k.encode('utf8') + SEP + str(v).encode('utf8') + EOL
+					message += u'%s: %s%s'%(k,v,EOL)
 		
 		message += EOL
 		return message
@@ -327,11 +325,11 @@ class GNTPNotice(_GNTPBase):
 		else:
 			self.set_password(password)
 			if app:
-				self.headers['Application-Name'] = app
+				self.add_header('Application-Name', app)
 			if name:
-				self.headers['Notification-Name'] = name
+				self.add_header('Notification-Name', name)
 			if title:
-				self.headers['Notification-Title'] = title
+				self.add_header('Notification-Title', title)
 			self.add_origin_info()
 	def decode(self,data,password):
 		'''
@@ -358,16 +356,15 @@ class GNTPNotice(_GNTPBase):
 		@return: GNTP Notification Message ready to be sent
 		'''
 		self.validate()
-		SEP = u': '
 		EOL = u'\r\n'
 		
 		message = self.format_info() + EOL
 		#Headers
 		for k,v in self.headers.iteritems():
-			message += k.encode('utf8') + SEP + str(v).encode('utf8') + EOL
+			message += u'%s: %s%s'%(k,v,EOL)
 		
 		message += EOL
-		return message
+		return message.encode('utf8')
 
 class GNTPSubscribe(_GNTPBase):
 	def __init__(self,data=None,password=None):
@@ -393,7 +390,7 @@ class GNTPOK(_GNTPBase):
 		if data:
 			self.decode(data)
 		if action:
-			self.headers['Response-Action'] = action
+			self.add_header('Response-Action', action)
 			self.add_origin_info()
 
 class GNTPError(_GNTPBase):
@@ -408,8 +405,8 @@ class GNTPError(_GNTPBase):
 		if data:
 			self.decode(data)
 		if errorcode:
-			self.headers['Error-Code'] = errorcode
-			self.headers['Error-Description'] = errordesc
+			self.add_header('Error-Code', errorcode)
+			self.add_header('Error-Description', errordesc)
 			self.add_origin_info()
 
 def parse_gntp(data,password=None,debug=False):
