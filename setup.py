@@ -9,4 +9,12 @@ setup(
 	url='http://github.com/kfdm/gntp/',
 	version=gntpversion,
 	packages=['gntp'],
+	# http://pypi.python.org/pypi?%3Aaction=list_classifiers
+	classifiers = [
+		'Development Status :: 3 - Alpha',
+		'Intended Audience :: Developers',
+		'Programming Language :: Python',
+		'Operating System :: OS Independent',
+		'Programming Language :: Python',
+	],
 	)
