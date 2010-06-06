@@ -8,5 +8,5 @@ setup(
 	author='Paul Traylor',
 	url='http://github.com/kfdm/gntp/',
 	version=gntpversion,
-	py_modules=['gntp','gntp_notifier'],
+	packages=['gntp'],
 	)

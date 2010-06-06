@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from gntp_notifier import GrowlNotifier
+from gntp.notifier import GrowlNotifier
 
 if __name__ == "__main__":
 	from optparse import OptionParser
