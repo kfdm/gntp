@@ -178,7 +178,10 @@ class _GNTPBase(object):
 			#print key,'\t\t\t',val
 		return dict
 	def add_header(self,key,value):
-		self.headers[key] = unicode('%s'%value,'utf8','replace')
+		if isinstance(value, unicode):
+			self.headers[key] = value
+		else:
+			self.headers[key] = unicode('%s'%value,'utf8','replace')
 	def decode(self,data,password=None):
 		'''
 		Decode GNTP Message
