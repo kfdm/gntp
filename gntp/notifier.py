@@ -11,6 +11,7 @@ class GrowlNotifier(object):
 	notifications = []
 	defaultNotifications = []
 	applicationIcon = None
+	passwordHash = 'MD5'
 	
 	#GNTP Specific
 	debug = False
@@ -72,7 +73,7 @@ class GrowlNotifier(object):
 		if self.applicationIcon:
 			register.add_header('Application-Icon',self.applicationIcon)
 		if self.password:
-			register.set_password(self.password)
+			register.set_password(self.password,self.passwordHash)
 		self.send(register.encode())
 	
 	def notify(self, noteType, title, description, icon=None, sticky=False, priority=None):
@@ -85,7 +86,7 @@ class GrowlNotifier(object):
 		notice.add_header('Notification-Name',noteType)
 		notice.add_header('Notification-Title',title)
 		if self.password:
-			notice.set_password(self.password)
+			notice.set_password(self.password,self.passwordHash)
 		if sticky:
 			notice.add_header('Notification-Sticky',sticky)
 		if priority:

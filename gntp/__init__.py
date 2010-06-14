@@ -68,18 +68,28 @@ class _GNTPBase(object):
 		@param encryptAlgo: Currently only supports MD5
 		@todo: Support other hash functions
 		'''
+		hash = {
+			'MD5': hashlib.md5,
+			'SHA1': hashlib.sha1,
+			'SHA256': hashlib.sha256,
+			'SHA512': hashlib.sha512,
+		}
+		
 		self.password = password
 		if not password:
 			self.info['encryptionAlgorithmID'] = None
 			self.info['keyHashAlgorithm'] = None;
 			return
+		
+		hashfunction = hash.get(encryptAlgo.upper())
+		
 		password = password.encode('utf8')
 		seed = time.ctime()
-		salt = hashlib.md5(seed).hexdigest()
-		saltHash = hashlib.md5(seed).digest()
+		salt = hashfunction(seed).hexdigest()
+		saltHash = hashfunction(seed).digest()
 		keyBasis = password+saltHash
-		key = hashlib.md5(keyBasis).digest()
-		keyHash = hashlib.md5(key).hexdigest()
+		key = hashfunction(keyBasis).digest()
+		keyHash = hashfunction(key).hexdigest()
 				
 		self.info['keyHashAlgorithmID'] = encryptAlgo.upper()
 		self.info['keyHash'] = keyHash.upper()
