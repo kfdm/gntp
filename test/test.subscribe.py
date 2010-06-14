@@ -2,6 +2,7 @@
 import sys
 sys.path = ['..'] + sys.path
 import gntp.notifier
+import platform
 
 class TestNotifier(gntp.notifier.GrowlNotifier):
 	hostname = 'shiroi'
@@ -10,8 +11,4 @@ class TestNotifier(gntp.notifier.GrowlNotifier):
 	debug = True
 
 growl = TestNotifier()
-growl.register()
-
-for hash in ['MD5','SHA1','SHA256','SHA512']:
-	growl.passwordHash = hash
-	growl.notify('Test','Test Hash',hash)
+growl.subscribe(platform.node(),platform.node(),12345)

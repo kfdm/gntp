@@ -96,6 +96,14 @@ class GrowlNotifier(object):
 		if description:
 			notice.add_header('Notification-Text',description)
 		self.send(notice.encode())
+	def subscribe(self,id,name,port):
+		sub = gntp.GNTPSubscribe()
+		sub.add_header('Subscriber-ID',id)
+		sub.add_header('Subscriber-Name',name)
+		sub.add_header('Subscriber-Port',port)
+		if self.password:
+			sub.set_password(self.password,self.passwordHash)
+		self.send(sub.encode())
 	def send(self,data):
 		'''
 		Send the GNTP Packet
