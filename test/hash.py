@@ -12,6 +12,6 @@ class TestNotifier(gntp.notifier.GrowlNotifier):
 growl = TestNotifier()
 growl.register()
 
-for hash in ['MD5','SHA1','SHA256','SHA512']:
+for hash in ['MD5','SHA1','SHA256','SHA512','fake-hash']:
 	growl.passwordHash = hash
 	growl.notify('Test','Test Hash',hash)

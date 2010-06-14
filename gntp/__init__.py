@@ -65,7 +65,7 @@ class _GNTPBase(object):
 		'''
 		Set a password for a GNTP Message
 		@param password:  Null to clear password
-		@param encryptAlgo: Currently only supports MD5
+		@param encryptAlgo: Supports MD5,SHA1,SHA256,SHA512
 		@todo: Support other hash functions
 		'''
 		hash = {
@@ -76,12 +76,15 @@ class _GNTPBase(object):
 		}
 		
 		self.password = password
+		self.encryptAlgo = encryptAlgo.upper()
 		if not password:
 			self.info['encryptionAlgorithmID'] = None
 			self.info['keyHashAlgorithm'] = None;
 			return
+		if not self.encryptAlgo in hash.keys():
+			raise UnsupportedError('INVALID HASH "%s"'%self.encryptAlgo) 
 		
-		hashfunction = hash.get(encryptAlgo.upper())
+		hashfunction = hash.get(self.encryptAlgo)
 		
 		password = password.encode('utf8')
 		seed = time.ctime()
@@ -91,7 +94,7 @@ class _GNTPBase(object):
 		key = hashfunction(keyBasis).digest()
 		keyHash = hashfunction(key).hexdigest()
 				
-		self.info['keyHashAlgorithmID'] = encryptAlgo.upper()
+		self.info['keyHashAlgorithmID'] = self.encryptAlgo
 		self.info['keyHash'] = keyHash.upper()
 		self.info['salt'] = salt.upper()
 	def _decode_hex(self,value):
