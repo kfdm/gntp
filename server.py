@@ -41,12 +41,18 @@ class ServerParser(OptionParser):
 		# Misc Options
 		self.add_option("-r","--regrowl",help="ReGrowl on local OSX machine",
 					dest='regrowl',action="store_true",default=self._config['server.regrowl'])
+		self.add_option("-e","--edit",help="Open config in $EDITOR",
+					dest='edit',action="store_true",default=False)
 		
 		# Debug Options
 		self.add_option("-d","--debug",help="Print raw growl packets",
 					dest='debug',action="store_true",default=self._config['server.debug'])
 		self.add_option("-q","--quiet",help="Quiet mode",
 					dest='debug',action="store_false")
+	def parse_args(self, args=None, values=None):
+		values, args = OptionParser.parse_args(self, args, values)
+		if values.edit: exit(self._config.editor())
+		return values, args
 
 class GNTPServer(SocketServer.TCPServer):
 	def serve_forever(self):

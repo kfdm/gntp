@@ -24,11 +24,13 @@ class Config:
 				for option,default in options.iteritems():
 					self._config.set(section,option,default)
 			self._config.write(open(self._file,'w'))
-			# If the EDITOR var is set, we'll open their editor 
-			# to edit the configuration file
-			if self._editor and os.environ['EDITOR']:
-				os.system('%s %s'%(os.environ['EDITOR'],self._file))
+			if self._editor: self.editor()
 			sys.exit(1)
+	def editor(self):
+		# If the EDITOR var is set, we'll open their editor 
+		# to edit the configuration file
+		if os.environ['EDITOR']:
+			os.system('%s %s'%(os.environ['EDITOR'],self._file))
 	def __getitem__(self,key):
 		section,option = key.split('.',1)
 		try:
