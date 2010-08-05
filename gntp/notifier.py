@@ -74,7 +74,7 @@ class GrowlNotifier(object):
 			register.add_header('Application-Icon',self.applicationIcon)
 		if self.password:
 			register.set_password(self.password,self.passwordHash)
-		self.send(register.encode())
+		self.send('register',register.encode())
 	
 	def notify(self, noteType, title, description, icon=None, sticky=False, priority=None):
 		'''
@@ -95,7 +95,7 @@ class GrowlNotifier(object):
 			notice.add_header('Notification-Icon',self._checkIcon(icon))
 		if description:
 			notice.add_header('Notification-Text',description)
-		self.send(notice.encode())
+		self.send('notify',notice.encode())
 	def subscribe(self,id,name,port):
 		sub = gntp.GNTPSubscribe()
 		sub.add_header('Subscriber-ID',id)
@@ -103,15 +103,19 @@ class GrowlNotifier(object):
 		sub.add_header('Subscriber-Port',port)
 		if self.password:
 			sub.set_password(self.password,self.passwordHash)
-		self.send(sub.encode())
-	def send(self,data):
+		self.send('subscribe',sub.encode())
+	def send(self,type,data):
 		'''
 		Send the GNTP Packet
 		'''
-		if self.debug: print '<Sending>\n',data,'\n</Sending>'
+		if self.debug:
+			print 'To: %s:%s <%s>'%(self.hostname,self.port,type)
+			print '<Sending>\n',data,'\n</Sending>'
 		s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		s.connect((self.hostname,self.port))
 		s.send(data)
 		response = gntp.parse_gntp(s.recv(1024))
 		s.close()
-		if self.debug: print '<Recieved>\n',response,'\n</Recieved>'
+		if self.debug:
+			print 'From: %s:%s <%s>'%(self.hostname,self.port,response.__class__)
+			print '<Recieved>\n',response,'\n</Recieved>'

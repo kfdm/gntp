@@ -3,9 +3,57 @@
 import SocketServer
 import traceback
 import time
+from gntp.config import Config
+from optparse import OptionParser
+
+class ServerConfig(Config):
+	_defaults = {
+		'gntp':{
+			'host':'localhost',
+			'port':23053,
+			'password':'',
+		},
+		'server':{
+			'address':'',
+			'port':23053,
+			'password':'',
+			'regrowl':False,
+			'debug':False,
+		},
+	}
+	_booleans = ['server.debug','server.regrowl']
+	_ints = ['gntp.port','server.port']
+	_editor = True
+	
+class ServerParser(OptionParser):
+	def __init__(self,file):
+		OptionParser.__init__(self)
+		self._config = ServerConfig(file)
+		
+		# Network Options		
+		self.add_option("-a","--address",help="address to listen on",
+					dest="host",default=self._config['server.address'])
+		self.add_option("-p","--port",help="port to listen on",
+					dest="port",type="int",default=self._config['server.port'])
+		self.add_option("-P","--password",help="Network password",
+					dest='password',default=self._config['server.password'])
+		
+		# Misc Options
+		self.add_option("-r","--regrowl",help="ReGrowl on local OSX machine",
+					dest='regrowl',action="store_true",default=self._config['server.regrowl'])
+		
+		# Debug Options
+		self.add_option("-d","--debug",help="Print raw growl packets",
+					dest='debug',action="store_true",default=self._config['server.debug'])
+		self.add_option("-q","--quiet",help="Quiet mode",
+					dest='debug',action="store_false")
 
 class GNTPServer(SocketServer.TCPServer):
-	pass
+	def serve_forever(self):
+		if self.growl_debug:
+			sa = self.socket.getsockname()
+			print "Listening for GNTP on", sa[0], "port", sa[1], "..."
+		SocketServer.TCPServer.serve_forever(self)
 
 class GNTPHandler(SocketServer.StreamRequestHandler):
 	def read(self):
@@ -51,14 +99,7 @@ class GNTPHandler(SocketServer.StreamRequestHandler):
 			raise
 		
 if __name__ == "__main__":
-	from optparse import OptionParser
-	parser = OptionParser()
-	parser.add_option("-a","--address",dest="host",help="address to listen on",default="")
-	parser.add_option("-p","--port",dest="port",help="port to listen on",type="int",default=23053)
-	parser.add_option("-r","--regrowl",dest='regrowl',help="ReGrowl on local OSX machine",action="store_true",default=False)
-	parser.add_option("-d","--debug",dest='debug',help="Print raw growl packets",action="store_true",default=False)
-	parser.add_option("-P","--password",dest='password',help="Network password",default=None)
-	(options, args) = parser.parse_args()
+	(options,args) = ServerParser('~/.gntp').parse_args()
 	
 	if options.regrowl:
 		import gntp_bridge as gntp
@@ -69,6 +110,4 @@ if __name__ == "__main__":
 	server.growl_debug = options.debug
 	server.growl_password = options.password
 	
-	sa = server.socket.getsockname()
-	print "Listening for GNTP on", sa[0], "port", sa[1], "..."
 	server.serve_forever()

@@ -3,7 +3,7 @@ import hashlib
 import time
 import platform
 
-__version__ = '0.1'
+__version__ = '0.2'
 
 class BaseError(Exception):
 	pass
