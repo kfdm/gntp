@@ -14,7 +14,7 @@ with the [Growl SDK](http://code.google.com/p/growl/source/browse/Bindings/pytho
 
 gntp/config.py
 --------------
-This is a class that is used mostly with the `client.py` and `server.p`y examples
+This is a class that is used mostly with the `client.py` and `server.py` examples
 to hold some of the default values that I use mostly in testing
 
 client.py
