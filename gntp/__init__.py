@@ -424,6 +424,8 @@ class GNTPError(_GNTPBase):
 			self.add_header('Error-Code', errorcode)
 			self.add_header('Error-Description', errordesc)
 			self.add_origin_info()
+	def error(self):
+		return self.headers['Error-Code'],self.headers['Error-Description']
 
 def parse_gntp(data,password=None,debug=False):
 	'''

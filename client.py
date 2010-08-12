@@ -87,8 +87,10 @@ if __name__ == "__main__":
 		port = options.port,
 		debug = options.debug,
 	)
-	growl.register()
-	growl.notify(
+	result = growl.register()
+	if result is not True: exit(result)
+	
+	result = growl.notify(
 		noteType = options.name,
 		title = options.title,
 		description = message,
@@ -96,3 +98,5 @@ if __name__ == "__main__":
 		sticky = options.sticky,
 		priority = options.priority,
 	)
+	if result is not True: exit(result)
+
