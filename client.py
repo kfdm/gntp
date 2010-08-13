@@ -73,6 +73,11 @@ class ClientParser(OptionParser):
 		if values.title is None:
 			values.title = ' '.join(args)
 		
+		# If we still have an empty title, use the 
+		# first bit of the message as the title
+		if values.title == '':
+			values.title = message[:20]
+		
 		return values, message
 
 if __name__ == "__main__":
