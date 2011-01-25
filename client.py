@@ -2,47 +2,25 @@
 
 import sys
 from gntp.notifier import GrowlNotifier
-from gntp.config import Config
 from optparse import OptionParser
-
-class ClientConfig(Config):
-	_defaults = {
-		'gntp':{
-			'host':'localhost',
-			'port':23053,
-			'password':'',
-		},
-		'client':{
-			'appname':'pygntp',
-			'name':'Notification Name',
-			'priority':0,
-			'sticky':False,
-			'debug':False,
-			'icon':'',
-		},
-	}
-	_booleans = ['client.debug','client.sticky']
-	_ints = ['gntp.port','client.priority']
-	_editor = True
 
 class ClientParser(OptionParser):
 	def __init__(self,file):
 		OptionParser.__init__(self)
-		self._config = ClientConfig(file)
 		
 		#Network
 		self.add_option("-H","--host",help="Specify a hostname to which to send a remote notification. [%default]",
-						dest="host",default=self._config['gntp.host'])
+						dest="host",default='localhost')
 		self.add_option("--port",help="port to listen on",
-						dest="port",type="int",default=self._config['gntp.port'])
+						dest="port",type="int",default=23053)
 		self.add_option("-P","--password",help="Network password",
-					dest='password',default=self._config['server.password'])
+					dest='password',default='')
 		
 		#Required (Needs Defaults)
 		self.add_option("-n","--name",help="Set the name of the application [%default]",
-						dest="app",default=self._config['client.appname'])
+						dest="app",default='Python GNTP Test Client')
 		self.add_option("-N","--notification",help="Set the notification name [%default]",
-						dest="name",default=self._config['client.name'])
+						dest="name",default='Notification')
 		self.add_option("-t","--title",help="Set the title of the notification [Default :%default]",
 						dest="title",default=None)
 		self.add_option("-m","--message",help="Sets the message instead of using stdin",
@@ -50,13 +28,13 @@ class ClientParser(OptionParser):
 		
 		#Optional (Does not require Default)
 		self.add_option("-d","--debug",help="Print raw growl packets",
-						dest='debug',action="store_true",default=self._config['client.debug'])
+						dest='debug',action="store_true",default=False)
 		self.add_option("-s","--sticky",help="Make the notification sticky [%default]",
-						dest='sticky',action="store_true",default=self._config['client.sticky'])
+						dest='sticky',action="store_true",default=False)
 		self.add_option("-p","--priority",help="-2 to 2 [%default]",
-						dest="priority",type="int",default=self._config['client.priority'])
+						dest="priority",type="int",default=0)
 		self.add_option("--image",help="Icon for notification (Only supports URL currently)",
-						dest="icon",default=self._config['client.icon'])
+						dest="icon",default='')
 		self.add_option("-e","--edit",help="Open config in $EDITOR",
 					dest='edit',action="store_true",default=False)
 	def parse_args(self, args=None, values=None):
