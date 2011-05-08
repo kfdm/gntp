@@ -245,7 +245,7 @@ class GNTPRegister(_GNTPBase):
 		else:
 			self.set_password(password)
 			self.add_header('Application-Name', 'pygntp')
-			self.add_header('Notification-Count', 0)
+			self.add_header('Notifications-Count', 0)
 			self.add_origin_info()
 	def validate(self):
 		'''
