@@ -5,6 +5,9 @@ http://code.google.com/p/growl/source/browse/Bindings/python/Growl.py
 """
 import gntp
 import socket
+import logging
+
+logger = logging.getLogger(__name__)
 
 class GrowlNotifier(object):
 	applicationName = 'Python GNTP'
@@ -14,12 +17,11 @@ class GrowlNotifier(object):
 	passwordHash = 'MD5'
 	
 	#GNTP Specific
-	debug = False
 	password = None
-	hostname = None
+	hostname = 'localhost'
 	port = 23053
 	
-	def __init__(self, applicationName=None, notifications=None, defaultNotifications=None, applicationIcon=None, hostname=None, password=None, port=None, debug=False):
+	def __init__(self, applicationName=None, notifications=None, defaultNotifications=None, applicationIcon=None, hostname=None, password=None, port=None):
 		if applicationName:
 			self.applicationName = applicationName
 		assert self.applicationName, 'An application name is required.'
@@ -49,10 +51,7 @@ class GrowlNotifier(object):
 		if port:
 			self.port = int(port)
 		assert isinstance(self.port,int), 'Requires valid port'
-		
-		if debug:
-			self.debug = debug
-		
+	
 	def _checkIcon(self, data):
 		'''
 		Check the icon to see if it's valid
@@ -114,15 +113,13 @@ class GrowlNotifier(object):
 		'''
 		Send the GNTP Packet
 		'''
-		if self.debug:
-			print 'To: %s:%s <%s>'%(self.hostname,self.port,type)
-			print '<Sending>\n',data,'\n</Sending>'
+		logger.debug('To : %s:%s <%s>',self.hostname,self.port,type)
+		logger.debug('\n%s',data)
 		s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		s.connect((self.hostname,self.port))
 		s.send(data)
 		response = gntp.parse_gntp(s.recv(1024))
 		s.close()
-		if self.debug:
-			print 'From: %s:%s <%s>'%(self.hostname,self.port,response.__class__)
-			print '<Recieved>\n',response,'\n</Recieved>'
+		logger.debug('From : %s:%s <%s>',self.hostname,self.port,response.__class__)
+		logger.debug('\n%s',response)
 		return response
