@@ -64,6 +64,7 @@ class GrowlNotifier(object):
 		'''
 		Send GNTP Registration
 		'''
+		logger.info('Sending registration to %s:%s',self.hostname,self.port)
 		register = gntp.GNTPRegister()
 		register.add_header('Application-Name',self.applicationName)
 		for notification in self.notifications:
@@ -75,12 +76,14 @@ class GrowlNotifier(object):
 			register.set_password(self.password,self.passwordHash)
 		response = self.send('register',register.encode())
 		if isinstance(response,gntp.GNTPOK): return True
+		logger.error('Invalid response %s',response.error())
 		return response.error()
 	
 	def notify(self, noteType, title, description, icon=None, sticky=False, priority=None):
 		'''
 		Send a GNTP notifications
 		'''
+		logger.info('Sending notification to %s:%s',self.hostname,self.port)
 		assert noteType in self.notifications
 		notice = gntp.GNTPNotice()
 		notice.add_header('Application-Name',self.applicationName)
@@ -98,6 +101,7 @@ class GrowlNotifier(object):
 			notice.add_header('Notification-Text',description)
 		response = self.send('notify',notice.encode())
 		if isinstance(response,gntp.GNTPOK): return True
+		logger.error('Invalid response %s',response.error())
 		return response.error()
 	def subscribe(self,id,name,port):
 		sub = gntp.GNTPSubscribe()
@@ -108,18 +112,19 @@ class GrowlNotifier(object):
 			sub.set_password(self.password,self.passwordHash)
 		response = self.send('subscribe',sub.encode())
 		if isinstance(response,gntp.GNTPOK): return True
+		logger.error('Invalid response %s',response.error())
 		return response.error()
 	def send(self,type,data):
 		'''
 		Send the GNTP Packet
 		'''
-		logger.debug('To : %s:%s <%s>',self.hostname,self.port,type)
-		logger.debug('\n%s',data)
+		logger.debug('To : %s:%s <%s>\n%s',self.hostname,self.port,type,data)
+		
 		s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		s.connect((self.hostname,self.port))
 		s.send(data)
 		response = gntp.parse_gntp(s.recv(1024))
 		s.close()
-		logger.debug('From : %s:%s <%s>',self.hostname,self.port,response.__class__)
-		logger.debug('\n%s',response)
+		
+		logger.debug('From : %s:%s <%s>\n%s',self.hostname,self.port,response.__class__,response)
 		return response
