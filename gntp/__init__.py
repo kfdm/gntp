@@ -24,14 +24,14 @@ class UnsupportedError(BaseError):
 		return error.encode()
 
 class _GNTPBase(object):
-	def __init__(self,messagetype):
-		self.info = {
-			'version':'1.0',
-			'messagetype':messagetype,
-			'encryptionAlgorithmID':None
-		}
-		self.requiredHeaders = []
-		self.headers = {}
+	info = {
+		'version':'1.0',
+		'messagetype':None,
+		'encryptionAlgorithmID':None
+	}
+	_requiredHeaders = []
+	headers = {}
+	resources = {}
 	def add_origin_info(self):
 		self.add_header('Origin-Machine-Name',platform.node())
 		self.add_header('Origin-Software-Name','gntp.py')
@@ -40,7 +40,7 @@ class _GNTPBase(object):
 		self.add_header('Origin-Platform-Version',platform.platform())
 	def __str__(self):
 		return self.encode()
-	def parse_info(self,data):
+	def _parse_info(self,data):
 		'''
 		Parse the first line of a GNTP message to get security and other info values
 		@param data: GNTP Message
@@ -115,7 +115,7 @@ class _GNTPBase(object):
 		if not len(data) == dataLength:
 			raise ParseError('INVALID_DATA_LENGTH Expected: %s Recieved %s'%(dataLength,len(data)))
 		return data
-	def validate_password(self,password):
+	def _validate_password(self,password):
 		'''
 		Validate GNTP Message against stored password
 		'''
@@ -143,11 +143,11 @@ class _GNTPBase(object):
 		'''
 		Verify required headers
 		'''
-		for header in self.requiredHeaders:
+		for header in self._requiredHeaders:
 			if not self.headers.get(header,False):
 				raise ParseError('Missing Notification Header: '+header)
 		
-	def format_info(self):
+	def _format_info(self):
 		'''
 		Generate info line for GNTP Message
 		@return: Info line string
@@ -172,7 +172,7 @@ class _GNTPBase(object):
 			)			
 		
 		return info	
-	def parse_dict(self,data):
+	def _parse_dict(self,data):
 		'''
 		Helper function to parse blocks of GNTP headers into a dictionary
 		@param data:
@@ -200,8 +200,8 @@ class _GNTPBase(object):
 		self.password = password
 		self.raw = data
 		parts = self.raw.split('\r\n\r\n')
-		self.info = self.parse_info(data)
-		self.headers = self.parse_dict(parts[0])
+		self.info = self._parse_info(data)
+		self.headers = self._parse_dict(parts[0])
 	def encode(self):
 		'''
 		Encode a GNTP Message
@@ -210,7 +210,7 @@ class _GNTPBase(object):
 		self.validate()
 		EOL = u'\r\n'
 		
-		message = self.format_info() + EOL
+		message = self._format_info() + EOL
 		#Headers
 		for k,v in self.headers.iteritems():
 			message += u'%s: %s%s'%(k,v,EOL)
@@ -221,22 +221,19 @@ class GNTPRegister(_GNTPBase):
 	'''
 	GNTP Registration Message
 	'''
+	notifications = []
+	_requiredHeaders = [
+		'Application-Name',
+		'Notifications-Count'
+	]
+	_requiredNotificationHeaders = ['Notification-Name']
 	def __init__(self,data=None,password=None):
 		'''
 		@param data: (Optional) See decode()
 		@param password: (Optional) Password to use while encoding/decoding messages
 		'''
-		_GNTPBase.__init__(self,'REGISTER')
-		self.notifications = []
-		self.resources = {}
+		self.info['messagetype'] = 'REGISTER'
 		
-		self.requiredHeaders = [
-			'Application-Name',
-			'Notifications-Count'
-		]
-		self.requiredNotification = [
-			'Notification-Name',
-		]
 		if data:
 			self.decode(data,password)
 		else:
@@ -248,11 +245,11 @@ class GNTPRegister(_GNTPBase):
 		'''
 		Validate required headers and validate notification headers
 		'''
-		for header in self.requiredHeaders:
+		for header in self._requiredHeaders:
 			if not self.headers.get(header,False):
 				raise ParseError('Missing Registration Header: '+header)
 		for notice in self.notifications:
-			for header in self.requiredNotification:
+			for header in self._requiredNotificationHeaders:
 				if not notice.get(header,False):
 					raise ParseError('Missing Notification Header: '+header)		
 	def decode(self,data,password):
@@ -262,14 +259,14 @@ class GNTPRegister(_GNTPBase):
 		'''
 		self.raw = data
 		parts = self.raw.split('\r\n\r\n')
-		self.info = self.parse_info(data)
-		self.validate_password(password)
-		self.headers = self.parse_dict(parts[0])
+		self.info = self._parse_info(data)
+		self._validate_password(password)
+		self.headers = self._parse_dict(parts[0])
 		
 		for i,part in enumerate(parts):
 			if i==0: continue  #Skip Header
 			if part.strip()=='': continue
-			notice = self.parse_dict(part)
+			notice = self._parse_dict(part)
 			if notice.get('Notification-Name',False):
 				self.notifications.append(notice)
 			elif notice.get('Identifier',False):
@@ -297,7 +294,7 @@ class GNTPRegister(_GNTPBase):
 		self.validate()
 		EOL = u'\r\n'
 		
-		message = self.format_info() + EOL
+		message = self._format_info() + EOL
 		#Headers
 		for k,v in self.headers.iteritems():
 			message += u'%s: %s%s'%(k,v,EOL)
@@ -316,6 +313,11 @@ class GNTPNotice(_GNTPBase):
 	'''
 	GNTP Notification Message
 	'''
+	_requiredHeaders = [
+		'Application-Name',
+		'Notification-Name',
+		'Notification-Title'
+	]
 	def __init__(self,data=None,app=None,name=None,title=None,password=None):
 		'''
 		
@@ -325,14 +327,8 @@ class GNTPNotice(_GNTPBase):
 		@param title: (Optional) Set Notification Title
 		@param password: (Optional) Password to use while encoding/decoding messages
 		'''
-		_GNTPBase.__init__(self,'NOTIFY')
-		self.resources	= {}
+		self.info['messagetype'] = 'NOTIFY'
 		
-		self.requiredHeaders = [
-			'Application-Name',
-			'Notification-Name',
-			'Notification-Title'
-		]
 		if data:
 			self.decode(data,password)
 		else:
@@ -351,14 +347,14 @@ class GNTPNotice(_GNTPBase):
 		'''
 		self.raw = data
 		parts = self.raw.split('\r\n\r\n')
-		self.info = self.parse_info(data)
-		self.validate_password(password)
-		self.headers = self.parse_dict(parts[0])
+		self.info = self._parse_info(data)
+		self._validate_password(password)
+		self.headers = self._parse_dict(parts[0])
 		
 		for i,part in enumerate(parts):
 			if i==0: continue  #Skip Header
 			if part.strip()=='': continue
-			notice = self.parse_dict(part)
+			notice = self._parse_dict(part)
 			if notice.get('Identifier',False):
 				notice['Data'] = self._decode_binary(part,notice)
 				#open('notice.png','wblol').write(notice['Data'])
@@ -371,7 +367,7 @@ class GNTPNotice(_GNTPBase):
 		self.validate()
 		EOL = u'\r\n'
 		
-		message = self.format_info() + EOL
+		message = self._format_info() + EOL
 		#Headers
 		for k,v in self.headers.iteritems():
 			message += u'%s: %s%s'%(k,v,EOL)
@@ -381,8 +377,8 @@ class GNTPNotice(_GNTPBase):
 
 class GNTPSubscribe(_GNTPBase):
 	def __init__(self,data=None,password=None):
-		_GNTPBase.__init__(self, 'SUBSCRIBE')
-		self.requiredHeaders = [
+		self.info['messagetype'] = 'SUBSCRIBE'
+		self._requiredHeaders = [
 			'Subscriber-ID',
 			'Subscriber-Name',
 		]
@@ -393,13 +389,13 @@ class GNTPSubscribe(_GNTPBase):
 			self.add_origin_info()
 
 class GNTPOK(_GNTPBase):
+	_requiredHeaders = ['Response-Action']
 	def __init__(self,data=None,action=None):
 		'''
 		@param data: (Optional) See _GNTPResponse.decode()
 		@param action: (Optional) Set type of action the OK Response is for
 		'''
-		_GNTPBase.__init__(self,'-OK')
-		self.requiredHeaders = ['Response-Action']
+		self.info['messagetype'] = '-OK'
 		if data:
 			self.decode(data)
 		if action:
@@ -407,14 +403,14 @@ class GNTPOK(_GNTPBase):
 			self.add_origin_info()
 
 class GNTPError(_GNTPBase):
+	_requiredHeaders = ['Error-Code','Error-Description']
 	def __init__(self,data=None,errorcode=None,errordesc=None):
 		'''
 		@param data: (Optional) See _GNTPResponse.decode()
 		@param errorcode: (Optional) Error code
 		@param errordesc: (Optional) Error Description
 		'''
-		_GNTPBase.__init__(self,'-ERROR')
-		self.requiredHeaders = ['Error-Code','Error-Description']
+		self.info['messagetype'] = '-ERROR'
 		if data:
 			self.decode(data)
 		if errorcode:
