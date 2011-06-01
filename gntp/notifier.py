@@ -83,7 +83,7 @@ class GrowlNotifier(object):
 		'''
 		Send a GNTP notifications
 		'''
-		logger.info('Sending notification to %s:%s',self.hostname,self.port)
+		logger.info('Sending notification [%s] to %s:%s',noteType,self.hostname,self.port)
 		assert noteType in self.notifications
 		notice = gntp.GNTPNotice()
 		notice.add_header('Application-Name',self.applicationName)

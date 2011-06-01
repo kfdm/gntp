@@ -38,8 +38,6 @@ class _GNTPBase(object):
 		self.add_header('Origin-Software-Version',__version__)
 		self.add_header('Origin-Platform-Name',platform.system())
 		self.add_header('Origin-Platform-Version',platform.platform())
-	def send(self):
-		print self.encode()
 	def __str__(self):
 		return self.encode()
 	def parse_info(self,data):
@@ -188,7 +186,6 @@ class _GNTPBase(object):
 			key = match.group(1).strip()
 			val = match.group(2).strip()
 			dict[key] = val
-			#print key,'\t\t\t',val
 		return dict
 	def add_header(self,key,value):
 		if isinstance(value, unicode):
@@ -427,19 +424,14 @@ class GNTPError(_GNTPBase):
 	def error(self):
 		return self.headers['Error-Code'],self.headers['Error-Description']
 
-def parse_gntp(data,password=None,debug=False):
+def parse_gntp(data,password=None):
 	'''
 	Attempt to parse a message as a GNTP message
 	@param data: Message to be parsed
 	@param password: Optional password to be used to verify the message
-	@param debug: Print out extra debugging information
 	'''
 	match = re.match('GNTP/(?P<version>\d+\.\d+) (?P<messagetype>REGISTER|NOTIFY|SUBSCRIBE|\-OK|\-ERROR)',data,re.IGNORECASE)
 	if not match:
-		if debug:
-			print '----'
-			print self.data
-			print '----'
 		raise ParseError('INVALID_GNTP_INFO')
 	info = match.groupdict()
 	if info['messagetype'] == 'REGISTER':
@@ -452,5 +444,4 @@ def parse_gntp(data,password=None,debug=False):
 		return GNTPOK(data)
 	elif info['messagetype'] == '-ERROR':
 		return GNTPError(data)
-	if debug: print info
 	raise ParseError('INVALID_GNTP_MESSAGE')
