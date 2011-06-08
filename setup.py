@@ -15,6 +15,5 @@ setup(
 		'Intended Audience :: Developers',
 		'Programming Language :: Python',
 		'Operating System :: OS Independent',
-		'Programming Language :: Python',
 	],
 	)
