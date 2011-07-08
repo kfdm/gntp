@@ -122,7 +122,7 @@ class GrowlNotifier(object):
 		
 		s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		s.connect((self.hostname,self.port))
-		s.send(data)
+		s.send(data.encode('utf8','replace'))
 		response = gntp.parse_gntp(s.recv(1024))
 		s.close()
 		

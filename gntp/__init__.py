@@ -216,7 +216,7 @@ class _GNTPBase(object):
 			message += u'%s: %s%s'%(k,v,EOL)
 		
 		message += EOL
-		return message.encode('utf8')
+		return message
 class GNTPRegister(_GNTPBase):
 	'''
 	GNTP Registration Message
@@ -373,7 +373,7 @@ class GNTPNotice(_GNTPBase):
 			message += u'%s: %s%s'%(k,v,EOL)
 		
 		message += EOL
-		return message.encode('utf8')
+		return message
 
 class GNTPSubscribe(_GNTPBase):
 	def __init__(self,data=None,password=None):
