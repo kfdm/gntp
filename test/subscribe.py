@@ -1,14 +1,9 @@
-#!/usr/bin/env python
-import sys
-sys.path = ['..'] + sys.path
-import gntp.notifier
+# -*- coding: utf-8 -*-
+# Simple script to test sending UTF8 text with the GrowlNotifier class
+import logging
+logging.basicConfig(level=logging.DEBUG)
+from gntp.notifier import GrowlNotifier
 import platform
 
-class TestNotifier(gntp.notifier.GrowlNotifier):
-	hostname = 'shiroi'
-	password = 'testpassword'
-	notifications = ['Test']
-	debug = True
-
-growl = TestNotifier()
+growl = GrowlNotifier(notifications=['Testing'],password='password',hostname='ayu')
 growl.subscribe(platform.node(),platform.node(),12345)
