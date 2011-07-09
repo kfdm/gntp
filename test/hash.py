@@ -1,17 +1,14 @@
-#!/usr/bin/env python
-import sys
-sys.path = ['..'] + sys.path
-import gntp.notifier
+# Test the various hashing methods
+import logging
+logging.basicConfig(level=logging.DEBUG)
+from gntp.notifier import GrowlNotifier
 
-class TestNotifier(gntp.notifier.GrowlNotifier):
-	hostname = 'shiroi'
-	password = 'testpassword'
-	notifications = ['Test']
-	debug = True
-
-growl = TestNotifier()
+growl = GrowlNotifier(notifications=['Testing'],password='password',hostname='ayu')
 growl.register()
 
 for hash in ['MD5','SHA1','SHA256','SHA512','fake-hash']:
+	print '-'*80
+	print 'Testing',hash
+	print '-'*80
 	growl.passwordHash = hash
-	growl.notify('Test','Test Hash',hash)
+	growl.notify('Testing','Test Hash',hash)
