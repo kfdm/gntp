@@ -62,6 +62,8 @@ if __name__ == "__main__":
 	(options,message) = ClientParser().parse_args()
 	if options.debug:
 		logging.basicConfig(level=options.verbose)
+	else:
+		logging.basicConfig(level=logging.ERROR)
 	
 	growl = GrowlNotifier(
 		applicationName = options.app,
