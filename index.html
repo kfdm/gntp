@@ -1,77 +1,211 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset='utf-8'>
-
-  <title>kfdm/gntp @ GitHub</title>
-
-  <style type="text/css">
-    body {
-      margin-top: 1.0em;
-      background-color: #8d2fa9;
-      font-family: Helvetica, Arial, FreeSans, san-serif;
-      color: #ffffff;
-    }
-    #container {
-      margin: 0 auto;
-      width: 700px;
-    }
-    h1 { font-size: 3.8em; color: #72d056; margin-bottom: 3px; }
-    h1 .small { font-size: 0.4em; }
-    h1 a { text-decoration: none }
-    h2 { font-size: 1.5em; color: #72d056; }
-    h3 { text-align: center; color: #72d056; }
-    a { color: #72d056; }
-    .description { font-size: 1.2em; margin-bottom: 30px; margin-top: 30px; font-style: italic;}
-    .download { float: right; }
-    pre { background: #000; color: #fff; padding: 15px;}
-    hr { border: 0; width: 80%; border-bottom: 1px solid #aaa}
-    .footer { text-align:center; padding-top:30px; font-style: italic; }
-  </style>
-</head>
-
-<body>
-  <a href="http://github.com/kfdm/gntp"><img style="position: absolute; top: 0; right: 0; border: 0;" src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub" /></a>
-
-  <div id="container">
-
-    <div class="download">
-      <a href="http://github.com/kfdm/gntp/zipball/master">
-        <img border="0" width="90" src="http://github.com/images/modules/download/zip.png"></a>
-      <a href="http://github.com/kfdm/gntp/tarball/master">
-        <img border="0" width="90" src="http://github.com/images/modules/download/tar.png"></a>
-    </div>
-
-    <h1><a href="http://github.com/kfdm/gntp">gntp</a>
-      <span class="small">by <a href="http://github.com/kfdm">kfdm</a></span></h1>
-
-    <div class="description">
-      GNTP Python Library
-    </div>
-
-    <h2>Authors</h2>
-<p>Hideo Hattori (hhatto.jp@gmail.com)<br/>Paul Traylor (kungfudiscomonkey@gmail.com)<br/><br/>      </p>
-<h2>Contact</h2>
-<p>Paul Traylor (kungfudiscomonkey@gmail.com)<br/>      </p>
 
 
-    <h2>Download</h2>
-    <p>
-      You can download this project in either
-      <a href="http://github.com/kfdm/gntp/zipball/master">zip</a> or
-      <a href="http://github.com/kfdm/gntp/tarball/master">tar</a> formats.
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Welcome to GNTP’s documentation! &mdash; GNTP v0.4 documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.4',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="GNTP v0.4 documentation" href="#" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="#">GNTP v0.4 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="welcome-to-gntp-s-documentation">
+<h1>Welcome to GNTP&#8217;s documentation!<a class="headerlink" href="#welcome-to-gntp-s-documentation" title="Permalink to this headline">¶</a></h1>
+<p>Python bindings for the
+<a class="reference external" href="http://www.growlforwindows.com/gfw/help/gntp.aspx">Growl Notification Transport Protocol</a></p>
+<div class="toctree-wrapper compound">
+<ul class="simple">
+</ul>
+</div>
+<div class="section" id="module-gntp.notifier">
+<span id="sending-gntp-messages"></span><h2>Sending GNTP Messages<a class="headerlink" href="#module-gntp.notifier" title="Permalink to this headline">¶</a></h2>
+<p>The gntp.notifier module is provided as a simple way to send notifications
+using GNTP</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This class is intended to mostly mirror the older Python bindings such
+that you should be able to replace instances of the old bindings with
+this class.
+<a class="reference external" href="http://code.google.com/p/growl/source/browse/Bindings/python/Growl.py">Original Python bindings</a></p>
+</div>
+<dl class="class">
+<dt id="gntp.notifier.GrowlNotifier">
+<em class="property">class </em><tt class="descclassname">gntp.notifier.</tt><tt class="descname">GrowlNotifier</tt><big>(</big><em>applicationName=None</em>, <em>notifications=None</em>, <em>defaultNotifications=None</em>, <em>applicationIcon=None</em>, <em>hostname=None</em>, <em>password=None</em>, <em>port=None</em><big>)</big><a class="headerlink" href="#gntp.notifier.GrowlNotifier" title="Permalink to this definition">¶</a></dt>
+<dd><p>Helper class to simplfy sending Growl messages</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>applicationName</strong> (<em>string</em>) &#8211; Sending application name</li>
+<li><strong>notification</strong> &#8211; List of valid notifications</li>
+<li><strong>defaultNotifications</strong> &#8211; List of notifications that should be enabled
+by default</li>
+<li><strong>applicationIcon</strong> &#8211; Icon URL</li>
+<li><strong>hostname</strong> &#8211; Remote host</li>
+<li><strong>port</strong> &#8211; Remote port</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="gntp.notifier.GrowlNotifier.notify">
+<tt class="descname">notify</tt><big>(</big><em>noteType</em>, <em>title</em>, <em>description</em>, <em>icon=None</em>, <em>sticky=False</em>, <em>priority=None</em><big>)</big><a class="headerlink" href="#gntp.notifier.GrowlNotifier.notify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send a GNTP notifications</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Must have registered with growl beforehand or messages will be ignored</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>noteType</strong> &#8211; One of the notification names registered earlier</li>
+<li><strong>title</strong> &#8211; Notification title (usually displayed on the notification)</li>
+<li><strong>description</strong> &#8211; The main content of the notification</li>
+<li><strong>icon</strong> &#8211; Icon URL path</li>
+<li><strong>sticky</strong> (<em>boolean</em>) &#8211; Sticky notification</li>
+<li><strong>priority</strong> (<em>integer</em>) &#8211; Message priority level from -2 to 2</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="gntp.notifier.GrowlNotifier.register">
+<tt class="descname">register</tt><big>(</big><big>)</big><a class="headerlink" href="#gntp.notifier.GrowlNotifier.register" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send GNTP Registration</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Before sending notifications to Growl, you need to have 
+sent a registration message at least once</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="gntp.notifier.GrowlNotifier.subscribe">
+<tt class="descname">subscribe</tt><big>(</big><em>id</em>, <em>name</em>, <em>port</em><big>)</big><a class="headerlink" href="#gntp.notifier.GrowlNotifier.subscribe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send a Subscribe request to a remote machine</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="example-usage">
+<h2>Example Usage<a class="headerlink" href="#example-usage" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">gntp.notifier</span>
+<span class="n">growl</span> <span class="o">=</span> <span class="n">gntp</span><span class="o">.</span><span class="n">notifier</span><span class="o">.</span><span class="n">GrowlNotifier</span><span class="p">(</span>
+        <span class="n">applicationName</span> <span class="o">=</span> <span class="s">&quot;My Application Name&quot;</span><span class="p">,</span>
+        <span class="n">notifications</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;New Updates&quot;</span><span class="p">,</span><span class="s">&quot;New Messages&quot;</span><span class="p">],</span>
+        <span class="n">defaultNotifications</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;New Messages&quot;</span><span class="p">],</span>
+        <span class="n">hostname</span> <span class="o">=</span> <span class="s">&quot;computer.example.com&quot;</span><span class="p">,</span>
+        <span class="n">password</span> <span class="o">=</span> <span class="s">&quot;abc123&quot;</span>
+<span class="p">)</span>
+<span class="n">growl</span><span class="o">.</span><span class="n">register</span><span class="p">()</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="n">growl</span><span class="o">.</span><span class="n">notify</span><span class="p">(</span>
+        <span class="n">noteType</span> <span class="o">=</span> <span class="s">&quot;New Message&quot;</span><span class="p">,</span>
+        <span class="n">title</span> <span class="o">=</span> <span class="s">&quot;You have a new message&quot;</span><span class="p">,</span>
+        <span class="n">description</span> <span class="o">=</span> <span class="s">&quot;A longer message description&quot;</span><span class="p">,</span>
+        <span class="n">icon</span> <span class="o">=</span> <span class="s">&quot;http://example.com/icon.png&quot;</span><span class="p">,</span>
+        <span class="n">sticky</span> <span class="o">=</span> <span class="bp">False</span><span class="p">,</span>
+        <span class="n">priority</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="#">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Welcome to GNTP&#8217;s documentation!</a><ul>
+<li><a class="reference internal" href="#module-gntp.notifier">Sending GNTP Messages</a></li>
+<li><a class="reference internal" href="#example-usage">Example Usage</a></li>
+</ul>
+</li>
+</ul>
+
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/index.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
     </p>
-    <p>You can also clone the project with <a href="http://git-scm.com">Git</a>
-      by running:
-      <pre>$ git clone git://github.com/kfdm/gntp</pre>
-    </p>
-
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="#">GNTP v0.4 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
     <div class="footer">
-      get the source code on GitHub : <a href="http://github.com/kfdm/gntp">kfdm/gntp</a>
+        &copy; Copyright 2011, Paul Traylor.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
     </div>
-
-  </div>
-
-  
-</body>
+  </body>
 </html>
