@@ -6,25 +6,39 @@
 Welcome to GNTP's documentation!
 ================================
 
-Contents:
+Python bindings for the
+`Growl Notification Transport Protocol <http://www.growlforwindows.com/gfw/help/gntp.aspx>`_
+
+
 
 .. toctree::
    :maxdepth: 2
 
-Core GNTP Classes
------------------
-.. automodule:: gntp
-	:members:
+Sending GNTP Messages
+---------------------
 
-GNTP Notifier Helper
---------------------
 .. automodule:: gntp.notifier
 	:members:
 
-Indices and tables
-==================
+Example Usage
+-------------
+::
 
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
-
+	import gntp.notifier
+	growl = gntp.notifier.GrowlNotifier(
+		applicationName = "My Application Name",
+		notifications = ["New Updates","New Messages"],
+		defaultNotifications = ["New Messages"],
+		hostname = "computer.example.com",
+		password = "abc123"
+	)
+	growl.register()
+	
+	result = growl.notify(
+		noteType = "New Message",
+		title = "You have a new message",
+		description = "A longer message description",
+		icon = "http://example.com/icon.png",
+		sticky = False,
+		priority = 1,
+	)

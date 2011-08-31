@@ -1,7 +1,13 @@
 """
-A Python module that uses GNTP to post messages
-Mostly mirrors the Growl.py file that comes with Mac Growl
-http://code.google.com/p/growl/source/browse/Bindings/python/Growl.py
+The gntp.notifier module is provided as a simple way to send notifications
+using GNTP
+
+.. note::
+	This class is intended to mostly mirror the older Python bindings such
+	that you should be able to replace instances of the old bindings with
+	this class.
+	`Original Python bindings <http://code.google.com/p/growl/source/browse/Bindings/python/Growl.py>`_
+
 """
 import gntp
 import socket
@@ -10,6 +16,17 @@ import logging
 logger = logging.getLogger(__name__)
 
 class GrowlNotifier(object):
+	"""Helper class to simplfy sending Growl messages
+	
+	:param applicationName: Sending application name
+	:type applicationName: string
+	:param notification: List of valid notifications
+	:param defaultNotifications: List of notifications that should be enabled
+		by default
+	:param applicationIcon: Icon URL
+	:param hostname: Remote host
+	:param port: Remote port
+	"""
 	applicationName = 'Python GNTP'
 	notifications = []
 	defaultNotifications = []
@@ -61,9 +78,12 @@ class GrowlNotifier(object):
 		return data
 	
 	def register(self):
-		'''
-		Send GNTP Registration
-		'''
+		"""Send GNTP Registration
+		
+		.. warning::
+			Before sending notifications to Growl, you need to have 
+			sent a registration message at least once
+		"""
 		logger.info('Sending registration to %s:%s',self.hostname,self.port)
 		register = gntp.GNTPRegister()
 		register.add_header('Application-Name',self.applicationName)
@@ -74,15 +94,26 @@ class GrowlNotifier(object):
 			register.add_header('Application-Icon',self.applicationIcon)
 		if self.password:
 			register.set_password(self.password,self.passwordHash)
-		response = self.send('register',register.encode())
+		response = self._send('register',register.encode())
 		if isinstance(response,gntp.GNTPOK): return True
 		logger.error('Invalid response %s',response.error())
 		return response.error()
 	
 	def notify(self, noteType, title, description, icon=None, sticky=False, priority=None):
-		'''
-		Send a GNTP notifications
-		'''
+		"""Send a GNTP notifications
+		
+		.. warning::
+			Must have registered with growl beforehand or messages will be ignored
+		
+		:param noteType: One of the notification names registered earlier
+		:param title: Notification title (usually displayed on the notification)
+		:param description: The main content of the notification
+		:param icon: Icon URL path
+		:param sticky: Sticky notification
+		:param priority: Message priority level from -2 to 2
+		:type sticky: boolean
+		:type priority: integer
+		"""
 		logger.info('Sending notification [%s] to %s:%s',noteType,self.hostname,self.port)
 		assert noteType in self.notifications
 		notice = gntp.GNTPNotice()
@@ -99,25 +130,24 @@ class GrowlNotifier(object):
 			notice.add_header('Notification-Icon',self._checkIcon(icon))
 		if description:
 			notice.add_header('Notification-Text',description)
-		response = self.send('notify',notice.encode())
+		response = self._send('notify',notice.encode())
 		if isinstance(response,gntp.GNTPOK): return True
 		logger.error('Invalid response %s',response.error())
 		return response.error()
 	def subscribe(self,id,name,port):
+		"""Send a Subscribe request to a remote machine"""
 		sub = gntp.GNTPSubscribe()
 		sub.add_header('Subscriber-ID',id)
 		sub.add_header('Subscriber-Name',name)
 		sub.add_header('Subscriber-Port',port)
 		if self.password:
 			sub.set_password(self.password,self.passwordHash)
-		response = self.send('subscribe',sub.encode())
+		response = self._send('subscribe',sub.encode())
 		if isinstance(response,gntp.GNTPOK): return True
 		logger.error('Invalid response %s',response.error())
 		return response.error()
-	def send(self,type,data):
-		'''
-		Send the GNTP Packet
-		'''
+	def _send(self,type,data):
+		"""Send the GNTP Packet"""
 		logger.debug('To : %s:%s <%s>\n%s',self.hostname,self.port,type,data)
 		
 		s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
