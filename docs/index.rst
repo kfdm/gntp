@@ -1,21 +1,19 @@
-.. GNTP documentation master file, created by
-   sphinx-quickstart on Tue Aug 30 22:54:03 2011.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+.. toctree::
+	:maxdepth: 2
+	:hidden:
+	
+	core
 
-Welcome to GNTP's documentation!
-================================
+GNTP Basics
+===========
 
 Python bindings for the
 `Growl Notification Transport Protocol <http://www.growlforwindows.com/gfw/help/gntp.aspx>`_
 
+Bugs can be reported at the `GitHub issue tracker <https://github.com/kfdm/gntp/issues>`_
 
-
-.. toctree::
-   :maxdepth: 2
-
-Sending GNTP Messages
----------------------
+Sending a message
+-----------------
 
 .. automodule:: gntp.notifier
 	:members:

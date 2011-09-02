@@ -42,7 +42,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'GNTP'
+project = u'Growl Notification Transport Protocol Python Bindings'
 copyright = u'2011, Paul Traylor'
 
 # The version info for the project you're documenting, acts as replacement for
