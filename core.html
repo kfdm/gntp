@@ -1,0 +1,331 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Core GNTP Classes &mdash; Growl Notification Transport Protocol Python Bindings v0.4 documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.4',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Growl Notification Transport Protocol Python Bindings v0.4 documentation" href="index.html" />
+    <link rel="prev" title="Basics" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Basics"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Growl Notification Transport Protocol Python Bindings v0.4 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="core-gntp-classes">
+<h1>Core GNTP Classes<a class="headerlink" href="#core-gntp-classes" title="Permalink to this headline">¶</a></h1>
+<p>Lower level classes for those who want more control in sending messages</p>
+<div class="section" id="exceptions">
+<h2>Exceptions<a class="headerlink" href="#exceptions" title="Permalink to this headline">¶</a></h2>
+<dl class="exception">
+<dt id="gntp.AuthError">
+<em class="property">exception </em><tt class="descclassname">gntp.</tt><tt class="descname">AuthError</tt><a class="headerlink" href="#gntp.AuthError" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="exception">
+<dt id="gntp.ParseError">
+<em class="property">exception </em><tt class="descclassname">gntp.</tt><tt class="descname">ParseError</tt><a class="headerlink" href="#gntp.ParseError" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="exception">
+<dt id="gntp.UnsupportedError">
+<em class="property">exception </em><tt class="descclassname">gntp.</tt><tt class="descname">UnsupportedError</tt><a class="headerlink" href="#gntp.UnsupportedError" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="gntp-messages">
+<h2>GNTP Messages<a class="headerlink" href="#gntp-messages" title="Permalink to this headline">¶</a></h2>
+<p>Classes representing each of the GNTP message types</p>
+<dl class="class">
+<dt id="gntp.GNTPRegister">
+<em class="property">class </em><tt class="descclassname">gntp.</tt><tt class="descname">GNTPRegister</tt><big>(</big><em>data=None</em>, <em>password=None</em><big>)</big><a class="headerlink" href="#gntp.GNTPRegister" title="Permalink to this definition">¶</a></dt>
+<dd><p>Represents a GNTP Registration Command</p>
+<dl class="method">
+<dt id="gntp.GNTPRegister.add_notification">
+<tt class="descname">add_notification</tt><big>(</big><em>name</em>, <em>enabled=True</em><big>)</big><a class="headerlink" href="#gntp.GNTPRegister.add_notification" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add new Notification to Registration message
+&#64;param name: Notification Name
+&#64;param enabled: Default Notification to Enabled</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gntp.GNTPRegister.decode">
+<tt class="descname">decode</tt><big>(</big><em>data</em>, <em>password</em><big>)</big><a class="headerlink" href="#gntp.GNTPRegister.decode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decode existing GNTP Registration message
+&#64;param data: Message to decode.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gntp.GNTPRegister.encode">
+<tt class="descname">encode</tt><big>(</big><big>)</big><a class="headerlink" href="#gntp.GNTPRegister.encode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Encode a GNTP Registration Message
+&#64;return: GNTP Registration Message ready to be sent</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gntp.GNTPRegister.set_password">
+<tt class="descname">set_password</tt><big>(</big><em>password</em>, <em>encryptAlgo='MD5'</em><big>)</big><a class="headerlink" href="#gntp.GNTPRegister.set_password" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set a password for a GNTP Message
+&#64;param password:  Null to clear password
+&#64;param encryptAlgo: Supports MD5,SHA1,SHA256,SHA512
+&#64;todo: Support other hash functions</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gntp.GNTPRegister.validate">
+<tt class="descname">validate</tt><big>(</big><big>)</big><a class="headerlink" href="#gntp.GNTPRegister.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate required headers and validate notification headers</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="gntp.GNTPNotice">
+<em class="property">class </em><tt class="descclassname">gntp.</tt><tt class="descname">GNTPNotice</tt><big>(</big><em>data=None</em>, <em>app=None</em>, <em>name=None</em>, <em>title=None</em>, <em>password=None</em><big>)</big><a class="headerlink" href="#gntp.GNTPNotice" title="Permalink to this definition">¶</a></dt>
+<dd><p>Represents a GNTP Notification Command</p>
+<dl class="method">
+<dt id="gntp.GNTPNotice.decode">
+<tt class="descname">decode</tt><big>(</big><em>data</em>, <em>password</em><big>)</big><a class="headerlink" href="#gntp.GNTPNotice.decode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decode existing GNTP Notification message
+&#64;param data: Message to decode.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gntp.GNTPNotice.encode">
+<tt class="descname">encode</tt><big>(</big><big>)</big><a class="headerlink" href="#gntp.GNTPNotice.encode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Encode a GNTP Notification Message
+&#64;return: GNTP Notification Message ready to be sent</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gntp.GNTPNotice.set_password">
+<tt class="descname">set_password</tt><big>(</big><em>password</em>, <em>encryptAlgo='MD5'</em><big>)</big><a class="headerlink" href="#gntp.GNTPNotice.set_password" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set a password for a GNTP Message
+&#64;param password:  Null to clear password
+&#64;param encryptAlgo: Supports MD5,SHA1,SHA256,SHA512
+&#64;todo: Support other hash functions</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gntp.GNTPNotice.validate">
+<tt class="descname">validate</tt><big>(</big><big>)</big><a class="headerlink" href="#gntp.GNTPNotice.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Verify required headers</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="gntp.GNTPSubscribe">
+<em class="property">class </em><tt class="descclassname">gntp.</tt><tt class="descname">GNTPSubscribe</tt><big>(</big><em>data=None</em>, <em>password=None</em><big>)</big><a class="headerlink" href="#gntp.GNTPSubscribe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Represents a GNTP Subscribe Command</p>
+<dl class="method">
+<dt id="gntp.GNTPSubscribe.decode">
+<tt class="descname">decode</tt><big>(</big><em>data</em>, <em>password=None</em><big>)</big><a class="headerlink" href="#gntp.GNTPSubscribe.decode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decode GNTP Message
+&#64;param data:</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gntp.GNTPSubscribe.encode">
+<tt class="descname">encode</tt><big>(</big><big>)</big><a class="headerlink" href="#gntp.GNTPSubscribe.encode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Encode a GNTP Message
+&#64;return: GNTP Message ready to be sent</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gntp.GNTPSubscribe.set_password">
+<tt class="descname">set_password</tt><big>(</big><em>password</em>, <em>encryptAlgo='MD5'</em><big>)</big><a class="headerlink" href="#gntp.GNTPSubscribe.set_password" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set a password for a GNTP Message
+&#64;param password:  Null to clear password
+&#64;param encryptAlgo: Supports MD5,SHA1,SHA256,SHA512
+&#64;todo: Support other hash functions</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gntp.GNTPSubscribe.validate">
+<tt class="descname">validate</tt><big>(</big><big>)</big><a class="headerlink" href="#gntp.GNTPSubscribe.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Verify required headers</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="gntp.GNTPOK">
+<em class="property">class </em><tt class="descclassname">gntp.</tt><tt class="descname">GNTPOK</tt><big>(</big><em>data=None</em>, <em>action=None</em><big>)</big><a class="headerlink" href="#gntp.GNTPOK" title="Permalink to this definition">¶</a></dt>
+<dd><p>Represents a GNTP OK Response</p>
+<dl class="method">
+<dt id="gntp.GNTPOK.decode">
+<tt class="descname">decode</tt><big>(</big><em>data</em>, <em>password=None</em><big>)</big><a class="headerlink" href="#gntp.GNTPOK.decode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decode GNTP Message
+&#64;param data:</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gntp.GNTPOK.encode">
+<tt class="descname">encode</tt><big>(</big><big>)</big><a class="headerlink" href="#gntp.GNTPOK.encode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Encode a GNTP Message
+&#64;return: GNTP Message ready to be sent</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gntp.GNTPOK.set_password">
+<tt class="descname">set_password</tt><big>(</big><em>password</em>, <em>encryptAlgo='MD5'</em><big>)</big><a class="headerlink" href="#gntp.GNTPOK.set_password" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set a password for a GNTP Message
+&#64;param password:  Null to clear password
+&#64;param encryptAlgo: Supports MD5,SHA1,SHA256,SHA512
+&#64;todo: Support other hash functions</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gntp.GNTPOK.validate">
+<tt class="descname">validate</tt><big>(</big><big>)</big><a class="headerlink" href="#gntp.GNTPOK.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Verify required headers</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="gntp.GNTPError">
+<em class="property">class </em><tt class="descclassname">gntp.</tt><tt class="descname">GNTPError</tt><big>(</big><em>data=None</em>, <em>errorcode=None</em>, <em>errordesc=None</em><big>)</big><a class="headerlink" href="#gntp.GNTPError" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="gntp.GNTPError.decode">
+<tt class="descname">decode</tt><big>(</big><em>data</em>, <em>password=None</em><big>)</big><a class="headerlink" href="#gntp.GNTPError.decode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decode GNTP Message
+&#64;param data:</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gntp.GNTPError.encode">
+<tt class="descname">encode</tt><big>(</big><big>)</big><a class="headerlink" href="#gntp.GNTPError.encode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Encode a GNTP Message
+&#64;return: GNTP Message ready to be sent</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gntp.GNTPError.set_password">
+<tt class="descname">set_password</tt><big>(</big><em>password</em>, <em>encryptAlgo='MD5'</em><big>)</big><a class="headerlink" href="#gntp.GNTPError.set_password" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set a password for a GNTP Message
+&#64;param password:  Null to clear password
+&#64;param encryptAlgo: Supports MD5,SHA1,SHA256,SHA512
+&#64;todo: Support other hash functions</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gntp.GNTPError.validate">
+<tt class="descname">validate</tt><big>(</big><big>)</big><a class="headerlink" href="#gntp.GNTPError.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Verify required headers</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="helper-functions">
+<h2>Helper Functions<a class="headerlink" href="#helper-functions" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="gntp.parse_gntp">
+<tt class="descclassname">gntp.</tt><tt class="descname">parse_gntp</tt><big>(</big><em>data</em>, <em>password=None</em><big>)</big><a class="headerlink" href="#gntp.parse_gntp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Attempt to parse a message as a GNTP message
+&#64;param data: Message to be parsed
+&#64;param password: Optional password to be used to verify the message</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Core GNTP Classes</a><ul>
+<li><a class="reference internal" href="#exceptions">Exceptions</a></li>
+<li><a class="reference internal" href="#gntp-messages">GNTP Messages</a></li>
+<li><a class="reference internal" href="#helper-functions">Helper Functions</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Basics</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/core.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Basics"
+             >previous</a> |</li>
+        <li><a href="index.html">Growl Notification Transport Protocol Python Bindings v0.4 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011, Paul Traylor.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>
