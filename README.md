@@ -1,18 +1,36 @@
-Python library for working with Growl Notification Transport Protocol (GNTP)
-============================================================================
+# GNTP
 
-gntp/__init__.py
-----------------
-This contains the core of the GNTP code.  It can be imported using
+This is a Python library for working with the [Growl Notification Transport Protocol](http://www.growlforwindows.com/gfw/help/gntp.aspx)
 
-    import gntp
+It should work as a dropin replacement for the older Python bindings
 
-gntp/notifier.py
-----------------
-This class uses a similar interface to the official python bindings that come
-with the [Growl SDK](http://code.google.com/p/growl/source/browse/Bindings/python/Growl.py)
+## Simple Usage
 
-client.py
----------
-Test client that shows the basic options.  Attempts to mimic some of the
-[growlnotify](http://growl.info/extras.php#growlnotify) flags
+```python
+import gntp.notifier
+growl = gntp.notifier.GrowlNotifier(
+	applicationName = "My Application Name",
+	notifications = ["New Updates","New Message"],
+	defaultNotifications = ["New Messages"],
+	hostname = "computer.example.com",
+	password = "abc123"
+)
+growl.register()
+
+growl.notify(
+	noteType = "New Message",
+	title = "You have a new message",
+	description = "A longer message description",
+	icon = "http://example.com/icon.png",
+	sticky = False,
+	priority = 1,
+)
+```
+
+## Installation
+
+	$ pip install gntp
+
+## Bugs
+
+[GitHub issue tracker](https://github.com/kfdm/gntp/issues)
