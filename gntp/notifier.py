@@ -18,14 +18,13 @@ logger = logging.getLogger(__name__)
 class GrowlNotifier(object):
 	"""Helper class to simplfy sending Growl messages
 	
-	:param applicationName: Sending application name
-	:type applicationName: string
-	:param notification: List of valid notifications
-	:param defaultNotifications: List of notifications that should be enabled
+	:param string applicationName: Sending application name
+	:param list notification: List of valid notifications
+	:param list defaultNotifications: List of notifications that should be enabled
 		by default
-	:param applicationIcon: Icon URL
-	:param hostname: Remote host
-	:param port: Remote port
+	:param string applicationIcon: Icon URL
+	:param string hostname: Remote host
+	:param integer port: Remote port
 	"""
 	applicationName = 'Python GNTP'
 	notifications = []
@@ -105,14 +104,12 @@ class GrowlNotifier(object):
 		.. warning::
 			Must have registered with growl beforehand or messages will be ignored
 		
-		:param noteType: One of the notification names registered earlier
-		:param title: Notification title (usually displayed on the notification)
-		:param description: The main content of the notification
-		:param icon: Icon URL path
-		:param sticky: Sticky notification
-		:param priority: Message priority level from -2 to 2
-		:type sticky: boolean
-		:type priority: integer
+		:param string noteType: One of the notification names registered earlier
+		:param string title: Notification title (usually displayed on the notification)
+		:param string description: The main content of the notification
+		:param string icon: Icon URL path
+		:param boolean sticky: Sticky notification
+		:param integer priority: Message priority level from -2 to 2
 		"""
 		logger.info('Sending notification [%s] to %s:%s',noteType,self.hostname,self.port)
 		assert noteType in self.notifications
