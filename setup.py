@@ -1,13 +1,18 @@
 #!/usr/bin/env python
 
-from gntp import __version__ as gntpversion
-from distutils.core import setup
+try:
+	from setuptools import setup
+except ImportError:
+	from distutils.core import setup
+
+import gntp
+
 setup(
 	name='gntp',
 	description='Growl Notification Transport Protocol for Python',
 	author='Paul Traylor',
 	url='http://github.com/kfdm/gntp/',
-	version=gntpversion,
+	version=gntp.__version__,
 	packages=['gntp'],
 	# http://pypi.python.org/pypi?%3Aaction=list_classifiers
 	classifiers = [
