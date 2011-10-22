@@ -27,47 +27,24 @@ class GrowlNotifier(object):
 	:param string hostname: Remote host
 	:param integer port: Remote port
 	"""
-	applicationName = 'Python GNTP'
-	notifications = []
-	defaultNotifications = []
-	applicationIcon = None
+
 	passwordHash = 'MD5'
 
-	#GNTP Specific
-	password = None
-	hostname = 'localhost'
-	port = 23053
+	def __init__(self, applicationName='Python GNTP', notifications=[],
+			defaultNotifications=None, applicationIcon=None, hostname='localhost',
+			password=None, port=23053):
 
-	def __init__(self, applicationName=None, notifications=None, defaultNotifications=None, applicationIcon=None, hostname=None, password=None, port=None):
-		if applicationName:
-			self.applicationName = applicationName
-		assert self.applicationName, 'An application name is required.'
-
-		if notifications:
-			self.notifications = list(notifications)
-		assert self.notifications, 'A sequence of one or more notification names is required.'
-
-		if defaultNotifications is not None:
+		self.applicationName = applicationName
+		self.notifications = list(notifications)
+		if defaultNotifications:
 			self.defaultNotifications = list(defaultNotifications)
-		elif not self.defaultNotifications:
-			self.defaultNotifications = list(self.notifications)
+		else:
+			self.defaultNotifications = self.notifications
+		self.applicationIcon = applicationIcon
 
-		if applicationIcon is not None:
-			self.applicationIcon = self._checkIcon(applicationIcon)
-		elif self.applicationIcon is not None:
-			self.applicationIcon = self._checkIcon(self.applicationIcon)
-
-		#GNTP Specific
-		if password:
-			self.password = password
-
-		if hostname:
-			self.hostname = hostname
-		assert self.hostname, 'Requires valid hostname'
-
-		if port:
-			self.port = int(port)
-		assert isinstance(self.port, int), 'Requires valid port'
+		self.password = password
+		self.hostname = hostname
+		self.port = int(port)
 
 	def _checkIcon(self, data):
 		'''
