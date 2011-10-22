@@ -23,15 +23,23 @@ class UnsupportedError(BaseError):
 		error = GNTPError(errorcode=500,errordesc='Currently unsupported by gntp.py')
 		return error.encode()
 
+
 class _GNTPBase(object):
-	info = {
-		'version':'1.0',
-		'messagetype':None,
-		'encryptionAlgorithmID':None
-	}
-	_requiredHeaders = []
-	headers = {}
-	resources = {}
+	def __init__(self, messagetype=None, version='1.0', encryption=None):
+		'''Base initilization
+
+		:param string messagetype: GNTP Message type
+		:param string version: GNTP Protocol version
+		:param string encription: Encryption protocol
+		'''
+		self.info = {
+			'version': version,
+			'messagetype': messagetype,
+			'encryptionAlgorithmID': encryption
+		}
+		self.headers = {}
+		self.resources = {}
+
 	def add_origin_info(self):
 		self.add_header('Origin-Machine-Name',platform.node())
 		self.add_header('Origin-Software-Name','gntp.py')
@@ -219,7 +227,6 @@ class _GNTPBase(object):
 		return message
 class GNTPRegister(_GNTPBase):
 	"""Represents a GNTP Registration Command"""
-	notifications = []
 	_requiredHeaders = [
 		'Application-Name',
 		'Notifications-Count'
@@ -230,7 +237,8 @@ class GNTPRegister(_GNTPBase):
 		@param data: (Optional) See decode()
 		@param password: (Optional) Password to use while encoding/decoding messages
 		'''
-		self.info['messagetype'] = 'REGISTER'
+		_GNTPBase.__init__(self, 'REGISTER')
+		self.notifications = []
 		
 		if data:
 			self.decode(data,password)
@@ -323,7 +331,7 @@ class GNTPNotice(_GNTPBase):
 		@param title: (Optional) Set Notification Title
 		@param password: (Optional) Password to use while encoding/decoding messages
 		'''
-		self.info['messagetype'] = 'NOTIFY'
+		_GNTPBase.__init__(self, 'NOTIFY')
 		
 		if data:
 			self.decode(data,password)
@@ -393,7 +401,7 @@ class GNTPOK(_GNTPBase):
 		@param data: (Optional) See _GNTPResponse.decode()
 		@param action: (Optional) Set type of action the OK Response is for
 		'''
-		self.info['messagetype'] = '-OK'
+		_GNTPBase.__init__(self, '-OK')
 		if data:
 			self.decode(data)
 		if action:
@@ -408,7 +416,7 @@ class GNTPError(_GNTPBase):
 		@param errorcode: (Optional) Error code
 		@param errordesc: (Optional) Error Description
 		'''
-		self.info['messagetype'] = '-ERROR'
+		_GNTPBase.__init__(self, '-ERROR')
 		if data:
 			self.decode(data)
 		if errorcode:
