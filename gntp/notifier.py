@@ -71,11 +71,8 @@ class GrowlNotifier(object):
 			register.add_header('Application-Icon', self.applicationIcon)
 		if self.password:
 			register.set_password(self.password, self.passwordHash)
-		response = self._send('register', register.encode())
-		if isinstance(response, gntp.GNTPOK):
-			return True
-		logger.error('Invalid response %s', response.error())
-		return response.error()
+		return self._send('register', register.encode())
+
 
 	def notify(self, noteType, title, description, icon=None, sticky=False, priority=None):
 		"""Send a GNTP notifications
@@ -106,11 +103,7 @@ class GrowlNotifier(object):
 			notice.add_header('Notification-Icon', self._checkIcon(icon))
 		if description:
 			notice.add_header('Notification-Text', description)
-		response = self._send('notify', notice.encode())
-		if isinstance(response, gntp.GNTPOK):
-			return True
-		logger.error('Invalid response %s', response.error())
-		return response.error()
+		return self._send('notify', notice.encode())
 
 	def subscribe(self, id, name, port):
 		"""Send a Subscribe request to a remote machine"""
@@ -120,11 +113,7 @@ class GrowlNotifier(object):
 		sub.add_header('Subscriber-Port', port)
 		if self.password:
 			sub.set_password(self.password, self.passwordHash)
-		response = self._send('subscribe', sub.encode())
-		if isinstance(response, gntp.GNTPOK):
-			return True
-		logger.error('Invalid response %s', response.error())
-		return response.error()
+		return self._send('subscribe', sub.encode())
 
 	def _send(self, type, data):
 		"""Send the GNTP Packet"""
@@ -137,4 +126,8 @@ class GrowlNotifier(object):
 		s.close()
 
 		logger.debug('From : %s:%s <%s>\n%s', self.hostname, self.port, response.__class__, response)
-		return response
+
+		if response.info['messagetype'] == '-OK':
+			return True
+		logger.error('Invalid response: %s', response.error())
+		return response.error()
