@@ -5,23 +5,19 @@ import unittest
 import os
 import logging
 logging.basicConfig(level=logging.WARNING)
-import gntp.notifier
+from gntp.notifier import GrowlNotifier
 
-class Growler(gntp.notifier.GrowlNotifier):
-	applicationName = 'GNTP unittest'
-	hostname = 'localhost'
-	port = 23053
-	notifications=['Testing']
 
 class TestHash(unittest.TestCase):
 	def setUp(self):
-		self.growl = Growler()
+		self.growl = GrowlNotifier('GNTP unittest', ['Testing'])
 		self.growl.register()
 		self.dir = os.path.dirname(__file__)
-		self.file = os.path.join(self.dir,'test_lines.txt')
+		self.file = os.path.join(self.dir, 'test_lines.txt')
+
 	def test_lines(self):
 		for line in open(self.file):
-			self.growl.notify('Testing','Line',line)
+			self.growl.notify('Testing', 'Line', line)
 
 if __name__ == '__main__':
 	unittest.main()
