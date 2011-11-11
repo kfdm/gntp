@@ -15,6 +15,35 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+def mini(description, applicationName='PythonMini', noteType="Message",
+			title="Mini Message", appliationIcon=None, hostname='localhost',
+			password=None, port=23053, sticky=False, priority=None):
+	"""Single notification function
+
+	Simple notification function in one line. Has only one required parameter
+	and attempts to use reasonable defaults for everything else
+	:param string description: Notification message
+	"""
+	growl = GrowlNotifier(
+		applicationName=applicationName,
+		notifications=[noteType],
+		defaultNotifications=[noteType],
+		hostname=hostname,
+		password=password,
+		port=port,
+	)
+	result = growl.register()
+	if result is not True:
+		return result
+
+	return growl.notify(
+		noteType=noteType,
+		title=title,
+		description=description,
+		icon=appliationIcon,
+		sticky=sticky,
+		priority=priority,
+	)
 
 class GrowlNotifier(object):
 	"""Helper class to simplfy sending Growl messages
@@ -131,3 +160,7 @@ class GrowlNotifier(object):
 			return True
 		logger.error('Invalid response: %s', response.error())
 		return response.error()
+
+if __name__ == '__main__':
+	mini('Testing mini notification')
+
