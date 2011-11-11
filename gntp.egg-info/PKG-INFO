@@ -1,0 +1,16 @@
+Metadata-Version: 1.0
+Name: gntp
+Version: 0.5
+Summary: Growl Notification Transport Protocol for Python
+Home-page: http://github.com/kfdm/gntp/
+Author: Paul Traylor
+Author-email: UNKNOWN
+License: UNKNOWN
+Description: UNKNOWN
+Platform: UNKNOWN
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: Developers
+Classifier: Natural Language :: English
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python
+Classifier: Operating System :: OS Independent
