@@ -188,7 +188,10 @@ class GrowlNotifier(object):
 		s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		s.connect((self.hostname, self.port))
 		s.send(data.encode('utf8', 'replace'))
-		response = gntp.parse_gntp(s.recv(1024))
+		recv_data = s.recv(1024)
+		while not recv_data.endswith("\r\n\r\n"):
+			recv_data += s.recv(1024)
+		response = gntp.parse_gntp(recv_data)
 		s.close()
 
 		logger.debug('From : %s:%s <%s>\n%s', self.hostname, self.port, response.__class__, response)
