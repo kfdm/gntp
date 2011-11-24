@@ -16,7 +16,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 def mini(description, applicationName='PythonMini', noteType="Message",
-			title="Mini Message", appliationIcon=None, hostname='localhost',
+			title="Mini Message", applicationIcon=None, hostname='localhost',
 			password=None, port=23053, sticky=False, priority=None):
 	"""Single notification function
 
@@ -40,7 +40,7 @@ def mini(description, applicationName='PythonMini', noteType="Message",
 		noteType=noteType,
 		title=title,
 		description=description,
-		icon=appliationIcon,
+		icon=applicationIcon,
 		sticky=sticky,
 		priority=priority,
 	)
