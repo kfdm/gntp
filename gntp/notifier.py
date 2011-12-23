@@ -13,6 +13,11 @@ import gntp
 import socket
 import logging
 
+__all__ = [
+	'mini',
+	'GrowlNotifier',
+]
+
 logger = logging.getLogger(__name__)
 
 def mini(description, applicationName='PythonMini', noteType="Message",
