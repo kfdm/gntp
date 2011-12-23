@@ -42,7 +42,9 @@ growl.notify(
 	priority = 1,
 )
 
-# Send a different message
+# Try to send a different type of message
+# This one may fail since it is not in our list
+# of defaultNotifications
 growl.notify(
 	noteType = "New Updates",
 	title = "There is a new update to download",
