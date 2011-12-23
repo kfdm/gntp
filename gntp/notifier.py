@@ -20,6 +20,7 @@ __all__ = [
 
 logger = logging.getLogger(__name__)
 
+
 def mini(description, applicationName='PythonMini', noteType="Message",
 			title="Mini Message", applicationIcon=None, hostname='localhost',
 			password=None, port=23053, sticky=False, priority=None):
@@ -49,6 +50,7 @@ def mini(description, applicationName='PythonMini', noteType="Message",
 		sticky=sticky,
 		priority=priority,
 	)
+
 
 class GrowlNotifier(object):
 	"""Helper class to simplfy sending Growl messages
@@ -106,7 +108,6 @@ class GrowlNotifier(object):
 		if self.password:
 			register.set_password(self.password, self.passwordHash)
 		return self._send('register', register.encode())
-
 
 	def notify(self, noteType, title, description, icon=None, sticky=False, priority=None):
 		"""Send a GNTP notifications
@@ -168,4 +169,3 @@ class GrowlNotifier(object):
 
 if __name__ == '__main__':
 	mini('Testing mini notification')
-
