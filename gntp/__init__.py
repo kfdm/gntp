@@ -19,6 +19,8 @@ GNTP_INFO_LINE_SHORT = re.compile(
 
 GNTP_HEADER = re.compile('([\w-]+):(.+)')
 
+GNTP_EOL = u'\r\n'
+
 
 class BaseError(Exception):
 	pass
@@ -238,14 +240,13 @@ class _GNTPBase(object):
 		@return: GNTP Message ready to be sent
 		'''
 		self.validate()
-		EOL = u'\r\n'
 
-		message = self._format_info() + EOL
+		message = self._format_info() + GNTP_EOL
 		#Headers
 		for k, v in self.headers.iteritems():
-			message += u'%s: %s%s' % (k, v, EOL)
+			message += u'%s: %s%s' % (k, v, GNTP_EOL)
 
-		message += EOL
+		message += GNTP_EOL
 		return message
 
 
@@ -325,21 +326,20 @@ class GNTPRegister(_GNTPBase):
 		@return: GNTP Registration Message ready to be sent
 		'''
 		self.validate()
-		EOL = u'\r\n'
 
-		message = self._format_info() + EOL
+		message = self._format_info() + GNTP_EOL
 		#Headers
 		for k, v in self.headers.iteritems():
-			message += u'%s: %s%s' % (k, v, EOL)
+			message += u'%s: %s%s' % (k, v, GNTP_EOL)
 
 		#Notifications
 		if len(self.notifications) > 0:
 			for notice in self.notifications:
-				message += EOL
+				message += GNTP_EOL
 				for k, v in notice.iteritems():
-					message += u'%s: %s%s' % (k, v, EOL)
+					message += u'%s: %s%s' % (k, v, GNTP_EOL)
 
-		message += EOL
+		message += GNTP_EOL
 		return message
 
 
@@ -400,14 +400,13 @@ class GNTPNotice(_GNTPBase):
 		@return: GNTP Notification Message ready to be sent
 		'''
 		self.validate()
-		EOL = u'\r\n'
 
-		message = self._format_info() + EOL
+		message = self._format_info() + GNTP_EOL
 		#Headers
 		for k, v in self.headers.iteritems():
-			message += u'%s: %s%s' % (k, v, EOL)
+			message += u'%s: %s%s' % (k, v, GNTP_EOL)
 
-		message += EOL
+		message += GNTP_EOL
 		return message
 
 
