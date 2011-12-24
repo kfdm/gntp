@@ -159,7 +159,7 @@ class GrowlNotifier(object):
 		self.add_origin_info(sub)
 		self.subscribe_hook(sub)
 
-		return self._send('subscribe', sub.encode())
+		return self._send('subscribe', sub)
 
 	def add_origin_info(self, packet):
 		"""Add optional Origin headers to message"""

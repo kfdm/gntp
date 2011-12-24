@@ -410,13 +410,13 @@ class GNTPNotice(_GNTPBase):
 
 
 class GNTPSubscribe(_GNTPBase):
+	_requiredHeaders = [
+		'Subscriber-ID',
+		'Subscriber-Name',
+	]
 	"""Represents a GNTP Subscribe Command"""
 	def __init__(self, data=None, password=None):
-		self.info['messagetype'] = 'SUBSCRIBE'
-		self._requiredHeaders = [
-			'Subscriber-ID',
-			'Subscriber-Name',
-		]
+		_GNTPBase.__init__(self, 'SUBSCRIBE')
 		if data:
 			self.decode(data, password)
 		else:
