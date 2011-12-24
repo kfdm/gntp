@@ -1,7 +1,6 @@
 import re
 import hashlib
 import time
-import platform
 
 __version__ = '0.5'
 
@@ -40,12 +39,6 @@ class _GNTPBase(object):
 		self.headers = {}
 		self.resources = {}
 
-	def add_origin_info(self):
-		self.add_header('Origin-Machine-Name',platform.node())
-		self.add_header('Origin-Software-Name','gntp.py')
-		self.add_header('Origin-Software-Version',__version__)
-		self.add_header('Origin-Platform-Name',platform.system())
-		self.add_header('Origin-Platform-Version',platform.platform())
 	def __str__(self):
 		return self.encode()
 	def _parse_info(self,data):
@@ -246,7 +239,6 @@ class GNTPRegister(_GNTPBase):
 			self.set_password(password)
 			self.add_header('Application-Name', 'pygntp')
 			self.add_header('Notifications-Count', 0)
-			self.add_origin_info()
 	def validate(self):
 		'''
 		Validate required headers and validate notification headers
@@ -343,7 +335,6 @@ class GNTPNotice(_GNTPBase):
 				self.add_header('Notification-Name', name)
 			if title:
 				self.add_header('Notification-Title', title)
-			self.add_origin_info()
 	def decode(self,data,password):
 		'''
 		Decode existing GNTP Notification message
@@ -391,7 +382,6 @@ class GNTPSubscribe(_GNTPBase):
 			self.decode(data,password)
 		else:
 			self.set_password(password)
-			self.add_origin_info()
 
 class GNTPOK(_GNTPBase):
 	"""Represents a GNTP OK Response"""
@@ -406,7 +396,6 @@ class GNTPOK(_GNTPBase):
 			self.decode(data)
 		if action:
 			self.add_header('Response-Action', action)
-			self.add_origin_info()
 
 class GNTPError(_GNTPBase):
 	_requiredHeaders = ['Error-Code','Error-Description']
@@ -422,7 +411,6 @@ class GNTPError(_GNTPBase):
 		if errorcode:
 			self.add_header('Error-Code', errorcode)
 			self.add_header('Error-Description', errordesc)
-			self.add_origin_info()
 	def error(self):
 		return self.headers['Error-Code'],self.headers['Error-Description']
 

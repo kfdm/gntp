@@ -12,6 +12,7 @@ using GNTP
 import gntp
 import socket
 import logging
+import platform
 
 __all__ = [
 	'mini',
@@ -107,7 +108,9 @@ class GrowlNotifier(object):
 			register.add_header('Application-Icon', self.applicationIcon)
 		if self.password:
 			register.set_password(self.password, self.passwordHash)
-		return self._send('register', register.encode())
+		self.add_origin_info(register)
+		self.register_hook(register)
+		return self._send('register', register)
 
 	def notify(self, noteType, title, description, icon=None, sticky=False, priority=None):
 		"""Send a GNTP notifications
@@ -138,7 +141,11 @@ class GrowlNotifier(object):
 			notice.add_header('Notification-Icon', self._checkIcon(icon))
 		if description:
 			notice.add_header('Notification-Text', description)
-		return self._send('notify', notice.encode())
+
+		self.add_origin_info(notice)
+		self.notify_hook(notice)
+
+		return self._send('notify', notice)
 
 	def subscribe(self, id, name, port):
 		"""Send a Subscribe request to a remote machine"""
@@ -148,11 +155,35 @@ class GrowlNotifier(object):
 		sub.add_header('Subscriber-Port', port)
 		if self.password:
 			sub.set_password(self.password, self.passwordHash)
+
+		self.add_origin_info(sub)
+		self.subscribe_hook(sub)
+
 		return self._send('subscribe', sub.encode())
 
-	def _send(self, type, data):
+	def add_origin_info(self, packet):
+		"""Add optional Origin headers to message"""
+		packet.add_header('Origin-Machine-Name', platform.node())
+		packet.add_header('Origin-Software-Name', 'gntp.py')
+		packet.add_header('Origin-Software-Version', gntp.__version__)
+		packet.add_header('Origin-Platform-Name', platform.system())
+		packet.add_header('Origin-Platform-Version', platform.platform())
+
+	def register_hook(self, packet):
+		pass
+
+	def notify_hook(self, packet):
+		pass
+
+	def subscribe_hook(self, packet):
+		pass
+
+	def _send(self, type, packet):
 		"""Send the GNTP Packet"""
-		logger.debug('To : %s:%s <%s>\n%s', self.hostname, self.port, type, data)
+
+		data = packet.encode()
+
+		logger.debug('To : %s:%s <%s>\n%s', self.hostname, self.port, packet.__class__, data)
 
 		s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		s.connect((self.hostname, self.port))
