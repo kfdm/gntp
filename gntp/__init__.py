@@ -4,6 +4,21 @@ import time
 
 __version__ = '0.5'
 
+#GNTP/<version> <messagetype> <encryptionAlgorithmID>[:<ivValue>][ <keyHashAlgorithmID>:<keyHash>.<salt>]
+GNTP_INFO_LINE = re.compile(
+	'GNTP/(?P<version>\d+\.\d+) (?P<messagetype>REGISTER|NOTIFY|SUBSCRIBE|\-OK|\-ERROR)' +
+	' (?P<encryptionAlgorithmID>[A-Z0-9]+(:(?P<ivValue>[A-F0-9]+))?) ?' +
+	'((?P<keyHashAlgorithmID>[A-Z0-9]+):(?P<keyHash>[A-F0-9]+).(?P<salt>[A-F0-9]+))?\r\n',
+	re.IGNORECASE
+)
+
+GNTP_INFO_LINE_SHORT = re.compile(
+	'GNTP/(?P<version>\d+\.\d+) (?P<messagetype>REGISTER|NOTIFY|SUBSCRIBE|\-OK|\-ERROR)',
+	re.IGNORECASE
+)
+
+GNTP_HEADER = re.compile('([\w-]+):(.+)')
+
 
 class BaseError(Exception):
 	pass
@@ -52,10 +67,8 @@ class _GNTPBase(object):
 		@param data: GNTP Message
 		@return: GNTP Message information in a dictionary
 		'''
-		#GNTP/<version> <messagetype> <encryptionAlgorithmID>[:<ivValue>][ <keyHashAlgorithmID>:<keyHash>.<salt>]
-		match = re.match('GNTP/(?P<version>\d+\.\d+) (?P<messagetype>REGISTER|NOTIFY|SUBSCRIBE|\-OK|\-ERROR)'+
-						' (?P<encryptionAlgorithmID>[A-Z0-9]+(:(?P<ivValue>[A-F0-9]+))?) ?'+
-						'((?P<keyHashAlgorithmID>[A-Z0-9]+):(?P<keyHash>[A-F0-9]+).(?P<salt>[A-F0-9]+))?\r\n', data,re.IGNORECASE)
+
+		match = GNTP_INFO_LINE.match(data)
 
 		if not match:
 			raise ParseError('ERROR_PARSING_INFO_LINE')
@@ -193,7 +206,7 @@ class _GNTPBase(object):
 		'''
 		dict = {}
 		for line in data.split('\r\n'):
-			match = re.match('([\w-]+):(.+)', line)
+			match = GNTP_HEADER.match(line)
 			if not match:
 				continue
 
@@ -454,7 +467,7 @@ def parse_gntp(data, password=None):
 	@param data: Message to be parsed
 	@param password: Optional password to be used to verify the message
 	'''
-	match = re.match('GNTP/(?P<version>\d+\.\d+) (?P<messagetype>REGISTER|NOTIFY|SUBSCRIBE|\-OK|\-ERROR)', data, re.IGNORECASE)
+	match = GNTP_INFO_LINE_SHORT.match(data)
 	if not match:
 		raise ParseError('INVALID_GNTP_INFO')
 	info = match.groupdict()
