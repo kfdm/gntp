@@ -23,25 +23,24 @@ GNTP_EOL = u'\r\n'
 
 
 class BaseError(Exception):
-	pass
+	def gntp_error(self):
+		error = GNTPError(self.errorcode, self.errordesc)
+		return error.encode()
 
 
 class ParseError(BaseError):
-	def gntp_error(self):
-		error = GNTPError(errorcode=500, errordesc='Error parsing the message')
-		return error.encode()
+	errorcode = 500
+	errordesc = 'Error parsing the message'
 
 
 class AuthError(BaseError):
-	def gntp_error(self):
-		error = GNTPError(errorcode=400, errordesc='Error with authorization')
-		return error.encode()
+	errorcode = 400
+	errordesc = 'Error with authorization'
 
 
 class UnsupportedError(BaseError):
-	def gntp_error(self):
-		error = GNTPError(errorcode=500, errordesc='Currently unsupported by gntp.py')
-		return error.encode()
+	errorcode = 500
+	errordesc = 'Currently unsupported by gntp.py'
 
 
 class _GNTPBase(object):
