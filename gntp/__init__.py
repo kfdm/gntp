@@ -44,13 +44,13 @@ class UnsupportedError(BaseError):
 
 
 class _GNTPBase(object):
-	def __init__(self, messagetype=None, version='1.0', encryption=None):
-		'''Base initilization
+	"""Base initilization
 
-		:param string messagetype: GNTP Message type
-		:param string version: GNTP Protocol version
-		:param string encription: Encryption protocol
-		'''
+	:param string messagetype: GNTP Message type
+	:param string version: GNTP Protocol version
+	:param string encription: Encryption protocol
+	"""
+	def __init__(self, messagetype=None, version='1.0', encryption=None):
 		self.info = {
 			'version': version,
 			'messagetype': messagetype,
@@ -63,11 +63,11 @@ class _GNTPBase(object):
 		return self.encode()
 
 	def _parse_info(self, data):
-		'''
-		Parse the first line of a GNTP message to get security and other info values
-		@param data: GNTP Message
-		@return: GNTP Message information in a dictionary
-		'''
+		"""Parse the first line of a GNTP message to get security and other info values
+
+		:param string data: GNTP Message
+		:return dict: Parsed GNTP Info line
+		"""
 
 		match = GNTP_INFO_LINE.match(data)
 
@@ -81,12 +81,11 @@ class _GNTPBase(object):
 		return info
 
 	def set_password(self, password, encryptAlgo='MD5'):
-		'''
-		Set a password for a GNTP Message
-		@param password:  Null to clear password
-		@param encryptAlgo: Supports MD5,SHA1,SHA256,SHA512
-		@todo: Support other hash functions
-		'''
+		"""Set a password for a GNTP Message
+
+		:param string password: Null to clear password
+		:param string encryptAlgo: Supports MD5, SHA1, SHA256, SHA512
+		"""
 		hash = {
 			'MD5': hashlib.md5,
 			'SHA1': hashlib.sha1,
@@ -118,11 +117,11 @@ class _GNTPBase(object):
 		self.info['salt'] = salt.upper()
 
 	def _decode_hex(self, value):
-		'''
-		Helper function to decode hex string to `proper` hex string
-		@param value: Value to decode
-		@return: Hex string
-		'''
+		"""Helper function to decode hex string to `proper` hex string
+
+		:param string value: Human readable hex string
+		:return string: Hex string
+		"""
 		result = ''
 		for i in range(0, len(value), 2):
 			tmp = int(value[i:i + 2], 16)
@@ -140,9 +139,7 @@ class _GNTPBase(object):
 		return data
 
 	def _validate_password(self, password):
-		'''
-		Validate GNTP Message against stored password
-		'''
+		"""Validate GNTP Message against stored password"""
 		self.password = password
 		if password == None:
 			raise AuthError('Missing password')
@@ -166,18 +163,16 @@ class _GNTPBase(object):
 		return True
 
 	def validate(self):
-		'''
-		Verify required headers
-		'''
+		"""Verify required headers"""
 		for header in self._requiredHeaders:
 			if not self.headers.get(header, False):
 				raise ParseError('Missing Notification Header: ' + header)
 
 	def _format_info(self):
-		'''
-		Generate info line for GNTP Message
-		@return: Info line string
-		'''
+		"""Generate info line for GNTP Message
+
+		:return string:
+		"""
 		info = u'GNTP/%s %s' % (
 			self.info.get('version'),
 			self.info.get('messagetype'),
@@ -200,11 +195,11 @@ class _GNTPBase(object):
 		return info
 
 	def _parse_dict(self, data):
-		'''
-		Helper function to parse blocks of GNTP headers into a dictionary
-		@param data:
-		@return: Dictionary of headers
-		'''
+		"""Helper function to parse blocks of GNTP headers into a dictionary
+
+		:param string data:
+		:return dict:
+		"""
 		dict = {}
 		for line in data.split('\r\n'):
 			match = GNTP_HEADER.match(line)
@@ -223,10 +218,10 @@ class _GNTPBase(object):
 			self.headers[key] = unicode('%s' % value, 'utf8', 'replace')
 
 	def decode(self, data, password=None):
-		'''
-		Decode GNTP Message
-		@param data:
-		'''
+		"""Decode GNTP Message
+
+		:param string data:
+		"""
 		self.password = password
 		self.raw = data
 		parts = self.raw.split('\r\n\r\n')
@@ -234,10 +229,10 @@ class _GNTPBase(object):
 		self.headers = self._parse_dict(parts[0])
 
 	def encode(self):
-		'''
-		Encode a GNTP Message
-		@return: GNTP Message ready to be sent
-		'''
+		"""Encode a GNTP Message
+
+		:return string: Encoded GNTP Message ready to be sent
+		"""
 		self.validate()
 
 		message = self._format_info() + GNTP_EOL
@@ -250,7 +245,11 @@ class _GNTPBase(object):
 
 
 class GNTPRegister(_GNTPBase):
-	"""Represents a GNTP Registration Command"""
+	"""Represents a GNTP Registration Command
+
+	:param string data: (Optional) See decode()
+	:param string password: (Optional) Password to use while encoding/decoding messages
+	"""
 	_requiredHeaders = [
 		'Application-Name',
 		'Notifications-Count'
@@ -258,10 +257,6 @@ class GNTPRegister(_GNTPBase):
 	_requiredNotificationHeaders = ['Notification-Name']
 
 	def __init__(self, data=None, password=None):
-		'''
-		@param data: (Optional) See decode()
-		@param password: (Optional) Password to use while encoding/decoding messages
-		'''
 		_GNTPBase.__init__(self, 'REGISTER')
 		self.notifications = []
 
@@ -283,10 +278,10 @@ class GNTPRegister(_GNTPBase):
 					raise ParseError('Missing Notification Header: ' + header)
 
 	def decode(self, data, password):
-		'''
-		Decode existing GNTP Registration message
-		@param data: Message to decode.
-		'''
+		"""Decode existing GNTP Registration message
+
+		:param string data: Message to decode
+		"""
 		self.raw = data
 		parts = self.raw.split('\r\n\r\n')
 		self.info = self._parse_info(data)
@@ -307,11 +302,11 @@ class GNTPRegister(_GNTPBase):
 				self.resources[notice.get('Identifier')] = notice
 
 	def add_notification(self, name, enabled=True):
-		'''
-		Add new Notification to Registration message
-		@param name: Notification Name
-		@param enabled: Default Notification to Enabled
-		'''
+		"""Add new Notification to Registration message
+
+		:param string name: Notification Name
+		:param boolean enabled: Enable this notification by default
+		"""
 		notice = {}
 		notice['Notification-Name'] = u'%s' % name
 		notice['Notification-Enabled'] = u'%s' % enabled
@@ -320,10 +315,10 @@ class GNTPRegister(_GNTPBase):
 		self.add_header('Notifications-Count', len(self.notifications))
 
 	def encode(self):
-		'''
-		Encode a GNTP Registration Message
-		@return: GNTP Registration Message ready to be sent
-		'''
+		"""Encode a GNTP Registration Message
+
+		:return string: Encoded GNTP Registration message
+		"""
 		self.validate()
 
 		message = self._format_info() + GNTP_EOL
@@ -343,7 +338,14 @@ class GNTPRegister(_GNTPBase):
 
 
 class GNTPNotice(_GNTPBase):
-	"""Represents a GNTP Notification Command"""
+	"""Represents a GNTP Notification Command
+
+	:param string data: (Optional) See decode()
+	:param string app: (Optional) Set Application-Name
+	:param string name: (Optional) Set Notification-Name
+	:param string title: (Optional) Set Notification Title
+	:param string password: (Optional) Password to use while encoding/decoding messages
+	"""
 	_requiredHeaders = [
 		'Application-Name',
 		'Notification-Name',
@@ -351,13 +353,6 @@ class GNTPNotice(_GNTPBase):
 	]
 
 	def __init__(self, data=None, app=None, name=None, title=None, password=None):
-		'''
-		@param data: (Optional) See decode()
-		@param app: (Optional) Set Application-Name
-		@param name: (Optional) Set Notification-Name
-		@param title: (Optional) Set Notification Title
-		@param password: (Optional) Password to use while encoding/decoding messages
-		'''
 		_GNTPBase.__init__(self, 'NOTIFY')
 
 		if data:
@@ -372,10 +367,10 @@ class GNTPNotice(_GNTPBase):
 				self.add_header('Notification-Title', title)
 
 	def decode(self, data, password):
-		'''
-		Decode existing GNTP Notification message
-		@param data: Message to decode.
-		'''
+		"""Decode existing GNTP Notification message
+
+		:param string data: Message to decode.
+		"""
 		self.raw = data
 		parts = self.raw.split('\r\n\r\n')
 		self.info = self._parse_info(data)
@@ -394,10 +389,10 @@ class GNTPNotice(_GNTPBase):
 				self.resources[notice.get('Identifier')] = notice
 
 	def encode(self):
-		'''
-		Encode a GNTP Notification Message
-		@return: GNTP Notification Message ready to be sent
-		'''
+		"""Encode a GNTP Notification Message
+
+		:return string: GNTP Notification Message ready to be sent
+		"""
 		self.validate()
 
 		message = self._format_info() + GNTP_EOL
@@ -410,11 +405,16 @@ class GNTPNotice(_GNTPBase):
 
 
 class GNTPSubscribe(_GNTPBase):
+	"""Represents a GNTP Subscribe Command
+
+	:param string data: (Optional) See decode()
+	:param string password: (Optional) Password to use while encoding/decoding messages
+	"""
 	_requiredHeaders = [
 		'Subscriber-ID',
 		'Subscriber-Name',
 	]
-	"""Represents a GNTP Subscribe Command"""
+
 	def __init__(self, data=None, password=None):
 		_GNTPBase.__init__(self, 'SUBSCRIBE')
 		if data:
@@ -424,14 +424,14 @@ class GNTPSubscribe(_GNTPBase):
 
 
 class GNTPOK(_GNTPBase):
-	"""Represents a GNTP OK Response"""
+	"""Represents a GNTP OK Response
+
+	:param string data: (Optional) See _GNTPResponse.decode()
+	:param string action: (Optional) Set type of action the OK Response is for
+	"""
 	_requiredHeaders = ['Response-Action']
 
 	def __init__(self, data=None, action=None):
-		'''
-		@param data: (Optional) See _GNTPResponse.decode()
-		@param action: (Optional) Set type of action the OK Response is for
-		'''
 		_GNTPBase.__init__(self, '-OK')
 		if data:
 			self.decode(data)
@@ -440,14 +440,15 @@ class GNTPOK(_GNTPBase):
 
 
 class GNTPError(_GNTPBase):
+	"""Represents a GNTP Error response
+
+	:param string data: (Optional) See _GNTPResponse.decode()
+	:param string errorcode: (Optional) Error code
+	:param string errordesc: (Optional) Error Description
+	"""
 	_requiredHeaders = ['Error-Code', 'Error-Description']
 
 	def __init__(self, data=None, errorcode=None, errordesc=None):
-		'''
-		@param data: (Optional) See _GNTPResponse.decode()
-		@param errorcode: (Optional) Error code
-		@param errordesc: (Optional) Error Description
-		'''
 		_GNTPBase.__init__(self, '-ERROR')
 		if data:
 			self.decode(data)
@@ -460,11 +461,11 @@ class GNTPError(_GNTPBase):
 
 
 def parse_gntp(data, password=None):
-	'''
-	Attempt to parse a message as a GNTP message
-	@param data: Message to be parsed
-	@param password: Optional password to be used to verify the message
-	'''
+	"""Attempt to parse a message as a GNTP message
+
+	:param string data: Message to be parsed
+	:param string password: Optional password to be used to verify the message
+	"""
 	match = GNTP_INFO_LINE_SHORT.match(data)
 	if not match:
 		raise ParseError('INVALID_GNTP_INFO')
