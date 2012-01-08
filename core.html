@@ -7,13 +7,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Core GNTP Classes &mdash; Growl Notification Transport Protocol Python Bindings v0.4 documentation</title>
+    <title>Core GNTP Classes &mdash; Growl Notification Transport Protocol Python Bindings v0.5 documentation</title>
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '0.4',
+        VERSION:     '0.5',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -22,7 +22,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="Growl Notification Transport Protocol Python Bindings v0.4 documentation" href="index.html" />
+    <link rel="top" title="Growl Notification Transport Protocol Python Bindings v0.5 documentation" href="index.html" />
     <link rel="prev" title="GNTP Basics" href="index.html" /> 
   </head>
   <body>
@@ -38,7 +38,7 @@
         <li class="right" >
           <a href="index.html" title="GNTP Basics"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">Growl Notification Transport Protocol Python Bindings v0.4 documentation</a> &raquo;</li> 
+        <li><a href="index.html">Growl Notification Transport Protocol Python Bindings v0.5 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -75,35 +75,80 @@
 <dt id="gntp.GNTPRegister">
 <em class="property">class </em><tt class="descclassname">gntp.</tt><tt class="descname">GNTPRegister</tt><big>(</big><em>data=None</em>, <em>password=None</em><big>)</big><a class="headerlink" href="#gntp.GNTPRegister" title="Permalink to this definition">¶</a></dt>
 <dd><p>Represents a GNTP Registration Command</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>data</strong> (<em>string</em>) &#8211; (Optional) See decode()</li>
+<li><strong>password</strong> (<em>string</em>) &#8211; (Optional) Password to use while encoding/decoding messages</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 <dl class="method">
 <dt id="gntp.GNTPRegister.add_notification">
 <tt class="descname">add_notification</tt><big>(</big><em>name</em>, <em>enabled=True</em><big>)</big><a class="headerlink" href="#gntp.GNTPRegister.add_notification" title="Permalink to this definition">¶</a></dt>
-<dd><p>Add new Notification to Registration message
-&#64;param name: Notification Name
-&#64;param enabled: Default Notification to Enabled</p>
+<dd><p>Add new Notification to Registration message</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>name</strong> (<em>string</em>) &#8211; Notification Name</li>
+<li><strong>enabled</strong> (<em>boolean</em>) &#8211; Enable this notification by default</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="gntp.GNTPRegister.decode">
 <tt class="descname">decode</tt><big>(</big><em>data</em>, <em>password</em><big>)</big><a class="headerlink" href="#gntp.GNTPRegister.decode" title="Permalink to this definition">¶</a></dt>
-<dd><p>Decode existing GNTP Registration message
-&#64;param data: Message to decode.</p>
+<dd><p>Decode existing GNTP Registration message</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data</strong> (<em>string</em>) &#8211; Message to decode</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="gntp.GNTPRegister.encode">
 <tt class="descname">encode</tt><big>(</big><big>)</big><a class="headerlink" href="#gntp.GNTPRegister.encode" title="Permalink to this definition">¶</a></dt>
-<dd><p>Encode a GNTP Registration Message
-&#64;return: GNTP Registration Message ready to be sent</p>
+<dd><p>Encode a GNTP Registration Message</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Return string:</th><td class="field-body">Encoded GNTP Registration message</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="gntp.GNTPRegister.set_password">
 <tt class="descname">set_password</tt><big>(</big><em>password</em>, <em>encryptAlgo='MD5'</em><big>)</big><a class="headerlink" href="#gntp.GNTPRegister.set_password" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set a password for a GNTP Message
-&#64;param password:  Null to clear password
-&#64;param encryptAlgo: Supports MD5,SHA1,SHA256,SHA512
-&#64;todo: Support other hash functions</p>
+<dd><p>Set a password for a GNTP Message</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>password</strong> (<em>string</em>) &#8211; Null to clear password</li>
+<li><strong>encryptAlgo</strong> (<em>string</em>) &#8211; Supports MD5, SHA1, SHA256, SHA512</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -118,27 +163,65 @@
 <dt id="gntp.GNTPNotice">
 <em class="property">class </em><tt class="descclassname">gntp.</tt><tt class="descname">GNTPNotice</tt><big>(</big><em>data=None</em>, <em>app=None</em>, <em>name=None</em>, <em>title=None</em>, <em>password=None</em><big>)</big><a class="headerlink" href="#gntp.GNTPNotice" title="Permalink to this definition">¶</a></dt>
 <dd><p>Represents a GNTP Notification Command</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>data</strong> (<em>string</em>) &#8211; (Optional) See decode()</li>
+<li><strong>app</strong> (<em>string</em>) &#8211; (Optional) Set Application-Name</li>
+<li><strong>name</strong> (<em>string</em>) &#8211; (Optional) Set Notification-Name</li>
+<li><strong>title</strong> (<em>string</em>) &#8211; (Optional) Set Notification Title</li>
+<li><strong>password</strong> (<em>string</em>) &#8211; (Optional) Password to use while encoding/decoding messages</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 <dl class="method">
 <dt id="gntp.GNTPNotice.decode">
 <tt class="descname">decode</tt><big>(</big><em>data</em>, <em>password</em><big>)</big><a class="headerlink" href="#gntp.GNTPNotice.decode" title="Permalink to this definition">¶</a></dt>
-<dd><p>Decode existing GNTP Notification message
-&#64;param data: Message to decode.</p>
+<dd><p>Decode existing GNTP Notification message</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data</strong> (<em>string</em>) &#8211; Message to decode.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="gntp.GNTPNotice.encode">
 <tt class="descname">encode</tt><big>(</big><big>)</big><a class="headerlink" href="#gntp.GNTPNotice.encode" title="Permalink to this definition">¶</a></dt>
-<dd><p>Encode a GNTP Notification Message
-&#64;return: GNTP Notification Message ready to be sent</p>
+<dd><p>Encode a GNTP Notification Message</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Return string:</th><td class="field-body">GNTP Notification Message ready to be sent</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="gntp.GNTPNotice.set_password">
 <tt class="descname">set_password</tt><big>(</big><em>password</em>, <em>encryptAlgo='MD5'</em><big>)</big><a class="headerlink" href="#gntp.GNTPNotice.set_password" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set a password for a GNTP Message
-&#64;param password:  Null to clear password
-&#64;param encryptAlgo: Supports MD5,SHA1,SHA256,SHA512
-&#64;todo: Support other hash functions</p>
+<dd><p>Set a password for a GNTP Message</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>password</strong> (<em>string</em>) &#8211; Null to clear password</li>
+<li><strong>encryptAlgo</strong> (<em>string</em>) &#8211; Supports MD5, SHA1, SHA256, SHA512</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -153,27 +236,62 @@
 <dt id="gntp.GNTPSubscribe">
 <em class="property">class </em><tt class="descclassname">gntp.</tt><tt class="descname">GNTPSubscribe</tt><big>(</big><em>data=None</em>, <em>password=None</em><big>)</big><a class="headerlink" href="#gntp.GNTPSubscribe" title="Permalink to this definition">¶</a></dt>
 <dd><p>Represents a GNTP Subscribe Command</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>data</strong> (<em>string</em>) &#8211; (Optional) See decode()</li>
+<li><strong>password</strong> (<em>string</em>) &#8211; (Optional) Password to use while encoding/decoding messages</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 <dl class="method">
 <dt id="gntp.GNTPSubscribe.decode">
 <tt class="descname">decode</tt><big>(</big><em>data</em>, <em>password=None</em><big>)</big><a class="headerlink" href="#gntp.GNTPSubscribe.decode" title="Permalink to this definition">¶</a></dt>
-<dd><p>Decode GNTP Message
-&#64;param data:</p>
+<dd><p>Decode GNTP Message</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data</strong> (<em>string</em>) &#8211; </td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="gntp.GNTPSubscribe.encode">
 <tt class="descname">encode</tt><big>(</big><big>)</big><a class="headerlink" href="#gntp.GNTPSubscribe.encode" title="Permalink to this definition">¶</a></dt>
-<dd><p>Encode a GNTP Message
-&#64;return: GNTP Message ready to be sent</p>
+<dd><p>Encode a GNTP Message</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Return string:</th><td class="field-body">Encoded GNTP Message ready to be sent</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="gntp.GNTPSubscribe.set_password">
 <tt class="descname">set_password</tt><big>(</big><em>password</em>, <em>encryptAlgo='MD5'</em><big>)</big><a class="headerlink" href="#gntp.GNTPSubscribe.set_password" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set a password for a GNTP Message
-&#64;param password:  Null to clear password
-&#64;param encryptAlgo: Supports MD5,SHA1,SHA256,SHA512
-&#64;todo: Support other hash functions</p>
+<dd><p>Set a password for a GNTP Message</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>password</strong> (<em>string</em>) &#8211; Null to clear password</li>
+<li><strong>encryptAlgo</strong> (<em>string</em>) &#8211; Supports MD5, SHA1, SHA256, SHA512</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -188,27 +306,62 @@
 <dt id="gntp.GNTPOK">
 <em class="property">class </em><tt class="descclassname">gntp.</tt><tt class="descname">GNTPOK</tt><big>(</big><em>data=None</em>, <em>action=None</em><big>)</big><a class="headerlink" href="#gntp.GNTPOK" title="Permalink to this definition">¶</a></dt>
 <dd><p>Represents a GNTP OK Response</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>data</strong> (<em>string</em>) &#8211; (Optional) See _GNTPResponse.decode()</li>
+<li><strong>action</strong> (<em>string</em>) &#8211; (Optional) Set type of action the OK Response is for</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 <dl class="method">
 <dt id="gntp.GNTPOK.decode">
 <tt class="descname">decode</tt><big>(</big><em>data</em>, <em>password=None</em><big>)</big><a class="headerlink" href="#gntp.GNTPOK.decode" title="Permalink to this definition">¶</a></dt>
-<dd><p>Decode GNTP Message
-&#64;param data:</p>
+<dd><p>Decode GNTP Message</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data</strong> (<em>string</em>) &#8211; </td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="gntp.GNTPOK.encode">
 <tt class="descname">encode</tt><big>(</big><big>)</big><a class="headerlink" href="#gntp.GNTPOK.encode" title="Permalink to this definition">¶</a></dt>
-<dd><p>Encode a GNTP Message
-&#64;return: GNTP Message ready to be sent</p>
+<dd><p>Encode a GNTP Message</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Return string:</th><td class="field-body">Encoded GNTP Message ready to be sent</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="gntp.GNTPOK.set_password">
 <tt class="descname">set_password</tt><big>(</big><em>password</em>, <em>encryptAlgo='MD5'</em><big>)</big><a class="headerlink" href="#gntp.GNTPOK.set_password" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set a password for a GNTP Message
-&#64;param password:  Null to clear password
-&#64;param encryptAlgo: Supports MD5,SHA1,SHA256,SHA512
-&#64;todo: Support other hash functions</p>
+<dd><p>Set a password for a GNTP Message</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>password</strong> (<em>string</em>) &#8211; Null to clear password</li>
+<li><strong>encryptAlgo</strong> (<em>string</em>) &#8211; Supports MD5, SHA1, SHA256, SHA512</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -222,27 +375,64 @@
 <dl class="class">
 <dt id="gntp.GNTPError">
 <em class="property">class </em><tt class="descclassname">gntp.</tt><tt class="descname">GNTPError</tt><big>(</big><em>data=None</em>, <em>errorcode=None</em>, <em>errordesc=None</em><big>)</big><a class="headerlink" href="#gntp.GNTPError" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="method">
+<dd><p>Represents a GNTP Error response</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>data</strong> (<em>string</em>) &#8211; (Optional) See _GNTPResponse.decode()</li>
+<li><strong>errorcode</strong> (<em>string</em>) &#8211; (Optional) Error code</li>
+<li><strong>errordesc</strong> (<em>string</em>) &#8211; (Optional) Error Description</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
 <dt id="gntp.GNTPError.decode">
 <tt class="descname">decode</tt><big>(</big><em>data</em>, <em>password=None</em><big>)</big><a class="headerlink" href="#gntp.GNTPError.decode" title="Permalink to this definition">¶</a></dt>
-<dd><p>Decode GNTP Message
-&#64;param data:</p>
+<dd><p>Decode GNTP Message</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data</strong> (<em>string</em>) &#8211; </td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="gntp.GNTPError.encode">
 <tt class="descname">encode</tt><big>(</big><big>)</big><a class="headerlink" href="#gntp.GNTPError.encode" title="Permalink to this definition">¶</a></dt>
-<dd><p>Encode a GNTP Message
-&#64;return: GNTP Message ready to be sent</p>
+<dd><p>Encode a GNTP Message</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Return string:</th><td class="field-body">Encoded GNTP Message ready to be sent</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="gntp.GNTPError.set_password">
 <tt class="descname">set_password</tt><big>(</big><em>password</em>, <em>encryptAlgo='MD5'</em><big>)</big><a class="headerlink" href="#gntp.GNTPError.set_password" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set a password for a GNTP Message
-&#64;param password:  Null to clear password
-&#64;param encryptAlgo: Supports MD5,SHA1,SHA256,SHA512
-&#64;todo: Support other hash functions</p>
+<dd><p>Set a password for a GNTP Message</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>password</strong> (<em>string</em>) &#8211; Null to clear password</li>
+<li><strong>encryptAlgo</strong> (<em>string</em>) &#8211; Supports MD5, SHA1, SHA256, SHA512</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -259,9 +449,19 @@
 <dl class="function">
 <dt id="gntp.parse_gntp">
 <tt class="descclassname">gntp.</tt><tt class="descname">parse_gntp</tt><big>(</big><em>data</em>, <em>password=None</em><big>)</big><a class="headerlink" href="#gntp.parse_gntp" title="Permalink to this definition">¶</a></dt>
-<dd><p>Attempt to parse a message as a GNTP message
-&#64;param data: Message to be parsed
-&#64;param password: Optional password to be used to verify the message</p>
+<dd><p>Attempt to parse a message as a GNTP message</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>data</strong> (<em>string</em>) &#8211; Message to be parsed</li>
+<li><strong>password</strong> (<em>string</em>) &#8211; Optional password to be used to verify the message</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </div>
@@ -325,7 +525,7 @@
         <li class="right" >
           <a href="index.html" title="GNTP Basics"
              >previous</a> |</li>
-        <li><a href="index.html">Growl Notification Transport Protocol Python Bindings v0.4 documentation</a> &raquo;</li> 
+        <li><a href="index.html">Growl Notification Transport Protocol Python Bindings v0.5 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

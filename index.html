@@ -7,13 +7,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>GNTP Basics &mdash; Growl Notification Transport Protocol Python Bindings v0.4 documentation</title>
+    <title>GNTP Basics &mdash; Growl Notification Transport Protocol Python Bindings v0.5 documentation</title>
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '0.4',
+        VERSION:     '0.5',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -22,7 +22,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="Growl Notification Transport Protocol Python Bindings v0.4 documentation" href="#" />
+    <link rel="top" title="Growl Notification Transport Protocol Python Bindings v0.5 documentation" href="#" />
     <link rel="next" title="Core GNTP Classes" href="core.html" /> 
   </head>
   <body>
@@ -38,7 +38,7 @@
         <li class="right" >
           <a href="core.html" title="Core GNTP Classes"
              accesskey="N">next</a> |</li>
-        <li><a href="#">Growl Notification Transport Protocol Python Bindings v0.4 documentation</a> &raquo;</li> 
+        <li><a href="#">Growl Notification Transport Protocol Python Bindings v0.5 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -65,9 +65,18 @@ that you should be able to replace instances of the old bindings with
 this class.
 <a class="reference external" href="http://code.google.com/p/growl/source/browse/Bindings/python/Growl.py">Original Python bindings</a></p>
 </div>
+<dl class="function">
+<dt id="gntp.notifier.mini">
+<tt class="descclassname">gntp.notifier.</tt><tt class="descname">mini</tt><big>(</big><em>description</em>, <em>applicationName='PythonMini'</em>, <em>noteType='Message'</em>, <em>title='Mini Message'</em>, <em>applicationIcon=None</em>, <em>hostname='localhost'</em>, <em>password=None</em>, <em>port=23053</em>, <em>sticky=False</em>, <em>priority=None</em><big>)</big><a class="headerlink" href="#gntp.notifier.mini" title="Permalink to this definition">¶</a></dt>
+<dd><p>Single notification function</p>
+<p>Simple notification function in one line. Has only one required parameter
+and attempts to use reasonable defaults for everything else
+:param string description: Notification message</p>
+</dd></dl>
+
 <dl class="class">
 <dt id="gntp.notifier.GrowlNotifier">
-<em class="property">class </em><tt class="descclassname">gntp.notifier.</tt><tt class="descname">GrowlNotifier</tt><big>(</big><em>applicationName=None</em>, <em>notifications=None</em>, <em>defaultNotifications=None</em>, <em>applicationIcon=None</em>, <em>hostname=None</em>, <em>password=None</em>, <em>port=None</em><big>)</big><a class="headerlink" href="#gntp.notifier.GrowlNotifier" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">gntp.notifier.</tt><tt class="descname">GrowlNotifier</tt><big>(</big><em>applicationName='Python GNTP'</em>, <em>notifications=</em><span class="optional">[</span><span class="optional">]</span>, <em>defaultNotifications=None</em>, <em>applicationIcon=None</em>, <em>hostname='localhost'</em>, <em>password=None</em>, <em>port=23053</em><big>)</big><a class="headerlink" href="#gntp.notifier.GrowlNotifier" title="Permalink to this definition">¶</a></dt>
 <dd><p>Helper class to simplfy sending Growl messages</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -75,17 +84,23 @@ this class.
 <tbody valign="top">
 <tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>applicationName</strong> (<em>string</em>) &#8211; Sending application name</li>
-<li><strong>notification</strong> &#8211; List of valid notifications</li>
-<li><strong>defaultNotifications</strong> &#8211; List of notifications that should be enabled
+<li><strong>notification</strong> (<em>list</em>) &#8211; List of valid notifications</li>
+<li><strong>defaultNotifications</strong> (<em>list</em>) &#8211; List of notifications that should be enabled
 by default</li>
-<li><strong>applicationIcon</strong> &#8211; Icon URL</li>
-<li><strong>hostname</strong> &#8211; Remote host</li>
-<li><strong>port</strong> &#8211; Remote port</li>
+<li><strong>applicationIcon</strong> (<em>string</em>) &#8211; Icon URL</li>
+<li><strong>hostname</strong> (<em>string</em>) &#8211; Remote host</li>
+<li><strong>port</strong> (<em>integer</em>) &#8211; Remote port</li>
 </ul>
 </td>
 </tr>
 </tbody>
 </table>
+<dl class="method">
+<dt id="gntp.notifier.GrowlNotifier.add_origin_info">
+<tt class="descname">add_origin_info</tt><big>(</big><em>packet</em><big>)</big><a class="headerlink" href="#gntp.notifier.GrowlNotifier.add_origin_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add optional Origin headers to message</p>
+</dd></dl>
+
 <dl class="method">
 <dt id="gntp.notifier.GrowlNotifier.notify">
 <tt class="descname">notify</tt><big>(</big><em>noteType</em>, <em>title</em>, <em>description</em>, <em>icon=None</em>, <em>sticky=False</em>, <em>priority=None</em><big>)</big><a class="headerlink" href="#gntp.notifier.GrowlNotifier.notify" title="Permalink to this definition">¶</a></dt>
@@ -99,10 +114,10 @@ by default</li>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>noteType</strong> &#8211; One of the notification names registered earlier</li>
-<li><strong>title</strong> &#8211; Notification title (usually displayed on the notification)</li>
-<li><strong>description</strong> &#8211; The main content of the notification</li>
-<li><strong>icon</strong> &#8211; Icon URL path</li>
+<li><strong>noteType</strong> (<em>string</em>) &#8211; One of the notification names registered earlier</li>
+<li><strong>title</strong> (<em>string</em>) &#8211; Notification title (usually displayed on the notification)</li>
+<li><strong>description</strong> (<em>string</em>) &#8211; The main content of the notification</li>
+<li><strong>icon</strong> (<em>string</em>) &#8211; Icon URL path</li>
 <li><strong>sticky</strong> (<em>boolean</em>) &#8211; Sticky notification</li>
 <li><strong>priority</strong> (<em>integer</em>) &#8211; Message priority level from -2 to 2</li>
 </ul>
@@ -118,7 +133,7 @@ by default</li>
 <dd><p>Send GNTP Registration</p>
 <div class="admonition warning">
 <p class="first admonition-title">Warning</p>
-<p class="last">Before sending notifications to Growl, you need to have 
+<p class="last">Before sending notifications to Growl, you need to have
 sent a registration message at least once</p>
 </div>
 </dd></dl>
@@ -135,22 +150,40 @@ sent a registration message at least once</p>
 <div class="section" id="example-usage">
 <h2>Example Usage<a class="headerlink" href="#example-usage" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">gntp.notifier</span>
+
+<span class="c"># Simple &quot;fire and forget&quot; notification</span>
+<span class="n">gntp</span><span class="o">.</span><span class="n">notifier</span><span class="o">.</span><span class="n">mini</span><span class="p">(</span><span class="s">&quot;Here&#39;s a quick message&quot;</span><span class="p">)</span>
+
+<span class="c"># More complete example</span>
 <span class="n">growl</span> <span class="o">=</span> <span class="n">gntp</span><span class="o">.</span><span class="n">notifier</span><span class="o">.</span><span class="n">GrowlNotifier</span><span class="p">(</span>
         <span class="n">applicationName</span> <span class="o">=</span> <span class="s">&quot;My Application Name&quot;</span><span class="p">,</span>
         <span class="n">notifications</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;New Updates&quot;</span><span class="p">,</span><span class="s">&quot;New Messages&quot;</span><span class="p">],</span>
         <span class="n">defaultNotifications</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;New Messages&quot;</span><span class="p">],</span>
-        <span class="n">hostname</span> <span class="o">=</span> <span class="s">&quot;computer.example.com&quot;</span><span class="p">,</span>
-        <span class="n">password</span> <span class="o">=</span> <span class="s">&quot;abc123&quot;</span>
+        <span class="c"># hostname = &quot;computer.example.com&quot;, # Defaults to localhost</span>
+        <span class="c"># password = &quot;abc123&quot; # Defaults to a blank password</span>
 <span class="p">)</span>
 <span class="n">growl</span><span class="o">.</span><span class="n">register</span><span class="p">()</span>
 
-<span class="n">result</span> <span class="o">=</span> <span class="n">growl</span><span class="o">.</span><span class="n">notify</span><span class="p">(</span>
-        <span class="n">noteType</span> <span class="o">=</span> <span class="s">&quot;New Message&quot;</span><span class="p">,</span>
+<span class="c"># Send one message</span>
+<span class="n">growl</span><span class="o">.</span><span class="n">notify</span><span class="p">(</span>
+        <span class="n">noteType</span> <span class="o">=</span> <span class="s">&quot;New Messages&quot;</span><span class="p">,</span>
         <span class="n">title</span> <span class="o">=</span> <span class="s">&quot;You have a new message&quot;</span><span class="p">,</span>
         <span class="n">description</span> <span class="o">=</span> <span class="s">&quot;A longer message description&quot;</span><span class="p">,</span>
         <span class="n">icon</span> <span class="o">=</span> <span class="s">&quot;http://example.com/icon.png&quot;</span><span class="p">,</span>
         <span class="n">sticky</span> <span class="o">=</span> <span class="bp">False</span><span class="p">,</span>
         <span class="n">priority</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c"># Try to send a different type of message</span>
+<span class="c"># This one may fail since it is not in our list</span>
+<span class="c"># of defaultNotifications</span>
+<span class="n">growl</span><span class="o">.</span><span class="n">notify</span><span class="p">(</span>
+        <span class="n">noteType</span> <span class="o">=</span> <span class="s">&quot;New Updates&quot;</span><span class="p">,</span>
+        <span class="n">title</span> <span class="o">=</span> <span class="s">&quot;There is a new update to download&quot;</span><span class="p">,</span>
+        <span class="n">description</span> <span class="o">=</span> <span class="s">&quot;A longer message description&quot;</span><span class="p">,</span>
+        <span class="n">icon</span> <span class="o">=</span> <span class="s">&quot;http://example.com/icon.png&quot;</span><span class="p">,</span>
+        <span class="n">sticky</span> <span class="o">=</span> <span class="bp">False</span><span class="p">,</span>
+        <span class="n">priority</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -214,7 +247,7 @@ sent a registration message at least once</p>
         <li class="right" >
           <a href="core.html" title="Core GNTP Classes"
              >next</a> |</li>
-        <li><a href="#">Growl Notification Transport Protocol Python Bindings v0.4 documentation</a> &raquo;</li> 
+        <li><a href="#">Growl Notification Transport Protocol Python Bindings v0.5 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
