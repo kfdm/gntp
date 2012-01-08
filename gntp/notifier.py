@@ -202,4 +202,7 @@ class GrowlNotifier(object):
 		return response.error()
 
 if __name__ == '__main__':
+	# If we're running this module directly we're likely running it as a test
+	# so extra debugging is useful
+	logging.basicConfig(level=logging.INFO)
 	mini('Testing mini notification')
