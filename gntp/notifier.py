@@ -66,6 +66,7 @@ class GrowlNotifier(object):
 	"""
 
 	passwordHash = 'MD5'
+	socketTimeout = 3
 
 	def __init__(self, applicationName='Python GNTP', notifications=[],
 			defaultNotifications=None, applicationIcon=None, hostname='localhost',
@@ -186,6 +187,7 @@ class GrowlNotifier(object):
 		logger.debug('To : %s:%s <%s>\n%s', self.hostname, self.port, packet.__class__, data)
 
 		s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+		s.settimeout(self.socketTimeout)
 		s.connect((self.hostname, self.port))
 		s.send(data.encode('utf8', 'replace'))
 		recv_data = s.recv(1024)
