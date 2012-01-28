@@ -62,7 +62,7 @@ class ClientParser(OptionParser):
 
 		return values, message
 
-if __name__ == "__main__":
+def main():
 	(options, message) = ClientParser().parse_args()
 	if options.debug:
 		logging.basicConfig(level=options.verbose)
@@ -91,3 +91,7 @@ if __name__ == "__main__":
 	)
 	if result is not True:
 		exit(result)
+
+if __name__ == "__main__":
+	main()
+
