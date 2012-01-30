@@ -24,7 +24,8 @@ logger = logging.getLogger(__name__)
 
 def mini(description, applicationName='PythonMini', noteType="Message",
 			title="Mini Message", applicationIcon=None, hostname='localhost',
-			password=None, port=23053, sticky=False, priority=None):
+			password=None, port=23053, sticky=False, priority=None,
+			callback=None):
 	"""Single notification function
 
 	Simple notification function in one line. Has only one required parameter
@@ -50,6 +51,7 @@ def mini(description, applicationName='PythonMini', noteType="Message",
 		icon=applicationIcon,
 		sticky=sticky,
 		priority=priority,
+		callback=callback,
 	)
 
 
@@ -113,7 +115,8 @@ class GrowlNotifier(object):
 		self.register_hook(register)
 		return self._send('register', register)
 
-	def notify(self, noteType, title, description, icon=None, sticky=False, priority=None):
+	def notify(self, noteType, title, description, icon=None, sticky=False,
+			priority=None, callback=None):
 		"""Send a GNTP notifications
 
 		.. warning::
@@ -125,6 +128,11 @@ class GrowlNotifier(object):
 		:param string icon: Icon URL path
 		:param boolean sticky: Sticky notification
 		:param integer priority: Message priority level from -2 to 2
+		:param string callback:  URL callback
+
+		.. warning::
+			For now, only URL callbacks are supported. In the future, the
+			callback argument will also support a function
 		"""
 		logger.info('Sending notification [%s] to %s:%s', noteType, self.hostname, self.port)
 		assert noteType in self.notifications
@@ -142,6 +150,8 @@ class GrowlNotifier(object):
 			notice.add_header('Notification-Icon', self._checkIcon(icon))
 		if description:
 			notice.add_header('Notification-Text', description)
+		if callback:
+			notice.add_header('Notification-Callback-Target', callback)
 
 		self.add_origin_info(notice)
 		self.notify_hook(notice)

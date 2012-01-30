@@ -39,6 +39,7 @@ class ClientParser(OptionParser):
 						dest="priority", type="int", default=0)
 		self.add_option("--image", help="Icon for notification (Only supports URL currently)",
 						dest="icon", default='')
+		self.add_option("--callback", help="URL callback", dest="callback")
 
 	def parse_args(self, args=None, values=None):
 		values, args = OptionParser.parse_args(self, args, values)
@@ -61,6 +62,7 @@ class ClientParser(OptionParser):
 			values.title = message[:20]
 
 		return values, message
+
 
 def main():
 	(options, message) = ClientParser().parse_args()
@@ -88,6 +90,7 @@ def main():
 		icon=options.icon,
 		sticky=options.sticky,
 		priority=options.priority,
+		callback=options.callback,
 	)
 	if result is not True:
 		exit(result)

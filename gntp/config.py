@@ -23,7 +23,8 @@ logger = logging.getLogger(__name__)
 
 def mini(description, applicationName='PythonMini', noteType="Message",
 			title="Mini Message", applicationIcon=None, hostname='localhost',
-			password=None, port=23053, sticky=False, priority=None):
+			password=None, port=23053, sticky=False, priority=None,
+			callback=None):
 	"""Single notification function
 
 	Simple notification function in one line. Has only one required parameter
@@ -49,6 +50,7 @@ def mini(description, applicationName='PythonMini', noteType="Message",
 		icon=applicationIcon,
 		sticky=sticky,
 		priority=priority,
+		callback=callback,
 	)
 
 
