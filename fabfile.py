@@ -23,3 +23,7 @@ def build():
 
 def install():
 	local("python setup.py install")
+
+
+def upload_docs():
+	local("python setup.py upload_docs --upload-dir build/html")
