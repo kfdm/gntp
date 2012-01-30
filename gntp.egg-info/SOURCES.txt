@@ -1,6 +1,7 @@
 setup.py
 gntp/__init__.py
 gntp/cli.py
+gntp/config.py
 gntp/notifier.py
 gntp.egg-info/PKG-INFO
 gntp.egg-info/SOURCES.txt

@@ -2,7 +2,7 @@ import re
 import hashlib
 import time
 
-__version__ = '0.5'
+__version__ = '0.6'
 
 #GNTP/<version> <messagetype> <encryptionAlgorithmID>[:<ivValue>][ <keyHashAlgorithmID>:<keyHash>.<salt>]
 GNTP_INFO_LINE = re.compile(

@@ -19,3 +19,7 @@ def html():
 
 def build():
 	local("python setup.py build")
+
+
+def install():
+	local("python setup.py install")
