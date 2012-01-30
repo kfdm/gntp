@@ -12,14 +12,36 @@ Python bindings for the
 
 Bugs can be reported at the `GitHub issue tracker <https://github.com/kfdm/gntp/issues>`_
 
-Sending a message
------------------
+Simple Message Sending
+----------------------
 
-.. automodule:: gntp.notifier
-	:members:
+::
 
-Example Usage
--------------
+	from gntp.notifier import mini
+	# Send a simple growl message with mostly default values
+	mini("Here's a quick message", callback="http://github.com/")
+
+.. autofunction:: gntp.notifier.mini
+
+
+Detailed Message Sending
+------------------------
+
+.. autoclass:: gntp.notifier.GrowlNotifier
+
+The GrowlNotifier class is intended to mostly mirror the older python bindings
+for growl
+
+.. automethod:: gntp.notifier.GrowlNotifier.register
+
+.. automethod:: gntp.notifier.GrowlNotifier.notify
+
+.. automethod:: gntp.notifier.GrowlNotifier.subscribe
+
+
+
+Complete Example
+----------------
 ::
 
 	import gntp.notifier
@@ -58,3 +80,7 @@ Example Usage
 		sticky = False,
 		priority = -1,
 	)
+
+GNTP Configfile Example
+-----------------------
+.. autoclass:: gntp.config.GrowlNotifier

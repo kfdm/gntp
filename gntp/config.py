@@ -61,10 +61,12 @@ class GrowlNotifier(gntp.notifier.GrowlNotifier):
 	For right now, we are only interested in letting users overide certain
 	values from ~/.gntp
 
-	[gntp]
-	hostname = ?
-	password = ?
-	port = ?
+	::
+
+		[gntp]
+		hostname = ?
+		password = ?
+		port = ?
 	"""
 	def __init__(self, applicationName='Python GNTP', notifications=[],
 			defaultNotifications=None, applicationIcon=None, hostname='localhost',

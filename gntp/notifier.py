@@ -31,6 +31,10 @@ def mini(description, applicationName='PythonMini', noteType="Message",
 	Simple notification function in one line. Has only one required parameter
 	and attempts to use reasonable defaults for everything else
 	:param string description: Notification message
+
+	.. warning::
+			For now, only URL callbacks are supported. In the future, the
+			callback argument will also support a function
 	"""
 	growl = GrowlNotifier(
 		applicationName=applicationName,
