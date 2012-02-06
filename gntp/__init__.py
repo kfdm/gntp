@@ -217,6 +217,9 @@ class _GNTPBase(object):
 		else:
 			self.headers[key] = unicode('%s' % value, 'utf8', 'replace')
 
+	def add_resource(self, data):
+		return 'some made up id'
+
 	def decode(self, data, password=None):
 		"""Decode GNTP Message
 
