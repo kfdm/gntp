@@ -29,10 +29,8 @@ class ClientParser(OptionParser):
 						dest="message", default=None)
 
 		#Optional (Does not require Default)
-		self.add_option("-d", "--debug", help="Show debug output",
-						dest='debug', action="store_true", default=False)
-		self.add_option('-v', '--verbose', help="Extra verbose errors",
-						dest='verbose', action='store_const', const=logging.DEBUG, default=logging.INFO)
+		self.add_option('-v', '--verbose', help="Verbosity levels",
+						dest='verbose', action='count', default=0)
 		self.add_option("-s", "--sticky", help="Make the notification sticky [%default]",
 						dest='sticky', action="store_true", default=False)
 		self.add_option("-p", "--priority", help="-2 to 2 [%default]",
@@ -61,15 +59,14 @@ class ClientParser(OptionParser):
 		if values.title == '':
 			values.title = message[:20]
 
+		values.verbose = logging.WARNING - values.verbose * 10
+
 		return values, message
 
 
 def main():
 	(options, message) = ClientParser().parse_args()
-	if options.debug:
-		logging.basicConfig(level=options.verbose)
-	else:
-		logging.basicConfig(level=logging.ERROR)
+	logging.basicConfig(level=options.verbose)
 
 	growl = GrowlNotifier(
 		applicationName=options.app,
@@ -97,4 +94,3 @@ def main():
 
 if __name__ == "__main__":
 	main()
-
