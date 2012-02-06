@@ -214,7 +214,7 @@ class GrowlNotifier(object):
 		s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		s.settimeout(self.socketTimeout)
 		s.connect((self.hostname, self.port))
-		s.send(data.encode('utf8', 'replace'))
+		s.send(data)
 		recv_data = s.recv(1024)
 		while not recv_data.endswith("\r\n\r\n"):
 			recv_data += s.recv(1024)
