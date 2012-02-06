@@ -443,7 +443,8 @@ class GNTPError(_GNTPBase):
 			self.add_header('Error-Description', errordesc)
 
 	def error(self):
-		return self.headers['Error-Code'], self.headers['Error-Description']
+		return (self.headers.get('Error-Code', None),
+			self.headers.get('Error-Description', None))
 
 
 def parse_gntp(data, password=None):
