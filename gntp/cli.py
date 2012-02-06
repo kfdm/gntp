@@ -2,7 +2,7 @@
 
 import sys
 import logging
-from gntp.notifier import GrowlNotifier
+from gntp.config import GrowlNotifier
 from optparse import OptionParser
 
 
