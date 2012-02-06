@@ -36,7 +36,7 @@ class ClientParser(OptionParser):
 		self.add_option("-p", "--priority", help="-2 to 2 [%default]",
 						dest="priority", type="int", default=0)
 		self.add_option("--image", help="Icon for notification (Only supports URL currently)",
-						dest="icon", default='')
+						dest="icon", default=None)
 		self.add_option("--callback", help="URL callback", dest="callback")
 
 	def parse_args(self, args=None, values=None):
@@ -82,7 +82,7 @@ def main():
 
 	# This would likely be better placed within the growl notifier
 	# class but until I make _checkIcon smarter this is "easier"
-	if not options.icon.startswith('http'):
+	if options.icon is not None and not options.icon.startswith('http'):
 		logging.info('Loading image %s', options.icon)
 		f = open(options.icon)
 		options.icon = f.read()
