@@ -389,21 +389,6 @@ class GNTPNotice(_GNTPBase):
 				#open('notice.png','wblol').write(notice['Data'])
 				self.resources[notice.get('Identifier')] = notice
 
-	def encode(self):
-		"""Encode a GNTP Notification Message
-
-		:return string: GNTP Notification Message ready to be sent
-		"""
-		self.validate()
-
-		message = self._format_info() + GNTP_EOL
-		#Headers
-		for k, v in self.headers.iteritems():
-			message += u'%s: %s%s' % (k, v, GNTP_EOL)
-
-		message += GNTP_EOL
-		return message
-
 
 class GNTPSubscribe(_GNTPBase):
 	"""Represents a GNTP Subscribe Command
