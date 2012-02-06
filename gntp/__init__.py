@@ -232,11 +232,10 @@ class _GNTPBase(object):
 		self.headers = self._parse_dict(parts[0])
 
 	def encode(self):
-		"""Encode a GNTP Message
+		"""Encode a generic GNTP Message
 
-		:return string: Encoded GNTP Message ready to be sent
+		:return string: GNTP Message ready to be sent
 		"""
-		self.validate()
 
 		message = self._format_info() + GNTP_EOL
 		#Headers
@@ -322,7 +321,6 @@ class GNTPRegister(_GNTPBase):
 
 		:return string: Encoded GNTP Registration message
 		"""
-		self.validate()
 
 		message = self._format_info() + GNTP_EOL
 		#Headers

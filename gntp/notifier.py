@@ -207,6 +207,7 @@ class GrowlNotifier(object):
 	def _send(self, type, packet):
 		"""Send the GNTP Packet"""
 
+		packet.validate()
 		data = packet.encode()
 
 		logger.debug('To : %s:%s <%s>\n%s', self.hostname, self.port, packet.__class__, data)
