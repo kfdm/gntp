@@ -6,6 +6,7 @@ This test runs with the gntp.config module so that we can
 get away without having to hardcode our password in a test
 script. Please fill out your ~/.gntp config before running
 """
+import os
 import unittest
 from gntp.config import GrowlNotifier
 from gntp import UnsupportedError
@@ -21,6 +22,15 @@ class TestHash(unittest.TestCase):
 	def setUp(self):
 		self.growl = Growler('GNTP unittest', ['Testing'])
 		self.growl.register()
+
+	def test_config(self):
+		"""Test to see if our config file exists
+
+		If our config file doesn't exist, then we have no
+		password to test with, so our password hash is no good
+		"""
+		config = os.path.expanduser('~/.gntp')
+		self.assertTrue(os.path.exists(config))
 
 	def test_md5(self):
 		self.assertTrue(self.growl.hash_test('MD5'))
