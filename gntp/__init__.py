@@ -215,8 +215,8 @@ class _GNTPBase(object):
 			if not match:
 				continue
 
-			key = match.group(1).strip()
-			val = match.group(2).strip()
+			key = unicode(match.group(1).strip(), 'utf8', 'replace')
+			val = unicode(match.group(2).strip(), 'utf8', 'replace')
 			dict[key] = val
 		return dict
 
