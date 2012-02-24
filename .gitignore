@@ -2,5 +2,8 @@ dist/*
 build/*
 MANIFEST
 README.html
-.tox/*
 
+# Testing files
+.tox/*
+.coverage
+htmlcov

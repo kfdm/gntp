@@ -1,9 +1,15 @@
 #!/usr/bin/env python
-# Test the various hashing methods
+"""
+Test the various hashing methods
+
+This test runs with the gntp.config module so that we can
+get away without having to hardcode our password in a test
+script. Please fill out your ~/.gntp config before running
+"""
+import os
 import unittest
-import logging
-logging.basicConfig(level=logging.WARNING)
-from gntp.notifier import GrowlNotifier
+from gntp.config import GrowlNotifier
+from gntp import UnsupportedError
 
 
 class Growler(GrowlNotifier):
@@ -17,6 +23,15 @@ class TestHash(unittest.TestCase):
 		self.growl = Growler('GNTP unittest', ['Testing'])
 		self.growl.register()
 
+	def test_config(self):
+		"""Test to see if our config file exists
+
+		If our config file doesn't exist, then we have no
+		password to test with, so our password hash is no good
+		"""
+		config = os.path.expanduser('~/.gntp')
+		self.assertTrue(os.path.exists(config))
+
 	def test_md5(self):
 		self.assertTrue(self.growl.hash_test('MD5'))
 
@@ -27,11 +42,11 @@ class TestHash(unittest.TestCase):
 		self.assertTrue(self.growl.hash_test('SHA256'))
 
 	def test_sha512(self):
-		self.assertTrue(self.growl.hash_test('512'))
+		self.assertTrue(self.growl.hash_test('SHA512'))
 
 	def test_fake(self):
 		'''Fake hash should not work'''
-		self.assertFalse(self.growl.hash_test('fake-hash'))
+		self.assertRaises(UnsupportedError, self.growl.hash_test, 'fake-hash')
 
 if __name__ == '__main__':
 	unittest.main()

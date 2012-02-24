@@ -40,6 +40,7 @@ def mini(description, applicationName='PythonMini', noteType="Message",
 		applicationName=applicationName,
 		notifications=[noteType],
 		defaultNotifications=[noteType],
+		applicationIcon=applicationIcon,
 		hostname=hostname,
 		password=password,
 		port=port,
@@ -93,10 +94,12 @@ class GrowlNotifier(object):
 	def _checkIcon(self, data):
 		'''
 		Check the icon to see if it's valid
-		@param data:
-		@todo Consider checking for a valid URL
+
+		If it's a simple URL icon, then we return True. If it's a data icon
+		then we return False
 		'''
-		return data
+		logger.info('Checking icon')
+		return data.startswith('http')
 
 	def register(self):
 		"""Send GNTP Registration
@@ -112,7 +115,11 @@ class GrowlNotifier(object):
 			enabled = notification in self.defaultNotifications
 			register.add_notification(notification, enabled)
 		if self.applicationIcon:
-			register.add_header('Application-Icon', self.applicationIcon)
+			if self._checkIcon(self.applicationIcon):
+				register.add_header('Application-Icon', self.applicationIcon)
+			else:
+				id = register.add_resource(self.applicationIcon)
+				register.add_header('Application-Icon', id)
 		if self.password:
 			register.set_password(self.password, self.passwordHash)
 		self.add_origin_info(register)
@@ -151,7 +158,12 @@ class GrowlNotifier(object):
 		if priority:
 			notice.add_header('Notification-Priority', priority)
 		if icon:
-			notice.add_header('Notification-Icon', self._checkIcon(icon))
+			if self._checkIcon(icon):
+				notice.add_header('Notification-Icon', icon)
+			else:
+				id = notice.add_resource(icon)
+				notice.add_header('Notification-Icon', id)
+
 		if description:
 			notice.add_header('Notification-Text', description)
 		if callback:
@@ -196,6 +208,7 @@ class GrowlNotifier(object):
 	def _send(self, type, packet):
 		"""Send the GNTP Packet"""
 
+		packet.validate()
 		data = packet.encode()
 
 		logger.debug('To : %s:%s <%s>\n%s', self.hostname, self.port, packet.__class__, data)
@@ -203,7 +216,7 @@ class GrowlNotifier(object):
 		s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		s.settimeout(self.socketTimeout)
 		s.connect((self.hostname, self.port))
-		s.send(data.encode('utf8', 'replace'))
+		s.send(data)
 		recv_data = s.recv(1024)
 		while not recv_data.endswith("\r\n\r\n"):
 			recv_data += s.recv(1024)

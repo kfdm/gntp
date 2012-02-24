@@ -2,7 +2,7 @@
 
 import sys
 import logging
-from gntp.notifier import GrowlNotifier
+from gntp.config import GrowlNotifier
 from optparse import OptionParser
 
 
@@ -29,16 +29,14 @@ class ClientParser(OptionParser):
 						dest="message", default=None)
 
 		#Optional (Does not require Default)
-		self.add_option("-d", "--debug", help="Show debug output",
-						dest='debug', action="store_true", default=False)
-		self.add_option('-v', '--verbose', help="Extra verbose errors",
-						dest='verbose', action='store_const', const=logging.DEBUG, default=logging.INFO)
+		self.add_option('-v', '--verbose', help="Verbosity levels",
+						dest='verbose', action='count', default=0)
 		self.add_option("-s", "--sticky", help="Make the notification sticky [%default]",
 						dest='sticky', action="store_true", default=False)
 		self.add_option("-p", "--priority", help="-2 to 2 [%default]",
 						dest="priority", type="int", default=0)
 		self.add_option("--image", help="Icon for notification (Only supports URL currently)",
-						dest="icon", default='')
+						dest="icon", default=None)
 		self.add_option("--callback", help="URL callback", dest="callback")
 
 	def parse_args(self, args=None, values=None):
@@ -61,15 +59,14 @@ class ClientParser(OptionParser):
 		if values.title == '':
 			values.title = message[:20]
 
+		values.verbose = logging.WARNING - values.verbose * 10
+
 		return values, message
 
 
 def main():
 	(options, message) = ClientParser().parse_args()
-	if options.debug:
-		logging.basicConfig(level=options.verbose)
-	else:
-		logging.basicConfig(level=logging.ERROR)
+	logging.basicConfig(level=options.verbose)
 
 	growl = GrowlNotifier(
 		applicationName=options.app,
@@ -82,6 +79,14 @@ def main():
 	result = growl.register()
 	if result is not True:
 		exit(result)
+
+	# This would likely be better placed within the growl notifier
+	# class but until I make _checkIcon smarter this is "easier"
+	if options.icon is not None and not options.icon.startswith('http'):
+		logging.info('Loading image %s', options.icon)
+		f = open(options.icon)
+		options.icon = f.read()
+		f.close()
 
 	result = growl.notify(
 		noteType=options.name,
@@ -97,4 +102,3 @@ def main():
 
 if __name__ == "__main__":
 	main()
-
