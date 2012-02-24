@@ -9,7 +9,8 @@ def clean():
 
 def test():
 	"Run unittests"
-	local('py.test')
+	local('nosetests -v --with-coverage')
+	local('coverage html')
 
 
 def html():
