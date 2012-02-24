@@ -7,13 +7,14 @@ Test most basic GNTP functions using our mini growl function
 
 import unittest
 import logging
+import os
 logging.basicConfig(level=logging.WARNING)
 import gntp.config
 import gntp.notifier
 
 APPLICATION_NAME = "GNTP unittest"
 ICON_URL = "https://www.google.com/intl/en_com/images/srpr/logo3w.png"
-ICON_FILE = "test/growl-icon.png"
+ICON_FILE = os.path.join(os.path.dirname(__file__), "growl-icon.png")
 CALLBACK_URL = "http://github.com"
 
 
