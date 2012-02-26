@@ -71,5 +71,12 @@ class BasicTests(GNTPTestCase):
 			description='Testing Callback',
 			))
 
+	#def test_subscribe(self):
+	#	self.assertTrue(self.growl.subscribe(
+	#		id='unittest-id',
+	#		name='example.com',
+	#		port=5000,
+	#		))
+
 if __name__ == '__main__':
 	unittest.main()
