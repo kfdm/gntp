@@ -3,7 +3,7 @@ import hashlib
 import time
 import StringIO
 
-__version__ = '0.6'
+__version__ = '0.7'
 
 #GNTP/<version> <messagetype> <encryptionAlgorithmID>[:<ivValue>][ <keyHashAlgorithmID>:<keyHash>.<salt>]
 GNTP_INFO_LINE = re.compile(

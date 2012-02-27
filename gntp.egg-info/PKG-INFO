@@ -1,6 +1,6 @@
 Metadata-Version: 1.0
 Name: gntp
-Version: 0.6
+Version: 0.7
 Summary: Growl Notification Transport Protocol for Python
 Home-page: http://github.com/kfdm/gntp/
 Author: Paul Traylor

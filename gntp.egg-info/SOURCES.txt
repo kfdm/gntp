@@ -8,7 +8,3 @@ gntp.egg-info/SOURCES.txt
 gntp.egg-info/dependency_links.txt
 gntp.egg-info/entry_points.txt
 gntp.egg-info/top_level.txt
-test/test_hash.py
-test/test_lines.py
-test/test_priority.py
-test/test_utf8.py
