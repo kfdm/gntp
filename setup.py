@@ -10,6 +10,7 @@ import gntp
 setup(
 	name='gntp',
 	description='Growl Notification Transport Protocol for Python',
+	long_description=open('README.rst').read(),
 	author='Paul Traylor',
 	url='http://github.com/kfdm/gntp/',
 	version=gntp.__version__,

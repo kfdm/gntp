@@ -1,0 +1,82 @@
+GNTP
+====
+
+This is a Python library for working with the `Growl Notification
+Transport Protocol <http://www.growlforwindows.com/gfw/help/gntp.aspx>`_
+
+It should work as a dropin replacement for the older Python bindings
+
+Installation
+------------
+
+You can install with pip
+
+::
+
+    $ pip install gntp
+
+then test the module
+
+::
+
+    $ python -m gntp.notifier
+
+Simple Usage
+------------
+
+::
+
+    import gntp.notifier
+
+    # Simple "fire and forget" notification
+    gntp.notifier.mini("Here's a quick message")
+
+    # More complete example
+    growl = gntp.notifier.GrowlNotifier(
+        applicationName = "My Application Name",
+        notifications = ["New Updates","New Messages"],
+        defaultNotifications = ["New Messages"],
+        # hostname = "computer.example.com", # Defaults to localhost
+        # password = "abc123" # Defaults to a blank password
+    )
+    growl.register()
+
+    # Send one message
+    growl.notify(
+        noteType = "New Messages",
+        title = "You have a new message",
+        description = "A longer message description",
+        icon = "http://example.com/icon.png",
+        sticky = False,
+        priority = 1,
+    )
+
+    # Try to send a different type of message
+    # This one may fail since it is not in our list
+    # of defaultNotifications
+    growl.notify(
+        noteType = "New Updates",
+        title = "There is a new update to download",
+        description = "A longer message description",
+        icon = "http://example.com/icon.png",
+        sticky = False,
+        priority = -1,
+    )
+
+Bugs
+----
+
+`GitHub issue tracker <https://github.com/kfdm/gntp/issues>`_
+
+
+Changelog
+---------
+
+`v0.7 <https://github.com/kfdm/gntp/compare/0.6...v0.7>`_
+    - Support for images
+    - Better test coverage support
+
+`0.6 <https://github.com/kfdm/gntp/compare/0.5...0.6>`_
+    - ConfigParser aware GrowlNotifier that reads settings from ~/.gntp
+
+
