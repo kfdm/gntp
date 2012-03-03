@@ -15,13 +15,15 @@ setup(
 	version=gntp.__version__,
 	packages=['gntp'],
 	# http://pypi.python.org/pypi?%3Aaction=list_classifiers
-	classifiers = [
+	classifiers=[
 		'Development Status :: 3 - Alpha',
 		'Intended Audience :: Developers',
-		'Natural Language :: English',
 		'License :: OSI Approved :: MIT License',
-		'Programming Language :: Python',
+		'Natural Language :: English',
 		'Operating System :: OS Independent',
+		'Programming Language :: Python :: 2.5',
+		'Programming Language :: Python :: 2.6',
+		'Programming Language :: Python :: 2.7',
 	],
 	entry_points={
 		'console_scripts': [
