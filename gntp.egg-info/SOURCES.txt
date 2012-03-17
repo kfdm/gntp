@@ -1,3 +1,5 @@
+MANIFEST.in
+README.rst
 setup.py
 gntp/__init__.py
 gntp/cli.py
