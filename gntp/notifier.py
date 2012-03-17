@@ -25,7 +25,7 @@ logger = logging.getLogger(__name__)
 def mini(description, applicationName='PythonMini', noteType="Message",
 			title="Mini Message", applicationIcon=None, hostname='localhost',
 			password=None, port=23053, sticky=False, priority=None,
-			callback=None, notificationIcon=None):
+			callback=None, notificationIcon=None, identifier=None):
 	"""Single notification function
 
 	Simple notification function in one line. Has only one required parameter
@@ -57,6 +57,7 @@ def mini(description, applicationName='PythonMini', noteType="Message",
 		sticky=sticky,
 		priority=priority,
 		callback=callback,
+		identifier=identifier,
 	)
 
 
@@ -127,7 +128,7 @@ class GrowlNotifier(object):
 		return self._send('register', register)
 
 	def notify(self, noteType, title, description, icon=None, sticky=False,
-			priority=None, callback=None):
+			priority=None, callback=None, identifier=None):
 		"""Send a GNTP notifications
 
 		.. warning::
@@ -168,6 +169,8 @@ class GrowlNotifier(object):
 			notice.add_header('Notification-Text', description)
 		if callback:
 			notice.add_header('Notification-Callback-Target', callback)
+		if identifier:
+			notice.add_header('Notification-Coalescing-ID', identifier)
 
 		self.add_origin_info(notice)
 		self.notify_hook(notice)

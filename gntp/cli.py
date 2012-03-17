@@ -115,6 +115,7 @@ def main():
 		sticky=options.sticky,
 		priority=options.priority,
 		callback=options.callback,
+		identifier=options.identifier,
 	)
 	if result is not True:
 		exit(result)
