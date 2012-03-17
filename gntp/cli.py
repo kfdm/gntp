@@ -2,42 +2,61 @@
 
 import sys
 import logging
+from gntp import __version__
 from gntp.config import GrowlNotifier
-from optparse import OptionParser
+from optparse import OptionParser, OptionGroup
 
 
 class ClientParser(OptionParser):
 	def __init__(self):
-		OptionParser.__init__(self)
+		OptionParser.__init__(self, version="%%prog %s" % __version__)
 
-		#Network
-		self.add_option("-H", "--host", help="Specify a hostname to which to send a remote notification. [%default]",
-						dest="host", default='localhost')
-		self.add_option("--port", help="port to listen on",
-						dest="port", type="int", default=23053)
-		self.add_option("-P", "--password", help="Network password",
-					dest='password', default='')
+		group = OptionGroup(self, "Network Options")
+		group.add_option("-H", "--host",
+			dest="host", default='localhost',
+			help="Specify a hostname to which to send a remote notification. [%default]")
+		group.add_option("--port",
+			dest="port", default=23053, type="int",
+			help="port to listen on [%default]")
+		group.add_option("-P", "--password",
+			dest='password', default='',
+			help="Network password")
+		self.add_option_group(group)
 
-		#Required (Needs Defaults)
-		self.add_option("-n", "--name", help="Set the name of the application [%default]",
-						dest="app", default='Python GNTP Test Client')
-		self.add_option("-N", "--notification", help="Set the notification name [%default]",
-						dest="name", default='Notification')
-		self.add_option("-t", "--title", help="Set the title of the notification [Default :%default]",
-						dest="title", default=None)
-		self.add_option("-m", "--message", help="Sets the message instead of using stdin",
-						dest="message", default=None)
+		group = OptionGroup(self, "Notification Options")
+		group.add_option("-n", "--name",
+			dest="app", default='Python GNTP Test Client',
+			help="Set the name of the application [%default]")
+		group.add_option("-s", "--sticky",
+			dest='sticky', default=False, action="store_true",
+			help="Make the notification sticky [%default]")
+		group.add_option("--image",
+			dest="icon", default=None,
+			help="Icon for notification (URL or /path/to/file)")
+		group.add_option("-m", "--message",
+			dest="message", default=None,
+			help="Sets the message instead of using stdin")
+		group.add_option("-p", "--priority",
+			dest="priority", default=0, type="int",
+			help="-2 to 2 [%default]")
+		group.add_option("-d", "--identifier",
+			dest="identifier",
+			help="Identifier for coalescing")
+		group.add_option("-t", "--title",
+			dest="title", default=None,
+			help="Set the title of the notification [%default]")
+		group.add_option("-N", "--notification",
+			dest="name", default='Notification',
+			help="Set the notification name [%default]")
+		group.add_option("--callback",
+			dest="callback",
+			help="URL callback")
+		self.add_option_group(group)
 
-		#Optional (Does not require Default)
-		self.add_option('-v', '--verbose', help="Verbosity levels",
-						dest='verbose', action='count', default=0)
-		self.add_option("-s", "--sticky", help="Make the notification sticky [%default]",
-						dest='sticky', action="store_true", default=False)
-		self.add_option("-p", "--priority", help="-2 to 2 [%default]",
-						dest="priority", type="int", default=0)
-		self.add_option("--image", help="Icon for notification (Only supports URL currently)",
-						dest="icon", default=None)
-		self.add_option("--callback", help="URL callback", dest="callback")
+		# Extra Options
+		self.add_option('-v', '--verbose',
+			dest='verbose', default=0, action='count',
+			help="Verbosity levels")
 
 	def parse_args(self, args=None, values=None):
 		values, args = OptionParser.parse_args(self, args, values)
