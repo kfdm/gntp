@@ -86,7 +86,7 @@ class GrowlNotifier(gntp.notifier.GrowlNotifier):
 		# saving the config, it should be safe to just add it here so the
 		# code below doesn't complain
 		if not config.has_section('gntp'):
-			logger.warning('No [gntp] section found in ~/.gntp config file')
+			logger.info('Error reading ~/.gntp config file')
 			config.add_section('gntp')
 
 		self.applicationName = applicationName
