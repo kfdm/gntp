@@ -81,6 +81,15 @@ Complete Example
 		priority = -1,
 	)
 
+	# Send the image with the growl notification
+	image = open('/path/to/icon.png').read()
+	growl.notify(
+		noteType = "New Messages",
+		title = "Now with icons",
+		description = "This time we attach the image",
+		icon = image,
+	)
+
 GNTP Configfile Example
 -----------------------
 .. autoclass:: gntp.config.GrowlNotifier
