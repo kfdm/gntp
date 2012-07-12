@@ -63,6 +63,22 @@ Simple Usage
         priority = -1,
     )
 
+
+Currently URL based images do not work in the OSX version of
+`growl <http://code.google.com/p/growl/issues/detail?id=423>`_
+You can send the image along with the notification to get around this.
+
+::
+
+    image = open('/path/to/image.png').read()
+    growl.notify(
+        noteType = "New Messages",
+        title = "You have a new message",
+        description = "This time we embed the image",
+        icon = image,
+    )
+
+
 Bugs
 ----
 
