@@ -1,10 +1,24 @@
 #!/usr/bin/env python
 
 import sys
+import os
 import logging
 from gntp import __version__
-from gntp.config import GrowlNotifier
+from gntp.notifier import GrowlNotifier
 from optparse import OptionParser, OptionGroup
+from ConfigParser import RawConfigParser
+
+DEFAULT_CONFIG = os.path.expanduser('~/.gntp')
+
+config = RawConfigParser({
+	'hostname': 'localhost',
+	'password': None,
+	'port': 23053,
+})
+config.read([DEFAULT_CONFIG])
+if not config.has_section('gntp'):
+	logging.info('Error reading ~/.gntp config file')
+	config.add_section('gntp')
 
 
 class ClientParser(OptionParser):
@@ -13,13 +27,13 @@ class ClientParser(OptionParser):
 
 		group = OptionGroup(self, "Network Options")
 		group.add_option("-H", "--host",
-			dest="host", default='localhost',
+			dest="host", default=config.get('gntp', 'hostname'),
 			help="Specify a hostname to which to send a remote notification. [%default]")
 		group.add_option("--port",
-			dest="port", default=23053, type="int",
+			dest="port", default=config.getint('gntp', 'port'), type="int",
 			help="port to listen on [%default]")
 		group.add_option("-P", "--password",
-			dest='password', default='',
+			dest='password', default=config.get('gntp', 'password'),
 			help="Network password")
 		self.add_option_group(group)
 
