@@ -24,19 +24,19 @@ class TestHash(GNTPTestCase):
 		password to test with, so our password hash is no good
 		"""
 		config = os.path.expanduser('~/.gntp')
-		self.assertTrue(os.path.exists(config))
+		self.assertIsTrue(os.path.exists(config))
 
 	def test_md5(self):
-		self.assertTrue(self._hash('MD5'))
+		self.assertIsTrue(self._hash('MD5'))
 
 	def test_sha1(self):
-		self.assertTrue(self._hash('SHA1'))
+		self.assertIsTrue(self._hash('SHA1'))
 
 	def test_sha256(self):
-		self.assertTrue(self._hash('SHA256'))
+		self.assertIsTrue(self._hash('SHA256'))
 
 	def test_sha512(self):
-		self.assertTrue(self._hash('SHA512'))
+		self.assertIsTrue(self._hash('SHA512'))
 
 	def test_fake(self):
 		'''Fake hash should not work'''

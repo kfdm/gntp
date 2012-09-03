@@ -15,11 +15,11 @@ class ConfigTests(GNTPTestCase):
 	def setUp(self):
 		if os.path.exists(ORIGINAL_CONFIG):
 			os.rename(ORIGINAL_CONFIG, BACKUP_CONFIG)
-		self.growl = GrowlNotifier('GNTP unittest', ['Testing'])
+		self.growl = GrowlNotifier(self.application, [self.notification_name])
 		self.growl.register()
 
 	def test_missing_config(self):
-		self.assertTrue(self._notify(description='No config file test'))
+		self.assertIsTrue(self._notify(description='No config file test'))
 
 	def tearDown(self):
 		if os.path.exists(BACKUP_CONFIG):

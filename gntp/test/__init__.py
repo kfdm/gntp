@@ -3,14 +3,17 @@ from gntp.config import GrowlNotifier
 
 
 class GNTPTestCase(unittest.TestCase):
+	application = 'GNTP unittest'
+	notification_name = 'Testing'
+
 	notification = {
-		'noteType': 'Testing',
+		'noteType': notification_name,
 		'title': 'Unittest Title',
 		'description': 'Unittest Description',
 	}
 
 	def setUp(self):
-		self.growl = GrowlNotifier('GNTP unittest', ['Testing'])
+		self.growl = GrowlNotifier(self.application, [self.notification_name])
 		self.growl.register()
 
 	def _notify(self, **kargs):
@@ -19,3 +22,7 @@ class GNTPTestCase(unittest.TestCase):
 				kargs[k] = self.notification[k]
 
 		return self.growl.notify(**kargs)
+
+	def assertIsTrue(self, result):
+		"""Python 2.5 safe way to assert that the result is true"""
+		return self.assertEqual(result, True)
