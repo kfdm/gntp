@@ -64,8 +64,8 @@ Simple Usage
     )
 
 
-Currently URL based images do not work in the OSX version of
-`growl <http://code.google.com/p/growl/issues/detail?id=423>`_
+URL based images do not work in the OSX version of
+`growl <http://code.google.com/p/growl/issues/detail?id=423>`_ 1.4
 You can send the image along with the notification to get around this.
 
 ::
@@ -87,6 +87,11 @@ Bugs
 
 Changelog
 ---------
+
+`v0.8 <https://github.com/kfdm/gntp/compare/v0.7...v0.8>`_
+    - Fix a bug where resource sections were missing a CRLF
+    - Fix a bug where the cli client was using config values over options
+    - Add support for coalescing
 
 `v0.7 <https://github.com/kfdm/gntp/compare/0.6...v0.7>`_
     - Support for images
