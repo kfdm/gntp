@@ -46,9 +46,9 @@ class UnsupportedError(BaseError):
 
 class _GNTPBuffer(StringIO.StringIO):
 	"""GNTP Buffer class"""
-	def writefmt(self, str="", *args):
+	def writefmt(self, message="", *args):
 		"""Shortcut function for writing GNTP Headers"""
-		self.write((str % args).encode('utf8', 'replace'))
+		self.write((message % args).encode('utf8', 'replace'))
 		self.write(GNTP_EOL)
 
 
@@ -268,6 +268,7 @@ class _GNTPBase(object):
 			buffer.writefmt()
 			buffer.write(data)
 			buffer.writefmt()
+			buffer.writefmt()
 
 		return buffer.getvalue()
 
@@ -370,6 +371,7 @@ class GNTPRegister(_GNTPBase):
 			buffer.writefmt('Length: %d', len(data))
 			buffer.writefmt()
 			buffer.write(data)
+			buffer.writefmt()
 			buffer.writefmt()
 
 		return buffer.getvalue()

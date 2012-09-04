@@ -208,7 +208,7 @@ class GrowlNotifier(object):
 	def subscribe_hook(self, packet):
 		pass
 
-	def _send(self, type, packet):
+	def _send(self, messagetype, packet):
 		"""Send the GNTP Packet"""
 
 		packet.validate()
@@ -228,7 +228,7 @@ class GrowlNotifier(object):
 
 		logger.debug('From : %s:%s <%s>\n%s', self.hostname, self.port, response.__class__, response)
 
-		if response.info['messagetype'] == '-OK':
+		if type(response) == gntp.GNTPOK:
 			return True
 		logger.error('Invalid response: %s', response.error())
 		return response.error()
