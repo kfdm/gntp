@@ -6,4 +6,5 @@ README.html
 # Testing files
 .tox/*
 .coverage
-htmlcov
+cover/*
+htmlcov/*
