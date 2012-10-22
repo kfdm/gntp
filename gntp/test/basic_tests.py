@@ -60,7 +60,7 @@ class BasicTests(GNTPTestCase):
 
 	def test_file_icon(self):
 		self.assertIsTrue(self._notify(
-			icon=open(ICON_FILE).read(),
+			icon=open(ICON_FILE, 'rb').read(),
 			description='test_file_icon',
 			))
 

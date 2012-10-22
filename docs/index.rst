@@ -82,7 +82,7 @@ Complete Example
 	)
 
 	# Send the image with the growl notification
-	image = open('/path/to/icon.png').read()
+	image = open('/path/to/icon.png', 'rb').read()
 	growl.notify(
 		noteType = "New Messages",
 		title = "Now with icons",

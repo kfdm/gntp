@@ -6,7 +6,7 @@ from gntp.test import GNTPTestCase
 import gntp
 
 ICON_FILE = os.path.join(os.path.dirname(__file__), "growl-icon.png")
-ICON_DATA = open(ICON_FILE).read()
+ICON_DATA = open(ICON_FILE, 'rb').read()
 FILE_DATA = open(__file__).read()
 
 

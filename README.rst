@@ -70,7 +70,7 @@ You can send the image along with the notification to get around this.
 
 ::
 
-    image = open('/path/to/image.png').read()
+    image = open('/path/to/image.png', 'rb').read()
     growl.notify(
         noteType = "New Messages",
         title = "You have a new message",
