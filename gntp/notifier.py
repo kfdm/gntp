@@ -22,45 +22,6 @@ __all__ = [
 logger = logging.getLogger(__name__)
 
 
-def mini(description, applicationName='PythonMini', noteType="Message",
-			title="Mini Message", applicationIcon=None, hostname='localhost',
-			password=None, port=23053, sticky=False, priority=None,
-			callback=None, notificationIcon=None, identifier=None):
-	"""Single notification function
-
-	Simple notification function in one line. Has only one required parameter
-	and attempts to use reasonable defaults for everything else
-	:param string description: Notification message
-
-	.. warning::
-			For now, only URL callbacks are supported. In the future, the
-			callback argument will also support a function
-	"""
-	growl = GrowlNotifier(
-		applicationName=applicationName,
-		notifications=[noteType],
-		defaultNotifications=[noteType],
-		applicationIcon=applicationIcon,
-		hostname=hostname,
-		password=password,
-		port=port,
-	)
-	result = growl.register()
-	if result is not True:
-		return result
-
-	return growl.notify(
-		noteType=noteType,
-		title=title,
-		description=description,
-		icon=notificationIcon,
-		sticky=sticky,
-		priority=priority,
-		callback=callback,
-		identifier=identifier,
-	)
-
-
 class GrowlNotifier(object):
 	"""Helper class to simplfy sending Growl messages
 
@@ -232,6 +193,46 @@ class GrowlNotifier(object):
 			return True
 		logger.error('Invalid response: %s', response.error())
 		return response.error()
+
+
+def mini(description, applicationName='PythonMini', noteType="Message",
+			title="Mini Message", applicationIcon=None, hostname='localhost',
+			password=None, port=23053, sticky=False, priority=None,
+			callback=None, notificationIcon=None, identifier=None,
+			notifierFactory=GrowlNotifier):
+	"""Single notification function
+
+	Simple notification function in one line. Has only one required parameter
+	and attempts to use reasonable defaults for everything else
+	:param string description: Notification message
+
+	.. warning::
+			For now, only URL callbacks are supported. In the future, the
+			callback argument will also support a function
+	"""
+	growl = notifierFactory(
+		applicationName=applicationName,
+		notifications=[noteType],
+		defaultNotifications=[noteType],
+		applicationIcon=applicationIcon,
+		hostname=hostname,
+		password=password,
+		port=port,
+	)
+	result = growl.register()
+	if result is not True:
+		return result
+
+	return growl.notify(
+		noteType=noteType,
+		title=title,
+		description=description,
+		icon=notificationIcon,
+		sticky=sticky,
+		priority=priority,
+		callback=callback,
+		identifier=identifier,
+	)
 
 if __name__ == '__main__':
 	# If we're running this module directly we're likely running it as a test
