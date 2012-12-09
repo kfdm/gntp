@@ -7,7 +7,7 @@ script. Please fill out your ~/.gntp config before running
 """
 
 from gntp.test import GNTPTestCase
-from gntp import BaseError
+import gntp.errors as errors
 
 
 class TestErrors(GNTPTestCase):
@@ -17,5 +17,4 @@ class TestErrors(GNTPTestCase):
 		# for testing
 		# http://en.wikipedia.org/wiki/List_of_TCP_and_UDP_port_numbers
 		self.growl.port = 9
-		with self.assertRaises(BaseError):
-			self._notify(description='Connection Error')
+		self.assertRaises(errors.NetworkError, self._notify, description='Connection Error')
