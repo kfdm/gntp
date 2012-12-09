@@ -216,29 +216,34 @@ def mini(description, applicationName='PythonMini', noteType="Message",
 			For now, only URL callbacks are supported. In the future, the
 			callback argument will also support a function
 	"""
-	growl = notifierFactory(
-		applicationName=applicationName,
-		notifications=[noteType],
-		defaultNotifications=[noteType],
-		applicationIcon=applicationIcon,
-		hostname=hostname,
-		password=password,
-		port=port,
-	)
-	result = growl.register()
-	if result is not True:
-		return result
+	try:
+		growl = notifierFactory(
+			applicationName=applicationName,
+			notifications=[noteType],
+			defaultNotifications=[noteType],
+			applicationIcon=applicationIcon,
+			hostname=hostname,
+			password=password,
+			port=port,
+		)
+		result = growl.register()
+		if result is not True:
+			return result
 
-	return growl.notify(
-		noteType=noteType,
-		title=title,
-		description=description,
-		icon=notificationIcon,
-		sticky=sticky,
-		priority=priority,
-		callback=callback,
-		identifier=identifier,
-	)
+		return growl.notify(
+			noteType=noteType,
+			title=title,
+			description=description,
+			icon=notificationIcon,
+			sticky=sticky,
+			priority=priority,
+			callback=callback,
+			identifier=identifier,
+		)
+	except Exception:
+		# We want the "mini" function to be simple and swallow Exceptions
+		# in order to be less invasive
+		logging.exception("Growl error")
 
 if __name__ == '__main__':
 	# If we're running this module directly we're likely running it as a test
