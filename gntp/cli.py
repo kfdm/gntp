@@ -3,7 +3,7 @@
 import sys
 import os
 import logging
-from gntp import __version__
+from gntp.version import __version__
 from gntp.notifier import GrowlNotifier
 from optparse import OptionParser, OptionGroup
 from ConfigParser import RawConfigParser

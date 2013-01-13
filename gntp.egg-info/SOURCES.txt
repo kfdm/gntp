@@ -5,6 +5,7 @@ gntp/__init__.py
 gntp/cli.py
 gntp/config.py
 gntp/notifier.py
+gntp/version.py
 gntp.egg-info/PKG-INFO
 gntp.egg-info/SOURCES.txt
 gntp.egg-info/dependency_links.txt

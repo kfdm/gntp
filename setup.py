@@ -5,7 +5,7 @@ try:
 except ImportError:
 	from distutils.core import setup
 
-import gntp
+from gntp.version import __version__
 
 setup(
 	name='gntp',
@@ -13,7 +13,7 @@ setup(
 	long_description=open('README.rst').read(),
 	author='Paul Traylor',
 	url='http://github.com/kfdm/gntp/',
-	version=gntp.__version__,
+	version=__version__,
 	packages=['gntp'],
 	# http://pypi.python.org/pypi?%3Aaction=list_classifiers
 	classifiers=[
