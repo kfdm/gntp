@@ -10,6 +10,7 @@ from gntp.test import GNTPTestCase
 import gntp
 import gntp.config
 import gntp.notifier
+import gntp.errors as errors
 
 ICON_URL = "https://www.google.com/intl/en_com/images/srpr/logo3w.png"
 ICON_FILE = os.path.join(os.path.dirname(__file__), "growl-icon.png")
@@ -50,7 +51,7 @@ class BasicTests(GNTPTestCase):
 		self.assertRaises(AssertionError, self._notify, noteType='Unknown')
 
 	def test_parse_error(self):
-		self.assertRaises(gntp.ParseError, gntp.parse_gntp, 'Invalid GNTP Packet')
+		self.assertRaises(errors.ParseError, gntp.parse_gntp, 'Invalid GNTP Packet')
 
 	def test_url_icon(self):
 		self.assertIsTrue(self._notify(

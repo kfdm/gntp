@@ -4,6 +4,7 @@ setup.py
 gntp/__init__.py
 gntp/cli.py
 gntp/config.py
+gntp/errors.py
 gntp/notifier.py
 gntp/version.py
 gntp.egg-info/PKG-INFO

@@ -8,7 +8,7 @@ script. Please fill out your ~/.gntp config before running
 """
 import os
 from gntp.test import GNTPTestCase
-from gntp import UnsupportedError
+from gntp.errors import UnsupportedError
 
 
 class TestHash(GNTPTestCase):

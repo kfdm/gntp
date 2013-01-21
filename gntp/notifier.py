@@ -15,6 +15,7 @@ import logging
 import platform
 
 from gntp.version import __version__
+import gntp.errors as errors
 
 __all__ = [
 	'mini',
@@ -181,11 +182,15 @@ class GrowlNotifier(object):
 
 		s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		s.settimeout(self.socketTimeout)
-		s.connect((self.hostname, self.port))
-		s.send(data)
-		recv_data = s.recv(1024)
-		while not recv_data.endswith("\r\n\r\n"):
-			recv_data += s.recv(1024)
+		try:
+			s.connect((self.hostname, self.port))
+			s.send(data)
+			recv_data = s.recv(1024)
+			while not recv_data.endswith("\r\n\r\n"):
+				recv_data += s.recv(1024)
+		except socket.error, e:
+			raise errors.NetworkError(e.message)
+
 		response = gntp.parse_gntp(recv_data)
 		s.close()
 
@@ -212,29 +217,34 @@ def mini(description, applicationName='PythonMini', noteType="Message",
 			For now, only URL callbacks are supported. In the future, the
 			callback argument will also support a function
 	"""
-	growl = notifierFactory(
-		applicationName=applicationName,
-		notifications=[noteType],
-		defaultNotifications=[noteType],
-		applicationIcon=applicationIcon,
-		hostname=hostname,
-		password=password,
-		port=port,
-	)
-	result = growl.register()
-	if result is not True:
-		return result
+	try:
+		growl = notifierFactory(
+			applicationName=applicationName,
+			notifications=[noteType],
+			defaultNotifications=[noteType],
+			applicationIcon=applicationIcon,
+			hostname=hostname,
+			password=password,
+			port=port,
+		)
+		result = growl.register()
+		if result is not True:
+			return result
 
-	return growl.notify(
-		noteType=noteType,
-		title=title,
-		description=description,
-		icon=notificationIcon,
-		sticky=sticky,
-		priority=priority,
-		callback=callback,
-		identifier=identifier,
-	)
+		return growl.notify(
+			noteType=noteType,
+			title=title,
+			description=description,
+			icon=notificationIcon,
+			sticky=sticky,
+			priority=priority,
+			callback=callback,
+			identifier=identifier,
+		)
+	except Exception:
+		# We want the "mini" function to be simple and swallow Exceptions
+		# in order to be less invasive
+		logging.exception("Growl error")
 
 if __name__ == '__main__':
 	# If we're running this module directly we're likely running it as a test

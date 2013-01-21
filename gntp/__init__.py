@@ -3,6 +3,8 @@ import hashlib
 import time
 import StringIO
 
+import gntp.errors as errors
+
 #GNTP/<version> <messagetype> <encryptionAlgorithmID>[:<ivValue>][ <keyHashAlgorithmID>:<keyHash>.<salt>]
 GNTP_INFO_LINE = re.compile(
 	'GNTP/(?P<version>\d+\.\d+) (?P<messagetype>REGISTER|NOTIFY|SUBSCRIBE|\-OK|\-ERROR)' +
@@ -19,27 +21,6 @@ GNTP_INFO_LINE_SHORT = re.compile(
 GNTP_HEADER = re.compile('([\w-]+):(.+)')
 
 GNTP_EOL = '\r\n'
-
-
-class BaseError(Exception):
-	def gntp_error(self):
-		error = GNTPError(self.errorcode, self.errordesc)
-		return error.encode()
-
-
-class ParseError(BaseError):
-	errorcode = 500
-	errordesc = 'Error parsing the message'
-
-
-class AuthError(BaseError):
-	errorcode = 400
-	errordesc = 'Error with authorization'
-
-
-class UnsupportedError(BaseError):
-	errorcode = 500
-	errordesc = 'Currently unsupported by gntp.py'
 
 
 class _GNTPBuffer(StringIO.StringIO):
@@ -79,7 +60,7 @@ class _GNTPBase(object):
 		match = GNTP_INFO_LINE.match(data)
 
 		if not match:
-			raise ParseError('ERROR_PARSING_INFO_LINE')
+			raise errors.ParseError('ERROR_PARSING_INFO_LINE')
 
 		info = match.groupdict()
 		if info['encryptionAlgorithmID'] == 'NONE':
@@ -107,7 +88,7 @@ class _GNTPBase(object):
 			self.info['keyHashAlgorithm'] = None
 			return
 		if not self.encryptAlgo in hash.keys():
-			raise UnsupportedError('INVALID HASH "%s"' % self.encryptAlgo)
+			raise errors.UnsupportedError('INVALID HASH "%s"' % self.encryptAlgo)
 
 		hashfunction = hash.get(self.encryptAlgo)
 
@@ -142,21 +123,21 @@ class _GNTPBase(object):
 		pointerEnd = pointerStart + dataLength
 		data = self.raw[pointerStart:pointerEnd]
 		if not len(data) == dataLength:
-			raise ParseError('INVALID_DATA_LENGTH Expected: %s Recieved %s' % (dataLength, len(data)))
+			raise errors.ParseError('INVALID_DATA_LENGTH Expected: %s Recieved %s' % (dataLength, len(data)))
 		return data
 
 	def _validate_password(self, password):
 		"""Validate GNTP Message against stored password"""
 		self.password = password
 		if password == None:
-			raise AuthError('Missing password')
+			raise errors.AuthError('Missing password')
 		keyHash = self.info.get('keyHash', None)
 		if keyHash is None and self.password is None:
 			return True
 		if keyHash is None:
-			raise AuthError('Invalid keyHash')
+			raise errors.AuthError('Invalid keyHash')
 		if self.password is None:
-			raise AuthError('Missing password')
+			raise errors.AuthError('Missing password')
 
 		password = self.password.encode('utf8')
 		saltHash = self._decode_hex(self.info['salt'])
@@ -166,14 +147,14 @@ class _GNTPBase(object):
 		keyHash = hashlib.md5(key).hexdigest()
 
 		if not keyHash.upper() == self.info['keyHash'].upper():
-			raise AuthError('Invalid Hash')
+			raise errors.AuthError('Invalid Hash')
 		return True
 
 	def validate(self):
 		"""Verify required headers"""
 		for header in self._requiredHeaders:
 			if not self.headers.get(header, False):
-				raise ParseError('Missing Notification Header: ' + header)
+				raise errors.ParseError('Missing Notification Header: ' + header)
 
 	def _format_info(self):
 		"""Generate info line for GNTP Message
@@ -298,11 +279,11 @@ class GNTPRegister(_GNTPBase):
 		'''Validate required headers and validate notification headers'''
 		for header in self._requiredHeaders:
 			if not self.headers.get(header, False):
-				raise ParseError('Missing Registration Header: ' + header)
+				raise errors.ParseError('Missing Registration Header: ' + header)
 		for notice in self.notifications:
 			for header in self._requiredNotificationHeaders:
 				if not notice.get(header, False):
-					raise ParseError('Missing Notification Header: ' + header)
+					raise errors.ParseError('Missing Notification Header: ' + header)
 
 	def decode(self, data, password):
 		"""Decode existing GNTP Registration message
@@ -492,7 +473,7 @@ def parse_gntp(data, password=None):
 	"""
 	match = GNTP_INFO_LINE_SHORT.match(data)
 	if not match:
-		raise ParseError('INVALID_GNTP_INFO')
+		raise errors.ParseError('INVALID_GNTP_INFO')
 	info = match.groupdict()
 	if info['messagetype'] == 'REGISTER':
 		return GNTPRegister(data, password=password)
@@ -504,4 +485,4 @@ def parse_gntp(data, password=None):
 		return GNTPOK(data)
 	elif info['messagetype'] == '-ERROR':
 		return GNTPError(data)
-	raise ParseError('INVALID_GNTP_MESSAGE')
+	raise errors.ParseError('INVALID_GNTP_MESSAGE')
