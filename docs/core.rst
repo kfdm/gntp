@@ -5,11 +5,11 @@ Lower level classes for those who want more control in sending messages
 Exceptions
 ----------
 
-.. autoexception:: gntp.AuthError
+.. autoexception:: gntp.errors.AuthError
 
-.. autoexception:: gntp.ParseError
+.. autoexception:: gntp.errors.ParseError
 
-.. autoexception:: gntp.UnsupportedError
+.. autoexception:: gntp.errors.UnsupportedError
 
 GNTP Messages
 -------------
