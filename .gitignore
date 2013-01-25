@@ -2,6 +2,7 @@ dist/*
 build/*
 MANIFEST
 README.html
+*.egg-info/*
 
 # Testing files
 .tox/*
