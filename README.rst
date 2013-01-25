@@ -88,6 +88,12 @@ Bugs
 Changelog
 ---------
 
+`v0.9 <https://github.com/kfdm/gntp/compare/v0.8...v0.9>`_
+    - Remove duplicate code from gntp.config
+    - Catch all errors and rethrow them as gntp.errors to make it easier for
+      other programs to deal with errors from the gntp library.
+    - Ensure that we open resource files as "rb" and update the documentation
+
 `v0.8 <https://github.com/kfdm/gntp/compare/v0.7...v0.8>`_
     - Fix a bug where resource sections were missing a CRLF
     - Fix a bug where the cli client was using config values over options
