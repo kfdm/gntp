@@ -92,7 +92,7 @@ class GrowlNotifier(object):
 		return self._send('register', register)
 
 	def notify(self, noteType, title, description, icon=None, sticky=False,
-			priority=None, callback=None, identifier=None):
+			priority=None, callback=None, identifier=None, custom={}):
 		"""Send a GNTP notifications
 
 		.. warning::
@@ -105,6 +105,8 @@ class GrowlNotifier(object):
 		:param boolean sticky: Sticky notification
 		:param integer priority: Message priority level from -2 to 2
 		:param string callback:  URL callback
+		:param dict custom: Custom attributes. Key names should be prefixed with X-
+			according to the spec but this is not enforced by this class
 
 		.. warning::
 			For now, only URL callbacks are supported. In the future, the
@@ -135,6 +137,9 @@ class GrowlNotifier(object):
 			notice.add_header('Notification-Callback-Target', callback)
 		if identifier:
 			notice.add_header('Notification-Coalescing-ID', identifier)
+
+		for key in custom:
+			notice.add_header(key, custom[key])
 
 		self.add_origin_info(notice)
 		self.notify_hook(notice)
