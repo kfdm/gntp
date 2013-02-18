@@ -78,6 +78,9 @@ You can send the image along with the notification to get around this.
         icon = image,
     )
 
+.. note:: With Growl 2 and above user can choose to pass notification to system
+   wide notifications center. In this case ``icon`` argument would be ignored
+   by the notification center (there would always be Growl icon instead).
 
 Bugs
 ----
