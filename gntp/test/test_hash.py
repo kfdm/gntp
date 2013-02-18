@@ -40,4 +40,5 @@ class TestHash(GNTPTestCase):
 
 	def test_fake(self):
 		'''Fake hash should not work'''
+		self.growl.password = 'foobar'
 		self.assertRaises(UnsupportedError, self._hash, 'fake-hash')
