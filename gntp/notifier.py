@@ -9,12 +9,14 @@ using GNTP
 	`Original Python bindings <http://code.google.com/p/growl/source/browse/Bindings/python/Growl.py>`_
 
 """
-import gntp
-import socket
+
 import logging
 import platform
+import socket
+
 
 from gntp.version import __version__
+import gntp
 import gntp.errors as errors
 
 __all__ = [

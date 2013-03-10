@@ -4,10 +4,11 @@ advantage of the ConfigParser module to allow us to setup some default values
 (such as hostname, password, and port) in a more global way to be shared among
 programs using gntp
 """
-import os
-import ConfigParser
-import gntp.notifier
 import logging
+import os
+
+import gntp.notifier
+import gntp.shim
 
 __all__ = [
 	'mini',
@@ -32,7 +33,7 @@ class GrowlNotifier(gntp.notifier.GrowlNotifier):
 		port = ?
 	"""
 	def __init__(self, *args, **kwargs):
-		config = ConfigParser.RawConfigParser({
+		config = gntp.shim.RawConfigParser({
 			'hostname': kwargs.get('hostname', 'localhost'),
 			'password': kwargs.get('password'),
 			'port': kwargs.get('port', 23053),

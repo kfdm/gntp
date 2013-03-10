@@ -1,8 +1,8 @@
-import re
 import hashlib
+import re
 import time
-import StringIO
 
+import gntp.shim
 import gntp.errors as errors
 
 #GNTP/<version> <messagetype> <encryptionAlgorithmID>[:<ivValue>][ <keyHashAlgorithmID>:<keyHash>.<salt>]
@@ -23,7 +23,7 @@ GNTP_HEADER = re.compile('([\w-]+):(.+)')
 GNTP_EOL = '\r\n'
 
 
-class _GNTPBuffer(StringIO.StringIO):
+class _GNTPBuffer(gntp.shim.StringIO):
 	"""GNTP Buffer class"""
 	def writefmt(self, message="", *args):
 		"""Shortcut function for writing GNTP Headers"""
