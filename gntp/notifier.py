@@ -9,10 +9,10 @@ using GNTP
 	`Original Python bindings <http://code.google.com/p/growl/source/browse/Bindings/python/Growl.py>`_
 
 """
-
 import logging
 import platform
 import socket
+import sys
 
 
 from gntp.version import __version__
@@ -195,8 +195,10 @@ class GrowlNotifier(object):
 			recv_data = s.recv(1024)
 			while not recv_data.endswith("\r\n\r\n"):
 				recv_data += s.recv(1024)
-		except socket.error, e:
-			raise errors.NetworkError(e.message)
+		except socket.error:
+			# Python2.5 and Python3 compatibile exception
+			exc = sys.exc_info()[1]
+			raise errors.NetworkError(exc.message)
 
 		response = gntp.parse_gntp(recv_data)
 		s.close()
