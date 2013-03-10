@@ -18,6 +18,7 @@ import sys
 from gntp.version import __version__
 import gntp
 import gntp.errors as errors
+import gntp.shim
 
 __all__ = [
 	'mini',
@@ -191,9 +192,9 @@ class GrowlNotifier(object):
 		s.settimeout(self.socketTimeout)
 		try:
 			s.connect((self.hostname, self.port))
-			s.send(data)
+			s.send(gntp.shim.b(data))
 			recv_data = s.recv(1024)
-			while not recv_data.endswith("\r\n\r\n"):
+			while not recv_data.endswith(gntp.shim.b("\r\n\r\n")):
 				recv_data += s.recv(1024)
 		except socket.error:
 			# Python2.5 and Python3 compatibile exception
