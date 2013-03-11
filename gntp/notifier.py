@@ -14,9 +14,8 @@ import platform
 import socket
 import sys
 
-
 from gntp.version import __version__
-import gntp
+import gntp.core
 import gntp.errors as errors
 import gntp.shim
 
@@ -78,7 +77,7 @@ class GrowlNotifier(object):
 			sent a registration message at least once
 		"""
 		logger.info('Sending registration to %s:%s', self.hostname, self.port)
-		register = gntp.GNTPRegister()
+		register = gntp.core.GNTPRegister()
 		register.add_header('Application-Name', self.applicationName)
 		for notification in self.notifications:
 			enabled = notification in self.defaultNotifications
@@ -118,7 +117,7 @@ class GrowlNotifier(object):
 		"""
 		logger.info('Sending notification [%s] to %s:%s', noteType, self.hostname, self.port)
 		assert noteType in self.notifications
-		notice = gntp.GNTPNotice()
+		notice = gntp.core.GNTPNotice()
 		notice.add_header('Application-Name', self.applicationName)
 		notice.add_header('Notification-Name', noteType)
 		notice.add_header('Notification-Title', title)
@@ -152,7 +151,7 @@ class GrowlNotifier(object):
 
 	def subscribe(self, id, name, port):
 		"""Send a Subscribe request to a remote machine"""
-		sub = gntp.GNTPSubscribe()
+		sub = gntp.core.GNTPSubscribe()
 		sub.add_header('Subscriber-ID', id)
 		sub.add_header('Subscriber-Name', name)
 		sub.add_header('Subscriber-Port', port)
@@ -202,12 +201,12 @@ class GrowlNotifier(object):
 			exc = sys.exc_info()[1]
 			raise errors.NetworkError(exc)
 
-		response = gntp.parse_gntp(recv_data)
+		response = gntp.core.parse_gntp(recv_data)
 		s.close()
 
 		logger.debug('From : %s:%s <%s>\n%s', self.hostname, self.port, response.__class__, response)
 
-		if type(response) == gntp.GNTPOK:
+		if type(response) == gntp.core.GNTPOK:
 			return True
 		logger.error('Invalid response: %s', response.error())
 		return response.error()

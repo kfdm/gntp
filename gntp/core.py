@@ -5,6 +5,15 @@ import time
 import gntp.shim
 import gntp.errors as errors
 
+__all__ = [
+	'GNTPRegister',
+	'GNTPNotice',
+	'GNTPSubscribe',
+	'GNTPOK',
+	'GNTPError',
+	'parse_gntp',
+]
+
 #GNTP/<version> <messagetype> <encryptionAlgorithmID>[:<ivValue>][ <keyHashAlgorithmID>:<keyHash>.<salt>]
 GNTP_INFO_LINE = re.compile(
 	'GNTP/(?P<version>\d+\.\d+) (?P<messagetype>REGISTER|NOTIFY|SUBSCRIBE|\-OK|\-ERROR)' +
