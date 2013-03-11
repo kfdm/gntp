@@ -1,3 +1,10 @@
+"""
+Python2.5 and Python3.3 compatibility shim
+
+Heavily inspirted by the "six" library.
+https://pypi.python.org/pypi/six
+"""
+
 import sys
 
 PY3 = sys.version_info[0] == 3
@@ -13,9 +20,7 @@ if PY3:
 			return s.decode('utf8', 'replace')
 		return s
 
-	import io
-	StringIO = io.StringIO
-	BytesIO = io.BytesIO
+	from io import StringIO
 	from configparser import RawConfigParser
 else:
 	def b(s):
@@ -30,7 +35,8 @@ else:
 			s = str(s)
 		return unicode(s, "utf8", "replace")
 
-	int2byte = chr
-	import StringIO
-	StringIO = BytesIO = StringIO.StringIO
+	from StringIO import StringIO
 	from ConfigParser import RawConfigParser
+
+b.__doc__ = "Ensure we have a byte string"
+u.__doc__ = "Ensure we have a unicode string"
