@@ -254,7 +254,7 @@ def mini(description, applicationName='PythonMini', noteType="Message",
 	except Exception:
 		# We want the "mini" function to be simple and swallow Exceptions
 		# in order to be less invasive
-		logging.exception("Growl error")
+		logger.exception("Growl error")
 
 if __name__ == '__main__':
 	# If we're running this module directly we're likely running it as a test
