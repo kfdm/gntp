@@ -1,9 +1,17 @@
-#!/usr/bin/env python
-
 try:
 	from setuptools import setup
+	kwargs = {
+		'entry_points':{
+			'console_scripts': [
+				'gntp = gntp.cli:main'
+			]
+		}
+	}
 except ImportError:
 	from distutils.core import setup
+	kwargs = {
+		'scripts':['scripts/gntp']
+	}
 
 from gntp.version import __version__
 
@@ -30,9 +38,5 @@ setup(
 		'Programming Language :: Python :: 3.3',
 		'Programming Language :: Python :: Implementation :: PyPy',
 	],
-	entry_points={
-		'console_scripts': [
-			'gntp = gntp.cli:main'
-		]
-	}
+	**kwargs
 )

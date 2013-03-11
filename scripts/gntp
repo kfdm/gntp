@@ -1,0 +1,3 @@
+#!python
+import gntp.cli
+gntp.cli.main()
