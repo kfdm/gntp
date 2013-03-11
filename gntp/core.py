@@ -85,7 +85,7 @@ class _GNTPBase(object):
 		:param string password: Null to clear password
 		:param string encryptAlgo: Supports MD5, SHA1, SHA256, SHA512
 		"""
-		hash = {
+		hash_algo = {
 			'MD5': hashlib.md5,
 			'SHA1': hashlib.sha1,
 			'SHA256': hashlib.sha256,
@@ -100,10 +100,10 @@ class _GNTPBase(object):
 		self.password = gntp.shim.b(password)
 		self.encryptAlgo = encryptAlgo.upper()
 
-		if not self.encryptAlgo in hash.keys():
+		if not self.encryptAlgo in hash_algo:
 			raise errors.UnsupportedError('INVALID HASH "%s"' % self.encryptAlgo)
 
-		hashfunction = hash.get(self.encryptAlgo)
+		hashfunction = hash_algo.get(self.encryptAlgo)
 
 		password = password.encode('utf8')
 		seed = time.ctime().encode('utf8')
@@ -142,7 +142,7 @@ class _GNTPBase(object):
 	def _validate_password(self, password):
 		"""Validate GNTP Message against stored password"""
 		self.password = password
-		if password == None:
+		if password is None:
 			raise errors.AuthError('Missing password')
 		keyHash = self.info.get('keyHash', None)
 		if keyHash is None and self.password is None:
@@ -199,9 +199,9 @@ class _GNTPBase(object):
 		"""Helper function to parse blocks of GNTP headers into a dictionary
 
 		:param string data:
-		:return dict:
+		:return dict: Dictionary of parsed GNTP Headers
 		"""
-		dict = {}
+		d = {}
 		for line in data.split('\r\n'):
 			match = GNTP_HEADER.match(line)
 			if not match:
@@ -209,8 +209,8 @@ class _GNTPBase(object):
 
 			key = match.group(1).strip()
 			val = match.group(2).strip()
-			dict[key] = val
-		return dict
+			d[key] = val
+		return d
 
 	def add_header(self, key, value):
 		self.headers[key] = value
