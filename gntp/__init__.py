@@ -204,7 +204,7 @@ class _GNTPBase(object):
 		return dict
 
 	def add_header(self, key, value):
-		self.headers[key] = str(value)
+		self.headers[key] = value
 
 	def add_resource(self, data):
 		"""Add binary resource
