@@ -67,6 +67,7 @@ class GrowlNotifier(object):
 		then we return False
 		'''
 		logger.info('Checking icon')
+		data = gntp.shim.u(data)
 		return data.startswith('http')
 
 	def register(self):
@@ -184,7 +185,7 @@ class GrowlNotifier(object):
 		"""Send the GNTP Packet"""
 
 		packet.validate()
-		data = packet.encode()
+		data = gntp.shim.b(packet.encode())
 
 		logger.debug('To : %s:%s <%s>\n%s', self.hostname, self.port, packet.__class__, data)
 
@@ -192,14 +193,14 @@ class GrowlNotifier(object):
 		s.settimeout(self.socketTimeout)
 		try:
 			s.connect((self.hostname, self.port))
-			s.send(gntp.shim.b(data))
+			s.send(data)
 			recv_data = s.recv(1024)
 			while not recv_data.endswith(gntp.shim.b("\r\n\r\n")):
 				recv_data += s.recv(1024)
 		except socket.error:
 			# Python2.5 and Python3 compatibile exception
 			exc = sys.exc_info()[1]
-			raise errors.NetworkError(exc.message)
+			raise errors.NetworkError(exc)
 
 		response = gntp.parse_gntp(recv_data)
 		s.close()

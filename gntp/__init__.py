@@ -211,6 +211,7 @@ class _GNTPBase(object):
 
 		:param string data: Binary Data
 		"""
+		data = gntp.shim.b(data)
 		identifier = hashlib.md5(data).hexdigest()
 		self.resources[identifier] = data
 		return 'x-growl-resource://%s' % identifier
@@ -221,9 +222,9 @@ class _GNTPBase(object):
 		:param string data:
 		"""
 		self.password = password
-		self.raw = data
+		self.raw = gntp.shim.u(data)
 		parts = self.raw.split('\r\n\r\n')
-		self.info = self._parse_info(data)
+		self.info = self._parse_info(self.raw)
 		self.headers = self._parse_dict(parts[0])
 
 	def encode(self):
@@ -243,6 +244,7 @@ class _GNTPBase(object):
 
 		#Resources
 		for resource, data in self.resources.items():
+			data = gntp.shim.u(data)
 			buffer.writefmt('Identifier: %s', resource)
 			buffer.writefmt('Length: %s', len(data))
 			buffer.writefmt()
@@ -291,9 +293,9 @@ class GNTPRegister(_GNTPBase):
 
 		:param string data: Message to decode
 		"""
-		self.raw = data
+		self.raw = gntp.shim.u(data)
 		parts = self.raw.split('\r\n\r\n')
-		self.info = self._parse_info(data)
+		self.info = self._parse_info(self.raw)
 		self._validate_password(password)
 		self.headers = self._parse_dict(parts[0])
 
@@ -391,9 +393,9 @@ class GNTPNotice(_GNTPBase):
 
 		:param string data: Message to decode.
 		"""
-		self.raw = data
+		self.raw = gntp.shim.u(data)
 		parts = self.raw.split('\r\n\r\n')
-		self.info = self._parse_info(data)
+		self.info = self._parse_info(self.raw)
 		self._validate_password(password)
 		self.headers = self._parse_dict(parts[0])
 
@@ -472,6 +474,7 @@ def parse_gntp(data, password=None):
 	:param string data: Message to be parsed
 	:param string password: Optional password to be used to verify the message
 	"""
+	data = gntp.shim.u(data)
 	match = GNTP_INFO_LINE_SHORT.match(data)
 	if not match:
 		raise errors.ParseError('INVALID_GNTP_INFO')

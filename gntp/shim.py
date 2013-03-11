@@ -9,6 +9,8 @@ if PY3:
 		return s.encode('utf8', 'replace')
 
 	def u(s):
+		if isinstance(s, bytes):
+			return s.decode('utf8', 'replace')
 		return s
 
 	import io
