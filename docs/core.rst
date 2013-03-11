@@ -15,23 +15,23 @@ GNTP Messages
 -------------
 Classes representing each of the GNTP message types
 
-.. autoclass:: gntp.GNTPRegister
+.. autoclass:: gntp.core.GNTPRegister
 	:members:
 	:inherited-members:
 
-.. autoclass:: gntp.GNTPNotice
+.. autoclass:: gntp.core.GNTPNotice
 	:members:
 	:inherited-members:
 
-.. autoclass:: gntp.GNTPSubscribe
+.. autoclass:: gntp.core.GNTPSubscribe
 	:members:
 	:inherited-members:
 
-.. autoclass:: gntp.GNTPOK
+.. autoclass:: gntp.core.GNTPOK
 	:members:
 	:inherited-members:
 
-.. autoclass:: gntp.GNTPError
+.. autoclass:: gntp.core.GNTPError
 	:members:
 	:inherited-members:
 
@@ -39,4 +39,4 @@ Classes representing each of the GNTP message types
 Helper Functions
 ----------------
 
-.. autofunction:: gntp.parse_gntp
+.. autofunction:: gntp.core.parse_gntp
