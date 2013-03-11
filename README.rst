@@ -90,6 +90,8 @@ Bugs
 
 Changelog
 ---------
+`v1.0 <https://github.com/kfdm/gntp/compare/v0.9...v1.0>`_
+    - Python 3.3 Support
 
 `v0.9 <https://github.com/kfdm/gntp/compare/v0.8...v0.9>`_
     - Remove duplicate code from gntp.config
