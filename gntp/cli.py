@@ -18,7 +18,6 @@ config = RawConfigParser({
 })
 config.read([DEFAULT_CONFIG])
 if not config.has_section('gntp'):
-	logging.info('Error reading ~/.gntp config file')
 	config.add_section('gntp')
 
 
@@ -101,6 +100,8 @@ class ClientParser(OptionParser):
 def main():
 	(options, message) = ClientParser().parse_args()
 	logging.basicConfig(level=options.verbose)
+	if not os.path.exists(DEFAULT_CONFIG):
+		logging.info('No config read found at %s', DEFAULT_CONFIG)
 
 	growl = GrowlNotifier(
 		applicationName=options.app,
