@@ -9,13 +9,16 @@ using GNTP
 	`Original Python bindings <http://code.google.com/p/growl/source/browse/Bindings/python/Growl.py>`_
 
 """
-import gntp
-import socket
 import logging
 import platform
+import socket
+import sys
+
 
 from gntp.version import __version__
+import gntp
 import gntp.errors as errors
+import gntp.shim
 
 __all__ = [
 	'mini',
@@ -64,6 +67,7 @@ class GrowlNotifier(object):
 		then we return False
 		'''
 		logger.info('Checking icon')
+		data = gntp.shim.u(data)
 		return data.startswith('http')
 
 	def register(self):
@@ -181,7 +185,7 @@ class GrowlNotifier(object):
 		"""Send the GNTP Packet"""
 
 		packet.validate()
-		data = packet.encode()
+		data = gntp.shim.b(packet.encode())
 
 		logger.debug('To : %s:%s <%s>\n%s', self.hostname, self.port, packet.__class__, data)
 
@@ -191,10 +195,12 @@ class GrowlNotifier(object):
 			s.connect((self.hostname, self.port))
 			s.send(data)
 			recv_data = s.recv(1024)
-			while not recv_data.endswith("\r\n\r\n"):
+			while not recv_data.endswith(gntp.shim.b("\r\n\r\n")):
 				recv_data += s.recv(1024)
-		except socket.error, e:
-			raise errors.NetworkError(e.message)
+		except socket.error:
+			# Python2.5 and Python3 compatibile exception
+			exc = sys.exc_info()[1]
+			raise errors.NetworkError(exc)
 
 		response = gntp.parse_gntp(recv_data)
 		s.close()

@@ -1,12 +1,13 @@
 #!/usr/bin/env python
 
-import sys
-import os
 import logging
-from gntp.version import __version__
-from gntp.notifier import GrowlNotifier
+import os
+import sys
 from optparse import OptionParser, OptionGroup
-from ConfigParser import RawConfigParser
+
+from gntp.notifier import GrowlNotifier
+from gntp.shim import RawConfigParser
+from gntp.version import __version__
 
 DEFAULT_CONFIG = os.path.expanduser('~/.gntp')
 
@@ -76,7 +77,7 @@ class ClientParser(OptionParser):
 		values, args = OptionParser.parse_args(self, args, values)
 
 		if values.message is None:
-			print 'Enter a message followed by Ctrl-D'
+			print('Enter a message followed by Ctrl-D')
 			try:
 				message = sys.stdin.read()
 			except KeyboardInterrupt:
