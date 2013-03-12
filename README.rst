@@ -90,6 +90,9 @@ Bugs
 
 Changelog
 ---------
+`v1.0.1 <https://github.com/kfdm/gntp/compare/v1.0...v1.0.1>`_
+    - Fix bug with binary data (images) being encoded incorrectly
+
 `v1.0 <https://github.com/kfdm/gntp/compare/v0.9...v1.0>`_
     - Python 3.3 Support
 
