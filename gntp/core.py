@@ -43,7 +43,7 @@ class _GNTPBuffer(gntp.shim.StringIO):
 		if not isinstance(value, str):
 			value = str(value)
 		self.write(gntp.shim.b(key))
-		self.write(b': ')
+		self.write(gntp.shim.b(': '))
 		self.write(gntp.shim.b(value))
 		self.write(gntp.shim.b(GNTP_EOL))
 
