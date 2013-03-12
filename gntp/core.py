@@ -29,16 +29,23 @@ GNTP_INFO_LINE_SHORT = re.compile(
 
 GNTP_HEADER = re.compile('([\w-]+):(.+)')
 
-GNTP_EOL = '\r\n'
+GNTP_EOL = gntp.shim.b('\r\n')
+GNTP_SEP = gntp.shim.b(': ')
 
 
 class _GNTPBuffer(gntp.shim.StringIO):
 	"""GNTP Buffer class"""
-	def writefmt(self, message="", *args):
-		"""Shortcut function for writing GNTP Headers"""
-		if not gntp.shim.PY3:
-			message = gntp.shim.b(message)
-		self.write(message % args)
+	def writeln(self, value=None):
+		if value:
+			self.write(gntp.shim.b(value))
+		self.write(GNTP_EOL)
+
+	def writeheader(self, key, value):
+		if not isinstance(value, str):
+			value = str(value)
+		self.write(gntp.shim.b(key))
+		self.write(GNTP_SEP)
+		self.write(gntp.shim.b(value))
 		self.write(GNTP_EOL)
 
 
@@ -239,29 +246,28 @@ class _GNTPBase(object):
 	def encode(self):
 		"""Encode a generic GNTP Message
 
-		:return string: GNTP Message ready to be sent
+		:return string: GNTP Message ready to be sent. Returned as a byte string
 		"""
 
-		buffer = _GNTPBuffer()
+		buff = _GNTPBuffer()
 
-		buffer.writefmt(self._format_info())
+		buff.writeln(self._format_info())
 
 		#Headers
 		for k, v in self.headers.items():
-			buffer.writefmt('%s: %s', k, v)
-		buffer.writefmt()
+			buff.writeheader(k, v)
+		buff.writeln()
 
 		#Resources
 		for resource, data in self.resources.items():
-			data = gntp.shim.u(data)
-			buffer.writefmt('Identifier: %s', resource)
-			buffer.writefmt('Length: %s', len(data))
-			buffer.writefmt()
-			buffer.write(data)
-			buffer.writefmt()
-			buffer.writefmt()
+			buff.writeheader('Identifier', resource)
+			buff.writeheader('Length', len(data))
+			buff.writeln()
+			buff.write(data)
+			buff.writeln()
+			buff.writeln()
 
-		return buffer.getvalue()
+		return buff.getvalue()
 
 
 class GNTPRegister(_GNTPBase):
@@ -337,35 +343,35 @@ class GNTPRegister(_GNTPBase):
 	def encode(self):
 		"""Encode a GNTP Registration Message
 
-		:return string: Encoded GNTP Registration message
+		:return string: Encoded GNTP Registration message. Returned as a byte string
 		"""
 
-		buffer = _GNTPBuffer()
+		buff = _GNTPBuffer()
 
-		buffer.writefmt(self._format_info())
+		buff.writeln(self._format_info())
 
 		#Headers
 		for k, v in self.headers.items():
-			buffer.writefmt('%s: %s', k, v)
-		buffer.writefmt()
+			buff.writeheader(k, v)
+		buff.writeln()
 
 		#Notifications
 		if len(self.notifications) > 0:
 			for notice in self.notifications:
 				for k, v in notice.items():
-					buffer.writefmt('%s: %s', k, v)
-				buffer.writefmt()
+					buff.writeheader(k, v)
+				buff.writeln()
 
 		#Resources
 		for resource, data in self.resources.items():
-			buffer.writefmt('Identifier: %s', resource)
-			buffer.writefmt('Length: %d', len(data))
-			buffer.writefmt()
-			buffer.write(data)
-			buffer.writefmt()
-			buffer.writefmt()
+			buff.writeheader('Identifier', resource)
+			buff.writeheader('Length', len(data))
+			buff.writeln()
+			buff.write(data)
+			buff.writeln()
+			buff.writeln()
 
-		return buffer.getvalue()
+		return buff.getvalue()
 
 
 class GNTPNotice(_GNTPBase):

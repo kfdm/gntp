@@ -66,8 +66,7 @@ class GrowlNotifier(object):
 		then we return False
 		'''
 		logger.info('Checking icon')
-		data = gntp.shim.u(data)
-		return data.startswith('http')
+		return gntp.shim.u(data).startswith('http')
 
 	def register(self):
 		"""Send GNTP Registration
@@ -86,8 +85,8 @@ class GrowlNotifier(object):
 			if self._checkIcon(self.applicationIcon):
 				register.add_header('Application-Icon', self.applicationIcon)
 			else:
-				id = register.add_resource(self.applicationIcon)
-				register.add_header('Application-Icon', id)
+				resource = register.add_resource(self.applicationIcon)
+				register.add_header('Application-Icon', resource)
 		if self.password:
 			register.set_password(self.password, self.passwordHash)
 		self.add_origin_info(register)
@@ -131,8 +130,8 @@ class GrowlNotifier(object):
 			if self._checkIcon(icon):
 				notice.add_header('Notification-Icon', icon)
 			else:
-				id = notice.add_resource(icon)
-				notice.add_header('Notification-Icon', id)
+				resource = notice.add_resource(icon)
+				notice.add_header('Notification-Icon', resource)
 
 		if description:
 			notice.add_header('Notification-Text', description)
@@ -184,7 +183,7 @@ class GrowlNotifier(object):
 		"""Send the GNTP Packet"""
 
 		packet.validate()
-		data = gntp.shim.b(packet.encode())
+		data = packet.encode()
 
 		logger.debug('To : %s:%s <%s>\n%s', self.hostname, self.port, packet.__class__, data)
 
