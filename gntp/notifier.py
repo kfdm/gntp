@@ -66,8 +66,7 @@ class GrowlNotifier(object):
 		then we return False
 		'''
 		logger.info('Checking icon')
-		data = gntp.shim.u(data)
-		return data.startswith('http')
+		return gntp.shim.u(data).startswith('http')
 
 	def register(self):
 		"""Send GNTP Registration
