@@ -29,7 +29,8 @@ GNTP_INFO_LINE_SHORT = re.compile(
 
 GNTP_HEADER = re.compile('([\w-]+):(.+)')
 
-GNTP_EOL = '\r\n'
+GNTP_EOL = gntp.shim.b('\r\n')
+GNTP_SEP = gntp.shim.b(': ')
 
 
 class _GNTPBuffer(gntp.shim.StringIO):
@@ -37,15 +38,15 @@ class _GNTPBuffer(gntp.shim.StringIO):
 	def writeln(self, value=None):
 		if value:
 			self.write(gntp.shim.b(value))
-		self.write(gntp.shim.b(GNTP_EOL))
+		self.write(GNTP_EOL)
 
 	def writeheader(self, key, value):
 		if not isinstance(value, str):
 			value = str(value)
 		self.write(gntp.shim.b(key))
-		self.write(gntp.shim.b(': '))
+		self.write(GNTP_SEP)
 		self.write(gntp.shim.b(value))
-		self.write(gntp.shim.b(GNTP_EOL))
+		self.write(GNTP_EOL)
 
 
 class _GNTPBase(object):
