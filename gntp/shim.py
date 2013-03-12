@@ -20,7 +20,7 @@ if PY3:
 			return s.decode('utf8', 'replace')
 		return s
 
-	from io import StringIO
+	from io import BytesIO as StringIO
 	from configparser import RawConfigParser
 else:
 	def b(s):
