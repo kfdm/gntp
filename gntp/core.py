@@ -246,7 +246,7 @@ class _GNTPBase(object):
 	def encode(self):
 		"""Encode a generic GNTP Message
 
-		:return string: GNTP Message ready to be sent
+		:return string: GNTP Message ready to be sent. Returned as a byte string
 		"""
 
 		buff = _GNTPBuffer()
@@ -343,7 +343,7 @@ class GNTPRegister(_GNTPBase):
 	def encode(self):
 		"""Encode a GNTP Registration Message
 
-		:return string: Encoded GNTP Registration message
+		:return string: Encoded GNTP Registration message. Returned as a byte string
 		"""
 
 		buff = _GNTPBuffer()
