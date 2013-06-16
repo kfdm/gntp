@@ -1,3 +1,6 @@
+# Copyright: 2013 Paul Traylor
+# These sources are released under the terms of the MIT license: see LICENSE
+
 """
 Python2.5 and Python3.3 compatibility shim
 

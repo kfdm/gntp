@@ -1,3 +1,6 @@
+# Copyright: 2013 Paul Traylor
+# These sources are released under the terms of the MIT license: see LICENSE
+
 """
 The gntp.config module is provided as an extended GrowlNotifier object that takes
 advantage of the ConfigParser module to allow us to setup some default values

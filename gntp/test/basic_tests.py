@@ -1,4 +1,6 @@
-#!/usr/bin/env python
+# Copyright: 2013 Paul Traylor
+# These sources are released under the terms of the MIT license: see LICENSE
+
 # -*- coding: utf-8 -*-
 # Simple test to send each priority level
 import logging

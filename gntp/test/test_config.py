@@ -1,3 +1,6 @@
+# Copyright: 2013 Paul Traylor
+# These sources are released under the terms of the MIT license: see LICENSE
+
 # Test when we don't have a config file
 # Since we don't know if the user will have a config file or not when
 # running this test, we will move it out of the way and then move it back

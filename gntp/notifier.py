@@ -1,3 +1,6 @@
+# Copyright: 2013 Paul Traylor
+# These sources are released under the terms of the MIT license: see LICENSE
+
 """
 The gntp.notifier module is provided as a simple way to send notifications
 using GNTP
