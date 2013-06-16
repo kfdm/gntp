@@ -26,6 +26,10 @@ Simple Usage
 
 ::
 
+    # GNTP uses the standard Python logging
+    import logging
+    logging.basicConfig(level=logging.INFO)
+
     import gntp.notifier
 
     # Simple "fire and forget" notification
