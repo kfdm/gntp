@@ -94,6 +94,10 @@ Bugs
 
 Changelog
 ---------
+`v1.0.2 <https://github.com/kfdm/gntp/compare/v1.0.1...v1.0.2>`_
+    - Fix bug with incoming password hash
+    - Added info about license in each source file
+
 `v1.0.1 <https://github.com/kfdm/gntp/compare/v1.0...v1.0.1>`_
     - Fix bug with binary data (images) being encoded incorrectly
 
