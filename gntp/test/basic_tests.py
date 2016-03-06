@@ -62,11 +62,17 @@ class BasicTests(GNTPTestCase):
 			description='test_url_icon',
 			))
 
-	def test_file_icon(self):
+	def test_data_icon(self):
 		self.assertIsTrue(self._notify(
 			icon=open(ICON_FILE, 'rb').read(),
-			description='test_file_icon',
+			description='test_data_icon',
 			))
+
+	def test_file_icon(self):
+		self.assertIsTrue(self._notify(
+			icon='file://' + os.path.abspath(ICON_FILE),
+			description='test_file_icon',
+		))
 
 	def test_callback(self):
 		self.assertIsTrue(self._notify(
