@@ -94,6 +94,9 @@ Bugs
 
 Changelog
 ---------
+`v1.0.3 <https://github.com/kfdm/gntp/compare/v1.0.2...v1.0.3>`_
+    - Allow file:// scheme to be used for icons
+
 `v1.0.2 <https://github.com/kfdm/gntp/compare/v1.0.1...v1.0.2>`_
     - Fix bug with incoming password hash
     - Added info about license in each source file
@@ -121,5 +124,3 @@ Changelog
 
 `0.6 <https://github.com/kfdm/gntp/compare/0.5...0.6>`_
     - ConfigParser aware GrowlNotifier that reads settings from ~/.gntp
-
-
